@@ -1,4 +1,9 @@
-<title>Tablero de Horario</title>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Horario Hector 26-27</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -255,12 +260,12 @@ label{
   font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;
   letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
 }
-input[type=text],input[type=time],select{
+input[type=text],input[type=time],input[type=date],select{
   font:400 14px/1.4 "IBM Plex Sans",system-ui,sans-serif;
   background:var(--surface-2);color:var(--ink);
   border:1px solid var(--rule);border-radius:3px;padding:8px 9px;width:100%;
 }
-input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
 .swatches{display:flex;gap:6px;flex-wrap:wrap}
 .swatch{
   width:26px;height:26px;border-radius:3px;border:1px solid var(--rule);cursor:pointer;padding:0;
@@ -275,8 +280,46 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
 .err{color:var(--signal);font-size:12.5px;padding:0 20px;min-height:0}
 .err:not(:empty){padding-bottom:6px}
 
+
+/* ---- tareas ---- */
+.tasks{background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);padding:16px 18px 8px}
+.tasks-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.tasks-head h2{
+  margin:0;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:23px;text-transform:uppercase;letter-spacing:.04em;
+}
+.filters{display:flex;gap:6px}
+.chip-btn{
+  appearance:none;border:1px solid var(--rule);background:var(--surface);color:var(--ink-soft);
+  border-radius:3px;padding:5px 10px;font-size:12.5px;font-weight:500;cursor:pointer;
+}
+.chip-btn:hover{border-color:var(--ink-faint)}
+.chip-btn:focus-visible,.t-x:focus-visible,.t-item input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.chip-btn[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.t-add{display:grid;grid-template-columns:1fr minmax(150px,230px) 150px auto;gap:8px;margin-bottom:6px}
+.t-list{list-style:none;margin:0;padding:0}
+.t-item{display:flex;align-items:center;gap:12px;padding:11px 2px;border-top:1px solid var(--rule-soft)}
+.t-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--ink);flex:none;cursor:pointer;margin:0}
+.t-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.t-title{font-size:14.5px;overflow-wrap:anywhere}
+.t-item.done .t-title{text-decoration:line-through;color:var(--ink-faint)}
+.t-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--ink-faint)}
+.t-tag{
+  padding:1px 7px 1px 10px;border-radius:2px;background:var(--bg);color:var(--fg);
+  box-shadow:inset 3px 0 0 var(--rail);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:11.5px;
+}
+.t-due.late{color:var(--signal);font-weight:600}
+.t-x{appearance:none;border:0;background:none;color:var(--ink-faint);font-size:22px;line-height:1;cursor:pointer;padding:2px 8px;border-radius:3px}
+.t-x:hover{color:var(--signal)}
+.t-empty{margin:0;padding:18px 2px 20px;color:var(--ink-faint);font-size:14px;border-top:1px solid var(--rule-soft)}
+.t-empty:not([hidden]) + *{margin-top:0}
+@media (prefers-color-scheme: dark){ input[type=date],input[type=time]{color-scheme:dark} }
+
 @media (max-width:640px){
   .wrap{padding:16px 12px 40px}
+  .t-add{grid-template-columns:1fr 1fr}
+  .t-add input[type=text]{grid-column:1 / -1}
+  .t-add .btn{grid-column:1 / -1;justify-content:center}
   .brand h1{font-size:30px}
   .strip{grid-template-columns:1fr}
   .fields{grid-template-columns:1fr}
@@ -285,23 +328,25 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
 
 @media print{
   body{background:#fff}
-  .tools,.notice,.stats,.empty .btn{display:none}
+  .tools,.notice,.stats,.empty .btn,.t-add,.filters{display:none}
   .board{overflow:visible}
   .board-shell{box-shadow:none}
   .blk,.col.is-today,.row-head{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <header class="masthead">
     <div class="brand">
-      <h1 id="title">Mi horario de clase</h1>
-      <span class="sub" id="subtitle">Semana lectiva · Lunes a viernes</span>
+      <h1 id="title">Horario · Hector</h1>
+      <span class="sub" id="subtitle">Océano Atlántico · Curso 26-27</span>
     </div>
     <div class="tools">
       <button class="btn btn-primary" id="add">＋ Añadir clase</button>
       <button class="btn" id="print">Imprimir</button>
-      <button class="btn btn-danger" id="clear">Vaciar</button>
+      <button class="btn btn-danger" id="clear">Restaurar horario</button>
     </div>
   </header>
 
@@ -334,11 +379,31 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     </div>
   </div>
 
+  <section class="tasks" aria-label="Tareas">
+    <div class="tasks-head">
+      <h2>Tareas</h2>
+      <div class="filters" id="t-filters">
+        <button type="button" class="chip-btn" data-f="open" aria-pressed="true">Pendientes</button>
+        <button type="button" class="chip-btn" data-f="done" aria-pressed="false">Hechas</button>
+        <button type="button" class="chip-btn" data-f="all" aria-pressed="false">Todas</button>
+      </div>
+    </div>
+    <form class="t-add" id="t-form" autocomplete="off">
+      <input type="text" id="t-text" maxlength="120" placeholder="Nueva tarea" aria-label="Nueva tarea">
+      <select id="t-subj" aria-label="Módulo"></select>
+      <input type="date" id="t-date" aria-label="Fecha límite">
+      <button type="submit" class="btn btn-primary">Añadir tarea</button>
+    </form>
+    <ul class="t-list" id="t-list"></ul>
+    <p class="t-empty" id="t-empty" hidden></p>
+  </section>
+
   <div class="stats">
     <span><b id="st-count">0</b> clases</span>
     <span><b id="st-hours">0 h</b> semanales</span>
-    <span><b id="st-subj">0</b> materias</span>
-    <span class="sync"><i class="dot off" id="sync-dot"></i><span id="sync-txt">Solo en este navegador</span></span>
+    <span><b id="st-subj">0</b> módulos</span>
+    <span><b id="st-tasks">0</b> tareas pendientes</span>
+    <span class="sync"><i class="dot" id="sync-dot"></i><span id="sync-txt">Guardado en este navegador</span></span>
   </div>
 </div>
 
@@ -347,15 +412,15 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     <h2 id="dlg-title">Nueva clase</h2>
     <div class="fields">
       <div class="f full">
-        <label for="f-subject">Materia</label>
-        <input type="text" id="f-subject" maxlength="60" autocomplete="off" placeholder="Cálculo diferencial">
+        <label for="f-subject">Módulo</label>
+        <input type="text" id="f-subject" maxlength="60" autocomplete="off" placeholder="Nombre del módulo">
       </div>
       <div class="f">
         <label for="f-teacher">Profesor(a)</label>
         <input type="text" id="f-teacher" maxlength="40" autocomplete="off" placeholder="Opcional">
       </div>
       <div class="f">
-        <label for="f-room">Aula</label>
+        <label for="f-room">Grupo / aula</label>
         <input type="text" id="f-room" maxlength="24" autocomplete="off" placeholder="Opcional">
       </div>
       <div class="f full">
@@ -393,26 +458,70 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   var DAYS_SHORT = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
   var COLORS = ["c1","c2","c3","c4","c5","c6","c7","c8"];
   var ROW_H = 58;          // px per hour
-  var LS_KEY = "horario-clase-v1";
+  var LS_KEY = "horario-hector-v2";
+  var TS_KEY = "horario-tareas-v1";
 
-  var SAMPLE = [
-    {day:0, start:"07:30", end:"09:00", subject:"Cálculo diferencial", teacher:"Prof. Rivas",   room:"A-204", color:"c1"},
-    {day:0, start:"09:15", end:"10:45", subject:"Química general",     teacher:"Prof. Nadal",   room:"Lab 2", color:"c2"},
-    {day:0, start:"11:00", end:"12:30", subject:"Historia moderna",    teacher:"Prof. Suárez",  room:"B-110", color:"c3"},
-    {day:1, start:"08:00", end:"09:30", subject:"Álgebra lineal",      teacher:"Prof. Rivas",   room:"A-204", color:"c1"},
-    {day:1, start:"10:00", end:"12:00", subject:"Taller de escritura", teacher:"Prof. Molina",  room:"C-7",   color:"c5"},
-    {day:2, start:"07:30", end:"09:00", subject:"Cálculo diferencial", teacher:"Prof. Rivas",   room:"A-204", color:"c1"},
-    {day:2, start:"09:15", end:"11:15", subject:"Física I",            teacher:"Prof. Kahn",    room:"Lab 1", color:"c4"},
-    {day:3, start:"08:00", end:"09:30", subject:"Álgebra lineal",      teacher:"Prof. Rivas",   room:"A-204", color:"c1"},
-    {day:3, start:"09:45", end:"11:15", subject:"Química general",     teacher:"Prof. Nadal",   room:"Lab 2", color:"c2"},
-    {day:3, start:"11:30", end:"13:00", subject:"Inglés B2",           teacher:"Prof. Owens",   room:"D-3",   color:"c6"},
-    {day:4, start:"07:30", end:"09:30", subject:"Física I",            teacher:"Prof. Kahn",    room:"Lab 1", color:"c4"},
-    {day:4, start:"10:00", end:"11:30", subject:"Historia moderna",    teacher:"Prof. Suárez",  room:"B-110", color:"c3"},
-    {day:4, start:"11:45", end:"13:15", subject:"Educación física",    teacher:"Prof. Arteaga", room:"Cancha",color:"c8"}
+  // Módulos: nombre, grupo y color (los colores siguen los del horario original)
+  var M = {
+    ofi:  {subject:"Aplicaciones ofimáticas",                       room:"SMR 1º",  color:"c1"},
+    som:  {subject:"Sistemas operativos monopuesto",                room:"SMR 1º",  color:"c7"},
+    dig:  {subject:"Digitalización",                                room:"SMR 1º",  color:"c2"},
+    seg:  {subject:"Seguridad informática",                         room:"SMR 2º",  color:"c1"},
+    sri:  {subject:"Servicios de red e internet",                   room:"ASIR 2º", color:"c6"},
+    aso:  {subject:"Administración de sistemas operativos",         room:"ASIR 2º", color:"c6"},
+    iaw:  {subject:"Implantación de aplicaciones web",              room:"ASIR 2º", color:"c6"},
+    pim:  {subject:"Proyecto intermodular",                         room:"ASIR 2º", color:"c6"},
+    sad:  {subject:"Seguridad y alta disponibilidad",               room:"ASIR 2º", color:"c5"},
+    sost: {subject:"Sostenibilidad aplicada al sistema productivo", room:"ASIR 2º", color:"c5"},
+    dsp:  {subject:"Digitalización aplicada a los sectores productivos", room:"ASIR 1º", color:"c5"},
+    psp:  {subject:"PSP",                                           room:"DAM 2º",  color:"c4"},
+    ad:   {subject:"Acceso a Datos",                                room:"DAM 2º",  color:"c3"},
+    cib:  {subject:"Curso Ciberseguridad · Incidencias",            room:"Curso",   color:"c8"}
+  };
+  function L(day, start, end, key){
+    var m = M[key];
+    return {day:day, start:start, end:end, subject:m.subject, teacher:"", room:m.room, color:m.color};
+  }
+  // day: 0 = lunes ... 4 = viernes. Los recreos (11:10–11:35 y 18:10–18:35) quedan como hueco.
+  var SCHEDULE = [
+    // LUNES
+    L(0,"08:30","11:10","ofi"),
+    L(0,"12:30","14:15","sad"),
+    L(0,"17:20","18:10","psp"),
+    L(0,"18:35","20:20","ad"),
+    // MARTES
+    L(1,"08:30","10:15","som"),
+    L(1,"10:20","11:10","sri"),
+    L(1,"11:35","13:20","sri"),
+    L(1,"13:25","14:15","pim"),
+    L(1,"17:20","18:10","cib"),
+    L(1,"18:35","19:25","cib"),
+    // MIÉRCOLES
+    L(2,"08:30","09:20","dig"),
+    L(2,"09:25","10:15","som"),
+    L(2,"10:20","11:10","sost"),
+    L(2,"12:30","13:20","dsp"),
+    L(2,"13:25","14:15","aso"),
+    // JUEVES
+    L(3,"08:30","09:20","ofi"),
+    L(3,"09:25","10:15","aso"),
+    L(3,"11:35","14:15","iaw"),
+    // VIERNES
+    L(4,"08:30","10:15","sri"),
+    L(4,"10:20","11:10","seg"),
+    L(4,"11:35","12:25","seg"),
+    L(4,"12:30","13:20","som"),
+    L(4,"13:25","14:15","pim"),
+    L(4,"15:30","16:20","psp"),
+    L(4,"16:25","18:10","ad"),
+    L(4,"18:35","19:25","ad")
   ];
 
   // ---------- state ----------
-  var state = {classes: [], sample: true};
+  var state = {classes: [], sample: false};
+  var tasks = [];
+  var tfilter = "open";
+  var tSig = "";
   var dbDoc = null;
   var editingId = null;
   var pickedColor = "c1";
@@ -457,7 +566,7 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     return out;
   }
   function seedSample(){
-    return normalize(SAMPLE.map(function(c){ var o={}; for(var k in c) o[k]=c[k]; o.id=uid(); return o; }));
+    return normalize(SCHEDULE.map(function(c){ var o={}; for(var k in c) o[k]=c[k]; o.id=uid(); return o; }));
   }
 
   // ---------- persistence ----------
@@ -503,7 +612,7 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     return days;
   }
   function bounds(){
-    var lo = 7*60, hi = 14*60;
+    var lo = 8*60, hi = 14*60;
     for(var i=0;i<state.classes.length;i++){
       lo = Math.min(lo, toMin(state.classes[i].start));
       hi = Math.max(hi, toMin(state.classes[i].end));
@@ -546,7 +655,12 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     document.getElementById("sample-notice").hidden = !(state.sample && has);
     empty.hidden = has;
     document.getElementById("board").hidden = !has;
-    if(!has){ grid.innerHTML = ""; renderStrip(); renderStats(); return; }
+    if(!has){ grid.innerHTML = ""; renderStrip(); renderStats(); renderTasks(); return; }
+
+    var openCount = {};
+    for(var q=0;q<tasks.length;q++){
+      if(!tasks[q].done) openCount[tasks[q].subject] = (openCount[tasks[q].subject]||0) + 1;
+    }
 
     var days = visibleDays();
     var b = bounds();
@@ -601,7 +715,10 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         var top = (it.s - b.lo)/60*ROW_H;
         var h = Math.max((it.e - it.s)/60*ROW_H - 2, 20);
         var w = 100/it.ncol;
-        var meta = [r.room, r.teacher].filter(Boolean).join(" · ");
+        var parts = [r.room, r.teacher];
+        var tc = openCount[r.subject] || 0;
+        if(tc) parts.push(tc + (tc > 1 ? " tareas" : " tarea"));
+        var meta = parts.filter(Boolean).join(" · ");
         html += '<button class="blk ' + r.color + (h < 42 ? " tiny" : "") + '" ' +
                 'data-id="' + r.id + '" type="button" ' +
                 'style="top:' + top + 'px;height:' + h + 'px;left:calc(' + (w*it.col) + '% + 2px);width:calc(' + w + '% - 4px);' +
@@ -623,6 +740,7 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
 
     renderStrip();
     renderStats();
+    renderTasks();
   }
 
   function renderStrip(){
@@ -680,6 +798,120 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     document.getElementById("st-count").textContent = state.classes.length;
     document.getElementById("st-hours").textContent = (Math.round(mins/6)/10).toString().replace(".", ",") + " h";
     document.getElementById("st-subj").textContent = Object.keys(subjects).length;
+  }
+
+  // ---------- tareas ----------
+  function pad2(n){ return (n<10?"0":"")+n; }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + "-" + pad2(d.getMonth()+1) + "-" + pad2(d.getDate()); }
+  function dueLabel(iso){
+    var p = iso.split("-"), d = new Date(+p[0], +p[1]-1, +p[2]);
+    var n = new Date(), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+    var diff = Math.round((d - t0) / 86400000);
+    if(diff === 0) return "hoy";
+    if(diff === 1) return "mañana";
+    if(diff === -1) return "ayer";
+    return DAYS_SHORT[(d.getDay()+6)%7].toLowerCase() + " " + d.getDate() + "/" + (d.getMonth()+1);
+  }
+  function readTasks(){
+    try{
+      var raw = localStorage.getItem(TS_KEY);
+      if(!raw) return [];
+      var a = JSON.parse(raw);
+      if(!Array.isArray(a)) return [];
+      var out = [];
+      for(var i=0;i<a.length;i++){
+        var t = a[i];
+        if(!t || typeof t.text !== "string" || !t.text) continue;
+        out.push({
+          id: typeof t.id === "string" && t.id ? t.id : uid(),
+          text: t.text.slice(0,120),
+          subject: String(t.subject || "General").slice(0,60),
+          due: /^\d{4}-\d{2}-\d{2}$/.test(t.due || "") ? t.due : "",
+          done: !!t.done
+        });
+      }
+      return out;
+    }catch(e){ return []; }
+  }
+  function writeTasks(){
+    try{ localStorage.setItem(TS_KEY, JSON.stringify(tasks)); }catch(e){}
+  }
+  function subjectColor(name){
+    for(var i=0;i<state.classes.length;i++){
+      if(state.classes[i].subject === name) return state.classes[i].color;
+    }
+    return "c7";
+  }
+  function subjectNames(){
+    var seen = {}, out = [];
+    for(var i=0;i<state.classes.length;i++){
+      var n = state.classes[i].subject;
+      if(!seen[n]){ seen[n] = 1; out.push(n); }
+    }
+    out.sort(function(a,b){ return a.localeCompare(b, "es"); });
+    return out;
+  }
+  function renderTasks(){
+    // selector de módulo: solo se reconstruye si cambia la lista
+    var names = subjectNames();
+    var sig = names.join("|");
+    if(sig !== tSig){
+      var sel = document.getElementById("t-subj"), prev = sel.value;
+      sel.innerHTML = "";
+      ["General"].concat(names).forEach(function(n){
+        var o = document.createElement("option");
+        o.value = n; o.textContent = n; sel.appendChild(o);
+      });
+      if(prev) sel.value = prev;
+      tSig = sig;
+    }
+
+    var f = document.querySelectorAll("#t-filters .chip-btn");
+    for(var i=0;i<f.length;i++) f[i].setAttribute("aria-pressed", f[i].dataset.f === tfilter ? "true" : "false");
+
+    var openN = 0;
+    for(var k=0;k<tasks.length;k++) if(!tasks[k].done) openN++;
+    document.getElementById("st-tasks").textContent = openN;
+
+    var list = [];
+    for(var j=0;j<tasks.length;j++){
+      var t = tasks[j];
+      if(tfilter === "open" && t.done) continue;
+      if(tfilter === "done" && !t.done) continue;
+      list.push({t: t, i: j});
+    }
+    list.sort(function(a,b){
+      if(a.t.done !== b.t.done) return a.t.done ? 1 : -1;
+      var da = a.t.due || "9999-99-99", db = b.t.due || "9999-99-99";
+      if(da !== db) return da < db ? -1 : 1;
+      return a.i - b.i;
+    });
+
+    var today = todayStr(), html = "";
+    for(var n=0;n<list.length;n++){
+      var x = list[n].t, c = subjectColor(x.subject);
+      var tag = x.subject !== "General"
+        ? '<span class="t-tag" style="--bg:var(--' + c + '-bg);--fg:var(--' + c + '-fg);--rail:var(--' + c + '-rail)">' + esc(x.subject) + '</span>'
+        : "";
+      var due = x.due ? '<span class="t-due' + (!x.done && x.due < today ? " late" : "") + '">' + dueLabel(x.due) + '</span>' : "";
+      html += '<li class="t-item' + (x.done ? " done" : "") + '" data-id="' + esc(x.id) + '">' +
+                '<input type="checkbox"' + (x.done ? " checked" : "") + ' aria-label="Marcar como hecha">' +
+                '<div class="t-body"><span class="t-title">' + esc(x.text) + '</span>' +
+                  ((tag || due) ? '<span class="t-meta">' + tag + due + '</span>' : "") +
+                '</div>' +
+                '<button type="button" class="t-x" aria-label="Eliminar tarea">×</button>' +
+              '</li>';
+    }
+    document.getElementById("t-list").innerHTML = html;
+
+    var emp = document.getElementById("t-empty");
+    if(list.length){ emp.hidden = true; }
+    else{
+      emp.hidden = false;
+      emp.textContent = tfilter === "open" ? "No tienes tareas pendientes."
+                      : tfilter === "done" ? "Todavía no has marcado ninguna como hecha."
+                      : "Aún no hay tareas. Escribe la primera arriba.";
+    }
   }
 
   // ---------- dialog ----------
@@ -773,10 +1005,43 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   document.getElementById("add2").addEventListener("click", function(){ openDialog(null); });
   document.getElementById("print").addEventListener("click", function(){ window.print(); });
   document.getElementById("clear").addEventListener("click", function(){
-    if(!state.classes.length) return;
-    if(!window.confirm("¿Borrar todas las clases del horario?")) return;
-    state.classes = []; state.sample = false;
+    if(!window.confirm("¿Restaurar el horario original? Se perderán los cambios que hayas hecho en las clases (las tareas no se tocan).")) return;
+    state = {classes: seedSample(), sample: false};
     persist(); render();
+  });
+
+  // tareas
+  document.getElementById("t-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var inp = document.getElementById("t-text");
+    var text = inp.value.trim();
+    if(!text){ inp.focus(); return; }
+    tasks.push({
+      id: uid(), text: text.slice(0,120),
+      subject: document.getElementById("t-subj").value || "General",
+      due: document.getElementById("t-date").value || "",
+      done: false
+    });
+    inp.value = ""; document.getElementById("t-date").value = "";
+    writeTasks(); render(); inp.focus();
+  });
+  document.getElementById("t-filters").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("button") : null;
+    if(!b) return;
+    tfilter = b.dataset.f; renderTasks();
+  });
+  document.getElementById("t-list").addEventListener("change", function(e){
+    var li = e.target.closest ? e.target.closest("li") : null;
+    if(!li || e.target.type !== "checkbox") return;
+    for(var i=0;i<tasks.length;i++) if(tasks[i].id === li.dataset.id) tasks[i].done = e.target.checked;
+    writeTasks(); render();
+  });
+  document.getElementById("t-list").addEventListener("click", function(e){
+    var x = e.target.closest ? e.target.closest(".t-x") : null;
+    if(!x) return;
+    var id = x.closest("li").dataset.id;
+    tasks = tasks.filter(function(t){ return t.id !== id; });
+    writeTasks(); render();
   });
   document.getElementById("wipe-sample").addEventListener("click", function(){
     state.classes = []; state.sample = false;
@@ -798,31 +1063,15 @@ input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   });
 
   // first paint from local storage or the sample week
+  tasks = readTasks();
   var local = readLocal();
   if(local && local.classes.length){ state = local; }
-  else { state = {classes: seedSample(), sample: true}; }
+  else { state = {classes: seedSample(), sample: false}; }
   render();
 
   // keep the "now" line and the status strip honest
   setInterval(render, 60000);
-
-  // shared storage, when the viewer can run it
-  if(window.claude && typeof window.claude.use === "function"){
-    window.claude.use("db").then(function(db){
-      if(!db) return;
-      dbDoc = db.doc("horario/semana");
-      dbDoc.onSnapshot(function(snap){
-        if(!snap.exists) return;
-        var data = snap.data() || {};
-        var list = normalize(data.classes);
-        state = {classes: list, sample: list.length ? !!data.sample : true};
-        if(!list.length) state = {classes: seedSample(), sample: true};
-        writeLocal();
-        render();
-        setSync(true, "Guardado en la nube");
-      }, function(){ setSync(false, "Solo en este navegador"); });
-      setSync(true, "Guardado en la nube");
-    }).catch(function(){});
-  }
 })();
 </script>
+</body>
+</html>
