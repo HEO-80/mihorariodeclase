@@ -1,0 +1,828 @@
+<title>Tablero de Horario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#EBEEF2;
+  --surface:#FFFFFF;
+  --surface-2:#F5F7F9;
+  --ink:#161B23;
+  --ink-soft:#5E6976;
+  --ink-faint:#8A95A2;
+  --rule:#D2D8E0;
+  --rule-soft:#E3E8ED;
+  --signal:#C1372B;
+  --today:rgba(193,55,43,.045);
+  --shadow:0 1px 2px rgba(22,27,35,.06), 0 8px 24px -14px rgba(22,27,35,.28);
+  --focus:#2F6FB5;
+
+  --c1-bg:#DCE8F7; --c1-fg:#1B3B5E; --c1-rail:#3C7BC0;
+  --c2-bg:#D4E9E5; --c2-fg:#15443C; --c2-rail:#2E8B7A;
+  --c3-bg:#F6E6CC; --c3-fg:#593C14; --c3-rail:#BF8426;
+  --c4-bg:#F7DEE1; --c4-fg:#5C2027; --c4-rail:#C05263;
+  --c5-bg:#E3DFF5; --c5-fg:#312860; --c5-rail:#7365C0;
+  --c6-bg:#DDEBD2; --c6-fg:#2B4416; --c6-rail:#639938;
+  --c7-bg:#DCE1E8; --c7-fg:#28313B; --c7-rail:#6C7B8C;
+  --c8-bg:#FAE0D4; --c8-fg:#5F311E; --c8-rail:#CC6B3F;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10141A;
+    --surface:#181D26;
+    --surface-2:#1F252F;
+    --ink:#E1E6ED;
+    --ink-soft:#8C97A5;
+    --ink-faint:#6C7683;
+    --rule:#2A323D;
+    --rule-soft:#222933;
+    --signal:#FF6E57;
+    --today:rgba(255,110,87,.06);
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 30px -16px rgba(0,0,0,.8);
+    --focus:#6FA8E0;
+
+    --c1-bg:#16293C; --c1-fg:#A9CCF0; --c1-rail:#4682C4;
+    --c2-bg:#12312C; --c2-fg:#92D6C7; --c2-rail:#34957F;
+    --c3-bg:#352816; --c3-fg:#E9C68C; --c3-rail:#C58D2E;
+    --c4-bg:#391D23; --c4-fg:#F0AAB3; --c4-rail:#C85A6B;
+    --c5-bg:#231E3C; --c5-fg:#BDB2F0; --c5-rail:#7A6CC8;
+    --c6-bg:#1D2E16; --c6-fg:#B6D89A; --c6-rail:#6BA340;
+    --c7-bg:#232A33; --c7-fg:#B6C2CF; --c7-rail:#8C9AAA;
+    --c8-bg:#36211A; --c8-fg:#EFB294; --c8-rail:#D47447;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10141A;
+  --surface:#181D26;
+  --surface-2:#1F252F;
+  --ink:#E1E6ED;
+  --ink-soft:#8C97A5;
+  --ink-faint:#6C7683;
+  --rule:#2A323D;
+  --rule-soft:#222933;
+  --signal:#FF6E57;
+  --today:rgba(255,110,87,.06);
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 30px -16px rgba(0,0,0,.8);
+  --focus:#6FA8E0;
+
+  --c1-bg:#16293C; --c1-fg:#A9CCF0; --c1-rail:#4682C4;
+  --c2-bg:#12312C; --c2-fg:#92D6C7; --c2-rail:#34957F;
+  --c3-bg:#352816; --c3-fg:#E9C68C; --c3-rail:#C58D2E;
+  --c4-bg:#391D23; --c4-fg:#F0AAB3; --c4-rail:#C85A6B;
+  --c5-bg:#231E3C; --c5-fg:#BDB2F0; --c5-rail:#7A6CC8;
+  --c6-bg:#1D2E16; --c6-fg:#B6D89A; --c6-rail:#6BA340;
+  --c7-bg:#232A33; --c7-fg:#B6C2CF; --c7-rail:#8C9AAA;
+  --c8-bg:#36211A; --c8-fg:#EFB294; --c8-rail:#D47447;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font:400 15px/1.5 "IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1240px;margin:0 auto;padding:22px 20px 56px;display:flex;flex-direction:column;gap:18px}
+
+/* ---- head ---- */
+.masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;
+  font-weight:700;font-size:38px;line-height:1;letter-spacing:.012em;
+  text-transform:uppercase;margin:0;text-wrap:balance;
+}
+.brand .sub{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
+}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+button{font-family:inherit}
+.btn{
+  appearance:none;border:1px solid var(--rule);background:var(--surface);color:var(--ink);
+  border-radius:3px;padding:8px 13px;font-size:13.5px;font-weight:500;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;transition:border-color .12s,background .12s;
+}
+.btn:hover{border-color:var(--ink-faint)}
+.btn:focus-visible,.swatch:focus-visible,.blk:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid var(--focus);outline-offset:2px;
+}
+.btn-primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn-primary:hover{background:var(--ink);border-color:var(--ink);opacity:.88}
+.btn-danger{color:var(--signal);border-color:var(--rule)}
+.btn-danger:hover{border-color:var(--signal)}
+
+/* ---- status strip ---- */
+.strip{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden;
+}
+.slot{background:var(--surface);padding:13px 16px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.slot .tag{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);
+}
+.slot.live .tag{color:var(--signal)}
+.slot .name{
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:24px;line-height:1.1;letter-spacing:.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.slot .meta{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;color:var(--ink-soft);
+  font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.slot .meta em{font-style:normal;color:var(--ink-faint)}
+
+.notice{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  border-left:3px solid var(--c3-rail);background:var(--surface);
+  padding:10px 14px;border-radius:0 4px 4px 0;font-size:13.5px;color:var(--ink-soft);
+}
+.notice strong{color:var(--ink);font-weight:600}
+.notice .btn{padding:5px 10px;font-size:12.5px}
+
+/* ---- board ---- */
+.board-shell{
+  background:var(--surface);border:1px solid var(--rule);border-radius:4px;
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.board{overflow-x:auto;overflow-y:hidden}
+.grid{min-width:760px}
+.row-head,.row-body{display:grid;grid-template-columns:var(--cols)}
+.row-head{border-bottom:1px solid var(--rule);background:var(--surface-2)}
+.dayhead{
+  padding:10px 12px 9px;border-left:1px solid var(--rule-soft);
+  display:flex;flex-direction:column;gap:1px;
+}
+.dayhead:first-child{border-left:0}
+.dayhead .d{
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:19px;line-height:1.1;text-transform:uppercase;letter-spacing:.05em;
+}
+.dayhead .n{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;
+  color:var(--ink-faint);font-variant-numeric:tabular-nums;
+}
+.dayhead.is-today .d{color:var(--signal)}
+.dayhead.is-today .n{color:var(--signal);opacity:.8}
+.corner{border-left:0}
+
+.railcol{position:relative;border-right:1px solid var(--rule-soft)}
+.hourlab{
+  position:absolute;right:8px;transform:translateY(-50%);
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;
+  color:var(--ink-faint);font-variant-numeric:tabular-nums;letter-spacing:.02em;
+}
+.col{
+  position:relative;border-left:1px solid var(--rule-soft);
+  background-image:repeating-linear-gradient(to bottom,var(--rule-soft) 0 1px,transparent 1px var(--rowh));
+}
+.col.is-today{background-color:var(--today)}
+
+.blk{
+  position:absolute;border:0;text-align:left;cursor:pointer;
+  border-radius:2px;padding:5px 7px 5px 9px;overflow:hidden;
+  background:var(--bg);color:var(--fg);
+  box-shadow:inset 3px 0 0 var(--rail);
+  display:flex;flex-direction:column;gap:1px;font-family:inherit;
+  transition:transform .1s ease, filter .1s ease;
+}
+.blk:hover{filter:brightness(.97);transform:translateY(-1px)}
+.blk .t{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;
+  font-variant-numeric:tabular-nums;opacity:.82;letter-spacing:.01em;white-space:nowrap;
+}
+.blk .s{
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:16px;line-height:1.12;letter-spacing:.01em;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.blk .m{font-size:11px;opacity:.78;line-height:1.25;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.blk.tiny{padding-top:3px;flex-direction:row;align-items:baseline;gap:6px}
+.blk.tiny .s{font-size:13px;-webkit-line-clamp:1}
+.blk.tiny .m{display:none}
+
+.nowline{position:absolute;left:0;right:0;height:0;pointer-events:none;z-index:3}
+.nowline::before{
+  content:"";position:absolute;left:0;right:0;top:-1px;height:2px;background:var(--signal);
+}
+.nowline::after{
+  content:"";position:absolute;left:-4px;top:-4px;width:8px;height:8px;
+  border-radius:50%;background:var(--signal);
+}
+.nowlab{
+  position:absolute;right:8px;transform:translateY(-50%);z-index:4;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;font-weight:600;
+  color:var(--surface);background:var(--signal);padding:1px 4px;border-radius:2px;
+  font-variant-numeric:tabular-nums;
+}
+.empty{
+  padding:54px 24px;text-align:center;color:var(--ink-faint);
+  display:flex;flex-direction:column;gap:12px;align-items:center;
+}
+.empty p{margin:0;max-width:44ch;font-size:14px;line-height:1.6}
+
+/* ---- footer stats ---- */
+.stats{
+  display:flex;gap:26px;flex-wrap:wrap;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;
+  color:var(--ink-faint);letter-spacing:.06em;text-transform:uppercase;
+  font-variant-numeric:tabular-nums;
+}
+.stats b{color:var(--ink-soft);font-weight:600}
+.sync{margin-left:auto;display:flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--c6-rail)}
+.dot.off{background:var(--ink-faint)}
+
+/* ---- dialog ---- */
+dialog{
+  border:1px solid var(--rule);border-radius:5px;background:var(--surface);color:var(--ink);
+  padding:0;width:min(460px,calc(100vw - 32px));box-shadow:var(--shadow);
+}
+dialog::backdrop{background:rgba(10,13,18,.5)}
+.dlg{display:flex;flex-direction:column}
+.dlg h2{
+  margin:0;padding:16px 20px 14px;border-bottom:1px solid var(--rule);
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:23px;text-transform:uppercase;letter-spacing:.04em;
+}
+.fields{padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f.full{grid-column:1 / -1}
+label{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
+}
+input[type=text],input[type=time],select{
+  font:400 14px/1.4 "IBM Plex Sans",system-ui,sans-serif;
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--rule);border-radius:3px;padding:8px 9px;width:100%;
+}
+input[type=time]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.swatches{display:flex;gap:6px;flex-wrap:wrap}
+.swatch{
+  width:26px;height:26px;border-radius:3px;border:1px solid var(--rule);cursor:pointer;padding:0;
+  background:var(--bg);box-shadow:inset 3px 0 0 var(--rail);
+}
+.swatch[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--rail),0 0 0 2px var(--surface),0 0 0 3px var(--ink)}
+.dlg-foot{
+  display:flex;gap:8px;padding:14px 20px;border-top:1px solid var(--rule);
+  background:var(--surface-2);align-items:center;
+}
+.dlg-foot .spacer{flex:1}
+.err{color:var(--signal);font-size:12.5px;padding:0 20px;min-height:0}
+.err:not(:empty){padding-bottom:6px}
+
+@media (max-width:640px){
+  .wrap{padding:16px 12px 40px}
+  .brand h1{font-size:30px}
+  .strip{grid-template-columns:1fr}
+  .fields{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+@media print{
+  body{background:#fff}
+  .tools,.notice,.stats,.empty .btn{display:none}
+  .board{overflow:visible}
+  .board-shell{box-shadow:none}
+  .blk,.col.is-today,.row-head{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="brand">
+      <h1 id="title">Mi horario de clase</h1>
+      <span class="sub" id="subtitle">Semana lectiva · Lunes a viernes</span>
+    </div>
+    <div class="tools">
+      <button class="btn btn-primary" id="add">＋ Añadir clase</button>
+      <button class="btn" id="print">Imprimir</button>
+      <button class="btn btn-danger" id="clear">Vaciar</button>
+    </div>
+  </header>
+
+  <section class="strip" aria-label="Estado actual">
+    <div class="slot" id="slot-now">
+      <span class="tag">Ahora</span>
+      <span class="name" id="now-name">—</span>
+      <span class="meta" id="now-meta">Sin clase en curso</span>
+    </div>
+    <div class="slot" id="slot-next">
+      <span class="tag">A continuación</span>
+      <span class="name" id="next-name">—</span>
+      <span class="meta" id="next-meta">Nada programado</span>
+    </div>
+  </section>
+
+  <div class="notice" id="sample-notice" hidden>
+    <strong>Horario de ejemplo.</strong>
+    <span>Estas clases son de muestra para que veas el tablero funcionando. Edita cualquiera o empieza de cero.</span>
+    <button class="btn" id="wipe-sample">Empezar de cero</button>
+  </div>
+
+  <div class="board-shell">
+    <div class="board" id="board">
+      <div class="grid" id="grid"></div>
+    </div>
+    <div class="empty" id="empty" hidden>
+      <p>Tu horario está vacío. Añade tu primera clase y aparecerá en el tablero.</p>
+      <button class="btn btn-primary" id="add2">＋ Añadir clase</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <span><b id="st-count">0</b> clases</span>
+    <span><b id="st-hours">0 h</b> semanales</span>
+    <span><b id="st-subj">0</b> materias</span>
+    <span class="sync"><i class="dot off" id="sync-dot"></i><span id="sync-txt">Solo en este navegador</span></span>
+  </div>
+</div>
+
+<dialog id="dlg">
+  <form method="dialog" class="dlg" id="form">
+    <h2 id="dlg-title">Nueva clase</h2>
+    <div class="fields">
+      <div class="f full">
+        <label for="f-subject">Materia</label>
+        <input type="text" id="f-subject" maxlength="60" autocomplete="off" placeholder="Cálculo diferencial">
+      </div>
+      <div class="f">
+        <label for="f-teacher">Profesor(a)</label>
+        <input type="text" id="f-teacher" maxlength="40" autocomplete="off" placeholder="Opcional">
+      </div>
+      <div class="f">
+        <label for="f-room">Aula</label>
+        <input type="text" id="f-room" maxlength="24" autocomplete="off" placeholder="Opcional">
+      </div>
+      <div class="f full">
+        <label for="f-day">Día</label>
+        <select id="f-day"></select>
+      </div>
+      <div class="f">
+        <label for="f-start">Entrada</label>
+        <input type="time" id="f-start" step="300" value="07:00">
+      </div>
+      <div class="f">
+        <label for="f-end">Salida</label>
+        <input type="time" id="f-end" step="300" value="08:30">
+      </div>
+      <div class="f full">
+        <label>Color</label>
+        <div class="swatches" id="f-colors"></div>
+      </div>
+    </div>
+    <p class="err" id="f-err"></p>
+    <div class="dlg-foot">
+      <button type="button" class="btn btn-danger" id="f-del">Eliminar</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="f-cancel">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="f-save">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(function(){
+  "use strict";
+
+  var DAYS = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
+  var DAYS_SHORT = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
+  var COLORS = ["c1","c2","c3","c4","c5","c6","c7","c8"];
+  var ROW_H = 58;          // px per hour
+  var LS_KEY = "horario-clase-v1";
+
+  var SAMPLE = [
+    {day:0, start:"07:30", end:"09:00", subject:"Cálculo diferencial", teacher:"Prof. Rivas",   room:"A-204", color:"c1"},
+    {day:0, start:"09:15", end:"10:45", subject:"Química general",     teacher:"Prof. Nadal",   room:"Lab 2", color:"c2"},
+    {day:0, start:"11:00", end:"12:30", subject:"Historia moderna",    teacher:"Prof. Suárez",  room:"B-110", color:"c3"},
+    {day:1, start:"08:00", end:"09:30", subject:"Álgebra lineal",      teacher:"Prof. Rivas",   room:"A-204", color:"c1"},
+    {day:1, start:"10:00", end:"12:00", subject:"Taller de escritura", teacher:"Prof. Molina",  room:"C-7",   color:"c5"},
+    {day:2, start:"07:30", end:"09:00", subject:"Cálculo diferencial", teacher:"Prof. Rivas",   room:"A-204", color:"c1"},
+    {day:2, start:"09:15", end:"11:15", subject:"Física I",            teacher:"Prof. Kahn",    room:"Lab 1", color:"c4"},
+    {day:3, start:"08:00", end:"09:30", subject:"Álgebra lineal",      teacher:"Prof. Rivas",   room:"A-204", color:"c1"},
+    {day:3, start:"09:45", end:"11:15", subject:"Química general",     teacher:"Prof. Nadal",   room:"Lab 2", color:"c2"},
+    {day:3, start:"11:30", end:"13:00", subject:"Inglés B2",           teacher:"Prof. Owens",   room:"D-3",   color:"c6"},
+    {day:4, start:"07:30", end:"09:30", subject:"Física I",            teacher:"Prof. Kahn",    room:"Lab 1", color:"c4"},
+    {day:4, start:"10:00", end:"11:30", subject:"Historia moderna",    teacher:"Prof. Suárez",  room:"B-110", color:"c3"},
+    {day:4, start:"11:45", end:"13:15", subject:"Educación física",    teacher:"Prof. Arteaga", room:"Cancha",color:"c8"}
+  ];
+
+  // ---------- state ----------
+  var state = {classes: [], sample: true};
+  var dbDoc = null;
+  var editingId = null;
+  var pickedColor = "c1";
+
+  function uid(){
+    if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "c" + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+  }
+  function toMin(hhmm){
+    var p = String(hhmm||"").split(":");
+    return (parseInt(p[0],10)||0)*60 + (parseInt(p[1],10)||0);
+  }
+  function toHHMM(min){
+    var h = Math.floor(min/60), m = min%60;
+    return (h<10?"0":"")+h + ":" + (m<10?"0":"")+m;
+  }
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];
+    });
+  }
+  function todayIdx(){ return (new Date().getDay() + 6) % 7; }  // 0 = lunes
+
+  function normalize(list){
+    if(!Array.isArray(list)) return [];
+    var out = [];
+    for(var i=0;i<list.length;i++){
+      var c = list[i]; if(!c || typeof c !== "object") continue;
+      var d = parseInt(c.day,10);
+      var s = toMin(c.start), e = toMin(c.end);
+      if(isNaN(d) || d<0 || d>6) continue;
+      if(!(e > s)) continue;
+      out.push({
+        id: typeof c.id === "string" && c.id ? c.id : uid(),
+        day: d, start: toHHMM(s), end: toHHMM(e),
+        subject: String(c.subject||"Clase").slice(0,60),
+        teacher: String(c.teacher||"").slice(0,40),
+        room: String(c.room||"").slice(0,24),
+        color: COLORS.indexOf(c.color) >= 0 ? c.color : "c1"
+      });
+    }
+    return out;
+  }
+  function seedSample(){
+    return normalize(SAMPLE.map(function(c){ var o={}; for(var k in c) o[k]=c[k]; o.id=uid(); return o; }));
+  }
+
+  // ---------- persistence ----------
+  function readLocal(){
+    try{
+      var raw = localStorage.getItem(LS_KEY);
+      if(!raw) return null;
+      var o = JSON.parse(raw);
+      return {classes: normalize(o.classes), sample: !!o.sample};
+    }catch(e){ return null; }
+  }
+  function writeLocal(){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify({classes: state.classes, sample: state.sample})); }catch(e){}
+  }
+  var saveQueue = Promise.resolve();
+  function persist(){
+    writeLocal();
+    if(!dbDoc) return;
+    var payload = {classes: state.classes, sample: state.sample, updatedAt: new Date().toISOString()};
+    saveQueue = saveQueue.then(function(){
+      return dbDoc.set(payload).catch(function(err){
+        if(err && err.code === "invalid_argument") setSync(false, "Solo lectura");
+        else setSync(false, "Sin guardar en la nube");
+      });
+    });
+  }
+  function setSync(on, text){
+    var dot = document.getElementById("sync-dot");
+    dot.className = "dot" + (on ? "" : " off");
+    document.getElementById("sync-txt").textContent = text;
+  }
+
+  // ---------- layout maths ----------
+  function visibleDays(){
+    var days = [0,1,2,3,4];
+    var hasSat=false, hasSun=false;
+    for(var i=0;i<state.classes.length;i++){
+      if(state.classes[i].day===5) hasSat=true;
+      if(state.classes[i].day===6) hasSun=true;
+    }
+    if(hasSat || hasSun) days.push(5);
+    if(hasSun) days.push(6);
+    return days;
+  }
+  function bounds(){
+    var lo = 7*60, hi = 14*60;
+    for(var i=0;i<state.classes.length;i++){
+      lo = Math.min(lo, toMin(state.classes[i].start));
+      hi = Math.max(hi, toMin(state.classes[i].end));
+    }
+    lo = Math.floor(lo/60)*60;
+    hi = Math.ceil(hi/60)*60;
+    if(hi - lo < 4*60) hi = lo + 4*60;
+    return {lo: lo, hi: hi};
+  }
+  // Greedy column packing so overlapping classes sit side by side.
+  function pack(items){
+    items.sort(function(a,b){ return a.s - b.s || a.e - b.e; });
+    var clusters = [], cur = [], curEnd = -1;
+    for(var i=0;i<items.length;i++){
+      var it = items[i];
+      if(cur.length && it.s >= curEnd){ clusters.push(cur); cur = []; curEnd = -1; }
+      cur.push(it); curEnd = Math.max(curEnd, it.e);
+    }
+    if(cur.length) clusters.push(cur);
+    for(var c=0;c<clusters.length;c++){
+      var cl = clusters[c], ends = [];
+      for(var j=0;j<cl.length;j++){
+        var placed = false;
+        for(var k=0;k<ends.length;k++){
+          if(ends[k] <= cl[j].s){ cl[j].col = k; ends[k] = cl[j].e; placed = true; break; }
+        }
+        if(!placed){ cl[j].col = ends.length; ends.push(cl[j].e); }
+      }
+      for(var m=0;m<cl.length;m++) cl[m].ncol = ends.length;
+    }
+    return items;
+  }
+
+  // ---------- render ----------
+  function render(){
+    var grid = document.getElementById("grid");
+    var empty = document.getElementById("empty");
+    var has = state.classes.length > 0;
+
+    document.getElementById("sample-notice").hidden = !(state.sample && has);
+    empty.hidden = has;
+    document.getElementById("board").hidden = !has;
+    if(!has){ grid.innerHTML = ""; renderStrip(); renderStats(); return; }
+
+    var days = visibleDays();
+    var b = bounds();
+    var span = b.hi - b.lo;
+    var height = span / 60 * ROW_H;
+    var ti = todayIdx();
+
+    grid.style.setProperty("--cols", "54px repeat(" + days.length + ", minmax(128px, 1fr))");
+    grid.style.setProperty("--rowh", ROW_H + "px");
+
+    var now = new Date();
+    var nowMin = now.getHours()*60 + now.getMinutes();
+    var monday = new Date(now); monday.setDate(now.getDate() - ti);
+
+    var html = '<div class="row-head"><div class="dayhead corner"></div>';
+    for(var i=0;i<days.length;i++){
+      var d = days[i];
+      var date = new Date(monday); date.setDate(monday.getDate() + d);
+      html += '<div class="dayhead' + (d===ti ? " is-today" : "") + '">' +
+                '<span class="d">' + DAYS_SHORT[d] + '</span>' +
+                '<span class="n">' + date.getDate() + "/" + (date.getMonth()+1) + '</span>' +
+              '</div>';
+    }
+    html += '</div><div class="row-body" style="height:' + height + 'px">';
+
+    // hour rail
+    html += '<div class="railcol">';
+    for(var t=b.lo; t<=b.hi; t+=60){
+      var y = (t - b.lo)/60*ROW_H;
+      html += '<span class="hourlab" style="top:' + y + 'px">' + toHHMM(t) + '</span>';
+    }
+    if(nowMin >= b.lo && nowMin <= b.hi && days.indexOf(ti) >= 0){
+      html += '<span class="nowlab" style="top:' + ((nowMin-b.lo)/60*ROW_H) + 'px">' + toHHMM(nowMin) + '</span>';
+    }
+    html += '</div>';
+
+    // day columns
+    for(var c=0;c<days.length;c++){
+      var day = days[c];
+      html += '<div class="col' + (day===ti ? " is-today" : "") + '">';
+
+      var items = [];
+      for(var k=0;k<state.classes.length;k++){
+        var cl = state.classes[k];
+        if(cl.day !== day) continue;
+        items.push({ref: cl, s: toMin(cl.start), e: toMin(cl.end)});
+      }
+      pack(items);
+
+      for(var n=0;n<items.length;n++){
+        var it = items[n], r = it.ref;
+        var top = (it.s - b.lo)/60*ROW_H;
+        var h = Math.max((it.e - it.s)/60*ROW_H - 2, 20);
+        var w = 100/it.ncol;
+        var meta = [r.room, r.teacher].filter(Boolean).join(" · ");
+        html += '<button class="blk ' + r.color + (h < 42 ? " tiny" : "") + '" ' +
+                'data-id="' + r.id + '" type="button" ' +
+                'style="top:' + top + 'px;height:' + h + 'px;left:calc(' + (w*it.col) + '% + 2px);width:calc(' + w + '% - 4px);' +
+                '--bg:var(--' + r.color + '-bg);--fg:var(--' + r.color + '-fg);--rail:var(--' + r.color + '-rail)" ' +
+                'title="' + esc(r.subject) + ' · ' + r.start + '–' + r.end + (meta ? ' · ' + esc(meta) : '') + '">' +
+                  '<span class="t">' + r.start + '–' + r.end + '</span>' +
+                  '<span class="s">' + esc(r.subject) + '</span>' +
+                  (meta ? '<span class="m">' + esc(meta) + '</span>' : '') +
+                '</button>';
+      }
+
+      if(day === ti && nowMin >= b.lo && nowMin <= b.hi){
+        html += '<div class="nowline" style="top:' + ((nowMin-b.lo)/60*ROW_H) + 'px"></div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+    grid.innerHTML = html;
+
+    renderStrip();
+    renderStats();
+  }
+
+  function renderStrip(){
+    var now = new Date();
+    var ti = todayIdx();
+    var nowMin = now.getHours()*60 + now.getMinutes();
+
+    var current = null, next = null, bestDelta = Infinity;
+    for(var i=0;i<state.classes.length;i++){
+      var c = state.classes[i], s = toMin(c.start), e = toMin(c.end);
+      if(c.day === ti && nowMin >= s && nowMin < e) current = c;
+      // minutes from now until this class starts, wrapping around the week
+      var delta = ((c.day - ti + 7) % 7) * 1440 + s - nowMin;
+      if(delta <= 0) delta += 7*1440;
+      if(delta < bestDelta){ bestDelta = delta; next = c; }
+    }
+
+    var nowSlot = document.getElementById("slot-now");
+    if(current){
+      nowSlot.classList.add("live");
+      document.getElementById("now-name").textContent = current.subject;
+      var left = toMin(current.end) - nowMin;
+      document.getElementById("now-meta").innerHTML =
+        current.start + "–" + current.end +
+        (current.room ? " <em>·</em> " + esc(current.room) : "") +
+        " <em>·</em> quedan " + left + " min";
+    }else{
+      nowSlot.classList.remove("live");
+      document.getElementById("now-name").textContent = "Tiempo libre";
+      document.getElementById("now-meta").textContent = "Sin clase en curso";
+    }
+
+    if(next){
+      document.getElementById("next-name").textContent = next.subject;
+      var when;
+      if(bestDelta < 60) when = "en " + bestDelta + " min";
+      else if(next.day === ti && bestDelta < 1440) when = "hoy";
+      else when = DAYS[next.day].toLowerCase();
+      document.getElementById("next-meta").innerHTML =
+        when + " <em>·</em> " + next.start + "–" + next.end +
+        (next.room ? " <em>·</em> " + esc(next.room) : "");
+    }else{
+      document.getElementById("next-name").textContent = "—";
+      document.getElementById("next-meta").textContent = "Nada programado";
+    }
+  }
+
+  function renderStats(){
+    var mins = 0, subjects = {};
+    for(var i=0;i<state.classes.length;i++){
+      var c = state.classes[i];
+      mins += toMin(c.end) - toMin(c.start);
+      subjects[c.subject.toLowerCase()] = 1;
+    }
+    document.getElementById("st-count").textContent = state.classes.length;
+    document.getElementById("st-hours").textContent = (Math.round(mins/6)/10).toString().replace(".", ",") + " h";
+    document.getElementById("st-subj").textContent = Object.keys(subjects).length;
+  }
+
+  // ---------- dialog ----------
+  var dlg = document.getElementById("dlg");
+
+  function buildDialogControls(){
+    var sel = document.getElementById("f-day");
+    for(var i=0;i<DAYS.length;i++){
+      var o = document.createElement("option");
+      o.value = String(i); o.textContent = DAYS[i];
+      sel.appendChild(o);
+    }
+    var box = document.getElementById("f-colors");
+    COLORS.forEach(function(c){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "swatch"; b.dataset.color = c;
+      b.setAttribute("aria-pressed","false");
+      b.setAttribute("aria-label","Color " + c.slice(1));
+      b.style.setProperty("--bg","var(--" + c + "-bg)");
+      b.style.setProperty("--rail","var(--" + c + "-rail)");
+      b.addEventListener("click", function(){ pickColor(c); });
+      box.appendChild(b);
+    });
+  }
+  function pickColor(c){
+    pickedColor = c;
+    var all = document.querySelectorAll("#f-colors .swatch");
+    for(var i=0;i<all.length;i++){
+      all[i].setAttribute("aria-pressed", all[i].dataset.color === c ? "true" : "false");
+    }
+  }
+  function openDialog(cls){
+    editingId = cls ? cls.id : null;
+    document.getElementById("dlg-title").textContent = cls ? "Editar clase" : "Nueva clase";
+    document.getElementById("f-subject").value = cls ? cls.subject : "";
+    document.getElementById("f-teacher").value = cls ? cls.teacher : "";
+    document.getElementById("f-room").value    = cls ? cls.room : "";
+    document.getElementById("f-day").value     = String(cls ? cls.day : Math.min(todayIdx(), 4));
+    document.getElementById("f-start").value   = cls ? cls.start : "07:00";
+    document.getElementById("f-end").value     = cls ? cls.end : "08:30";
+    document.getElementById("f-err").textContent = "";
+    document.getElementById("f-del").hidden = !cls;
+    pickColor(cls ? cls.color : COLORS[state.classes.length % COLORS.length]);
+    dlg.showModal();
+    document.getElementById("f-subject").focus();
+  }
+  function saveFromDialog(){
+    var subject = document.getElementById("f-subject").value.trim();
+    var start = document.getElementById("f-start").value;
+    var end = document.getElementById("f-end").value;
+    var err = document.getElementById("f-err");
+
+    if(!subject){ err.textContent = "Escribe el nombre de la materia."; document.getElementById("f-subject").focus(); return; }
+    if(!start || !end){ err.textContent = "Indica la hora de entrada y la de salida."; return; }
+    if(toMin(end) <= toMin(start)){ err.textContent = "La salida debe ser posterior a la entrada."; return; }
+
+    var rec = {
+      id: editingId || uid(),
+      day: parseInt(document.getElementById("f-day").value, 10),
+      start: start, end: end, subject: subject,
+      teacher: document.getElementById("f-teacher").value.trim(),
+      room: document.getElementById("f-room").value.trim(),
+      color: pickedColor
+    };
+
+    if(state.sample){ state.classes = []; state.sample = false; }
+
+    var found = false;
+    for(var i=0;i<state.classes.length;i++){
+      if(state.classes[i].id === rec.id){ state.classes[i] = rec; found = true; break; }
+    }
+    if(!found) state.classes.push(rec);
+
+    dlg.close();
+    persist();
+    render();
+  }
+  function deleteCurrent(){
+    if(!editingId) return;
+    state.classes = state.classes.filter(function(c){ return c.id !== editingId; });
+    state.sample = false;
+    dlg.close();
+    persist();
+    render();
+  }
+
+  // ---------- wiring ----------
+  buildDialogControls();
+
+  document.getElementById("add").addEventListener("click", function(){ openDialog(null); });
+  document.getElementById("add2").addEventListener("click", function(){ openDialog(null); });
+  document.getElementById("print").addEventListener("click", function(){ window.print(); });
+  document.getElementById("clear").addEventListener("click", function(){
+    if(!state.classes.length) return;
+    if(!window.confirm("¿Borrar todas las clases del horario?")) return;
+    state.classes = []; state.sample = false;
+    persist(); render();
+  });
+  document.getElementById("wipe-sample").addEventListener("click", function(){
+    state.classes = []; state.sample = false;
+    persist(); render();
+  });
+  document.getElementById("f-save").addEventListener("click", saveFromDialog);
+  document.getElementById("f-del").addEventListener("click", deleteCurrent);
+  document.getElementById("f-cancel").addEventListener("click", function(){ dlg.close(); });
+  document.getElementById("form").addEventListener("submit", function(e){ e.preventDefault(); saveFromDialog(); });
+  document.getElementById("form").addEventListener("keydown", function(e){
+    if(e.key === "Enter" && e.target.tagName === "INPUT"){ e.preventDefault(); saveFromDialog(); }
+  });
+  document.getElementById("grid").addEventListener("click", function(e){
+    var el = e.target.closest ? e.target.closest(".blk") : null;
+    if(!el) return;
+    for(var i=0;i<state.classes.length;i++){
+      if(state.classes[i].id === el.dataset.id){ openDialog(state.classes[i]); return; }
+    }
+  });
+
+  // first paint from local storage or the sample week
+  var local = readLocal();
+  if(local && local.classes.length){ state = local; }
+  else { state = {classes: seedSample(), sample: true}; }
+  render();
+
+  // keep the "now" line and the status strip honest
+  setInterval(render, 60000);
+
+  // shared storage, when the viewer can run it
+  if(window.claude && typeof window.claude.use === "function"){
+    window.claude.use("db").then(function(db){
+      if(!db) return;
+      dbDoc = db.doc("horario/semana");
+      dbDoc.onSnapshot(function(snap){
+        if(!snap.exists) return;
+        var data = snap.data() || {};
+        var list = normalize(data.classes);
+        state = {classes: list, sample: list.length ? !!data.sample : true};
+        if(!list.length) state = {classes: seedSample(), sample: true};
+        writeLocal();
+        render();
+        setSync(true, "Guardado en la nube");
+      }, function(){ setSync(false, "Solo en este navegador"); });
+      setSync(true, "Guardado en la nube");
+    }).catch(function(){});
+  }
+})();
+</script>
