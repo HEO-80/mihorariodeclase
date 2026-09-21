@@ -281,6 +281,17 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
 .err:not(:empty){padding-bottom:6px}
 
 
+/* ---- nav ---- */
+.nav{display:flex;gap:4px;border-bottom:1px solid var(--rule);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav a{
+  padding:9px 16px 8px;margin-bottom:-1px;border-bottom:3px solid transparent;white-space:nowrap;
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;font-size:20px;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;
+}
+.nav a:hover{color:var(--ink)}
+.nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--signal)}
+.nav a:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+
 /* ---- tareas ---- */
 .tasks{background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);padding:16px 18px 8px}
 .tasks-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
@@ -328,7 +339,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
 
 @media print{
   body{background:#fff}
-  .tools,.notice,.stats,.empty .btn,.t-add,.filters{display:none}
+  .tools,.notice,.stats,.empty .btn,.t-add,.filters,.nav{display:none}
   .board{overflow:visible}
   .board-shell{box-shadow:none}
   .blk,.col.is-today,.row-head{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -338,6 +349,8 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
 <body>
 
 <div class="wrap">
+  <nav class="nav" id="nav" aria-label="Horarios"></nav>
+
   <header class="masthead">
     <div class="brand">
       <h1 id="title">Horario · Hector</h1>
@@ -364,9 +377,9 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
   </section>
 
   <div class="notice" id="sample-notice" hidden>
-    <strong>Horario de ejemplo.</strong>
-    <span>Estas clases son de muestra para que veas el tablero funcionando. Edita cualquiera o empieza de cero.</span>
-    <button class="btn" id="wipe-sample">Empezar de cero</button>
+    <strong id="notice-h">Propuesta inicial.</strong>
+    <span id="notice-t"></span>
+    <button class="btn" id="wipe-sample">Entendido</button>
   </div>
 
   <div class="board-shell">
@@ -381,7 +394,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
 
   <section class="tasks" aria-label="Tareas">
     <div class="tasks-head">
-      <h2>Tareas</h2>
+      <h2 id="t-title">Tareas</h2>
       <div class="filters" id="t-filters">
         <button type="button" class="chip-btn" data-f="open" aria-pressed="true">Pendientes</button>
         <button type="button" class="chip-btn" data-f="done" aria-pressed="false">Hechas</button>
@@ -399,7 +412,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
   </section>
 
   <div class="stats">
-    <span><b id="st-count">0</b> clases</span>
+    <span><b id="st-count">0</b> bloques</span>
     <span><b id="st-hours">0 h</b> semanales</span>
     <span><b id="st-subj">0</b> módulos</span>
     <span><b id="st-tasks">0</b> tareas pendientes</span>
@@ -458,7 +471,6 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
   var DAYS_SHORT = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
   var COLORS = ["c1","c2","c3","c4","c5","c6","c7","c8"];
   var ROW_H = 58;          // px per hour
-  var LS_KEY = "horario-hector-v2";
   var TS_KEY = "horario-tareas-v1";
 
   // Módulos: nombre, grupo y color (los colores siguen los del horario original)
@@ -517,6 +529,41 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     L(4,"18:35","19:25","ad")
   ];
 
+  // Plan de estudio del Bachelor (propuesta editable). Evaluación: 70% actividades + 30% test final,
+  // hay que aprobar los dos bloques por separado, así que hay horas fijas para actividades y para repaso.
+  var MB = {
+    alg: {subject:"Álgebra y matemática discreta",          room:"Estudio",         color:"c5"},
+    fis: {subject:"Fundamentos físicos de la informática",  room:"Estudio",         color:"c2"},
+    deo: {subject:"Deontología y legislación (en inglés)",  room:"Estudio",         color:"c4"},
+    act: {subject:"Actividades y entregas",                 room:"70% continua",    color:"c8"},
+    rep: {subject:"Repaso semanal · tipo test",             room:"Dudas y práctica",color:"c7"}
+  };
+  function B(day, start, end, key){
+    var m = MB[key];
+    return {day:day, start:start, end:end, subject:m.subject, teacher:"", room:m.room, color:m.color};
+  }
+  var BACHELOR = [
+    B(2,"16:00","18:30","alg"),   // miércoles
+    B(3,"16:00","18:30","fis"),   // jueves
+    B(5,"10:00","12:00","deo"),   // sábado
+    B(5,"12:15","14:15","act"),
+    B(6,"10:00","12:00","act"),   // domingo
+    B(6,"12:15","13:45","rep")
+  ];
+
+  // Para añadir otro horario: una entrada más aquí (y sus bloques arriba). El menú se genera solo.
+  var VIEWS = [
+    {id:"profesor", label:"Profesor", key:"horario-hector-v2", defaults:SCHEDULE,
+     title:"Horario · Hector", sub:"Océano Atlántico · Curso 26-27",
+     tasksTitle:"Tareas", taskHint:"Nueva tarea", proposal:false},
+    {id:"bachelor", label:"Bachelor", key:"horario-bachelor-v1", defaults:BACHELOR,
+     title:"Bachelor · UNIPRO", sub:"Estudio y entregas · 1er semestre",
+     tasksTitle:"Entregas y tareas", taskHint:"Nueva entrega o tarea", proposal:true,
+     noticeH:"Reparto propuesto.",
+     noticeT:"Es un punto de partida (unas 12 h semanales, con las tardes de miércoles y jueves y el fin de semana). Pulsa cualquier bloque para moverlo o cambiarlo, y apunta abajo cada fecha de entrega."}
+  ];
+  var view = VIEWS[0];
+
   // ---------- state ----------
   var state = {classes: [], sample: false};
   var tasks = [];
@@ -566,20 +613,20 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     return out;
   }
   function seedSample(){
-    return normalize(SCHEDULE.map(function(c){ var o={}; for(var k in c) o[k]=c[k]; o.id=uid(); return o; }));
+    return normalize(view.defaults.map(function(c){ var o={}; for(var k in c) o[k]=c[k]; o.id=uid(); return o; }));
   }
 
   // ---------- persistence ----------
   function readLocal(){
     try{
-      var raw = localStorage.getItem(LS_KEY);
+      var raw = localStorage.getItem(view.key);
       if(!raw) return null;
       var o = JSON.parse(raw);
       return {classes: normalize(o.classes), sample: !!o.sample};
     }catch(e){ return null; }
   }
   function writeLocal(){
-    try{ localStorage.setItem(LS_KEY, JSON.stringify({classes: state.classes, sample: state.sample})); }catch(e){}
+    try{ localStorage.setItem(view.key, JSON.stringify({classes: state.classes, sample: state.sample})); }catch(e){}
   }
   var saveQueue = Promise.resolve();
   function persist(){
@@ -612,11 +659,12 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     return days;
   }
   function bounds(){
-    var lo = 8*60, hi = 14*60;
+    var lo = Infinity, hi = 0;
     for(var i=0;i<state.classes.length;i++){
       lo = Math.min(lo, toMin(state.classes[i].start));
       hi = Math.max(hi, toMin(state.classes[i].end));
     }
+    if(lo === Infinity){ lo = 8*60; hi = 14*60; }
     lo = Math.floor(lo/60)*60;
     hi = Math.ceil(hi/60)*60;
     if(hi - lo < 4*60) hi = lo + 4*60;
@@ -659,7 +707,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
 
     var openCount = {};
     for(var q=0;q<tasks.length;q++){
-      if(!tasks[q].done) openCount[tasks[q].subject] = (openCount[tasks[q].subject]||0) + 1;
+      if(tasks[q].view === view.id && !tasks[q].done) openCount[tasks[q].subject] = (openCount[tasks[q].subject]||0) + 1;
     }
 
     var days = visibleDays();
@@ -810,7 +858,10 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     if(diff === 0) return "hoy";
     if(diff === 1) return "mañana";
     if(diff === -1) return "ayer";
-    return DAYS_SHORT[(d.getDay()+6)%7].toLowerCase() + " " + d.getDate() + "/" + (d.getMonth()+1);
+    var fecha = DAYS_SHORT[(d.getDay()+6)%7].toLowerCase() + " " + d.getDate() + "/" + (d.getMonth()+1);
+    if(diff > 1 && diff <= 14) return fecha + " · en " + diff + " días";
+    if(diff < -1 && diff >= -14) return fecha + " · hace " + (-diff) + " días";
+    return fecha;
   }
   function readTasks(){
     try{
@@ -827,6 +878,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
           text: t.text.slice(0,120),
           subject: String(t.subject || "General").slice(0,60),
           due: /^\d{4}-\d{2}-\d{2}$/.test(t.due || "") ? t.due : "",
+          view: typeof t.view === "string" && t.view ? t.view : "profesor",
           done: !!t.done
         });
       }
@@ -870,12 +922,13 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     for(var i=0;i<f.length;i++) f[i].setAttribute("aria-pressed", f[i].dataset.f === tfilter ? "true" : "false");
 
     var openN = 0;
-    for(var k=0;k<tasks.length;k++) if(!tasks[k].done) openN++;
+    for(var k=0;k<tasks.length;k++) if(tasks[k].view === view.id && !tasks[k].done) openN++;
     document.getElementById("st-tasks").textContent = openN;
 
     var list = [];
     for(var j=0;j<tasks.length;j++){
       var t = tasks[j];
+      if(t.view !== view.id) continue;
       if(tfilter === "open" && t.done) continue;
       if(tfilter === "done" && !t.done) continue;
       list.push({t: t, i: j});
@@ -910,7 +963,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
       emp.hidden = false;
       emp.textContent = tfilter === "open" ? "No tienes tareas pendientes."
                       : tfilter === "done" ? "Todavía no has marcado ninguna como hecha."
-                      : "Aún no hay tareas. Escribe la primera arriba.";
+                      : view.id === "bachelor" ? "Aún no hay entregas. Apunta la primera con su fecha." : "Aún no hay tareas. Escribe la primera arriba.";
     }
   }
 
@@ -977,7 +1030,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
       color: pickedColor
     };
 
-    if(state.sample){ state.classes = []; state.sample = false; }
+    state.sample = false;
 
     var found = false;
     for(var i=0;i<state.classes.length;i++){
@@ -1006,7 +1059,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
   document.getElementById("print").addEventListener("click", function(){ window.print(); });
   document.getElementById("clear").addEventListener("click", function(){
     if(!window.confirm("¿Restaurar el horario original? Se perderán los cambios que hayas hecho en las clases (las tareas no se tocan).")) return;
-    state = {classes: seedSample(), sample: false};
+    state = freshState();
     persist(); render();
   });
 
@@ -1020,6 +1073,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
       id: uid(), text: text.slice(0,120),
       subject: document.getElementById("t-subj").value || "General",
       due: document.getElementById("t-date").value || "",
+      view: view.id,
       done: false
     });
     inp.value = ""; document.getElementById("t-date").value = "";
@@ -1044,7 +1098,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     writeTasks(); render();
   });
   document.getElementById("wipe-sample").addEventListener("click", function(){
-    state.classes = []; state.sample = false;
+    state.sample = false;
     persist(); render();
   });
   document.getElementById("f-save").addEventListener("click", saveFromDialog);
@@ -1063,11 +1117,56 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
   });
 
   // first paint from local storage or the sample week
+  function freshState(){ return {classes: seedSample(), sample: !!view.proposal}; }
+  function loadState(){
+    var local = readLocal();
+    return (local && local.classes.length) ? local : freshState();
+  }
+  function viewById(id){
+    for(var i=0;i<VIEWS.length;i++) if(VIEWS[i].id === id) return VIEWS[i];
+    return null;
+  }
+  function initialView(){
+    var fromHash = viewById((location.hash || "").replace("#", ""));
+    if(fromHash) return fromHash;
+    var saved = null;
+    try{ saved = localStorage.getItem("horario-vista"); }catch(e){}
+    return viewById(saved) || VIEWS[0];
+  }
+  function buildNav(){
+    var html = "";
+    for(var i=0;i<VIEWS.length;i++){
+      html += '<a href="#' + VIEWS[i].id + '" data-id="' + VIEWS[i].id + '">' + esc(VIEWS[i].label) + '</a>';
+    }
+    document.getElementById("nav").innerHTML = html;
+  }
+  function applyView(v){
+    view = v;
+    state = loadState();
+    tfilter = "open"; tSig = "";
+    try{ localStorage.setItem("horario-vista", v.id); }catch(e){}
+    document.title = v.title;
+    document.getElementById("title").textContent = v.title;
+    document.getElementById("subtitle").textContent = v.sub;
+    document.getElementById("t-title").textContent = v.tasksTitle;
+    document.getElementById("t-text").placeholder = v.taskHint;
+    document.getElementById("notice-h").textContent = v.noticeH || "";
+    document.getElementById("notice-t").textContent = v.noticeT || "";
+    var links = document.querySelectorAll("#nav a");
+    for(var i=0;i<links.length;i++){
+      if(links[i].dataset.id === v.id) links[i].setAttribute("aria-current", "page");
+      else links[i].removeAttribute("aria-current");
+    }
+    render();
+  }
+
   tasks = readTasks();
-  var local = readLocal();
-  if(local && local.classes.length){ state = local; }
-  else { state = {classes: seedSample(), sample: false}; }
-  render();
+  buildNav();
+  applyView(initialView());
+  window.addEventListener("hashchange", function(){
+    var v = viewById((location.hash || "").replace("#", ""));
+    if(v && v !== view) applyView(v);
+  });
 
   // keep the "now" line and the status strip honest
   setInterval(render, 60000);
