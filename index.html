@@ -154,7 +154,7 @@ button{font-family:inherit}
   box-shadow:var(--shadow);overflow:hidden;
 }
 .board{overflow-x:auto;overflow-y:hidden}
-.grid{min-width:760px}
+.grid{min-width:830px}
 .row-head,.row-body{display:grid;grid-template-columns:var(--cols)}
 .row-head{border-bottom:1px solid var(--rule);background:var(--surface-2)}
 .dayhead{
@@ -188,7 +188,7 @@ button{font-family:inherit}
 
 .blk{
   position:absolute;border:0;text-align:left;cursor:pointer;
-  border-radius:2px;padding:5px 7px 5px 9px;overflow:hidden;
+  border-radius:2px;padding:6px 8px 6px 10px;overflow:hidden;
   background:var(--bg);color:var(--fg);
   box-shadow:inset 3px 0 0 var(--rail);
   display:flex;flex-direction:column;gap:1px;font-family:inherit;
@@ -196,17 +196,18 @@ button{font-family:inherit}
 }
 .blk:hover{filter:brightness(.97);transform:translateY(-1px)}
 .blk .t{
-  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;
-  font-variant-numeric:tabular-nums;opacity:.82;letter-spacing:.01em;white-space:nowrap;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;line-height:13px;
+  font-variant-numeric:tabular-nums;opacity:.82;letter-spacing:.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .blk .s{
   font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
-  font-size:16px;line-height:1.12;letter-spacing:.01em;
-  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  font-size:17px;line-height:19px;letter-spacing:.01em;min-width:0;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:var(--lines,2);-webkit-box-orient:vertical;
 }
-.blk .m{font-size:11px;opacity:.78;line-height:1.25;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.blk.tiny{padding-top:3px;flex-direction:row;align-items:baseline;gap:6px}
-.blk.tiny .s{font-size:13px;-webkit-line-clamp:1}
+.blk .m{font-size:11.5px;opacity:.78;line-height:14px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.blk.tiny{padding-top:4px;flex-direction:row;align-items:baseline;gap:6px}
+.blk.tiny .s{font-size:14px;-webkit-line-clamp:1}
 .blk.tiny .m{display:none}
 
 .nowline{position:absolute;left:0;right:0;height:0;pointer-events:none;z-index:3}
@@ -470,7 +471,10 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
   var DAYS = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
   var DAYS_SHORT = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
   var COLORS = ["c1","c2","c3","c4","c5","c6","c7","c8"];
-  var ROW_H = 58;          // px per hour
+  var ROW_H = 84;          // px per hour
+  // Medidas del bloque (deben coincidir con el CSS de .blk) para saber cuántas
+  // líneas del nombre caben enteras: así nunca se corta una línea por la mitad.
+  var BK = {pad:12, time:13, gap:1, line:19, meta:14};
   var TS_KEY = "horario-tareas-v1";
 
   // Módulos: nombre, grupo y color (los colores siguen los del horario original)
@@ -716,7 +720,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     var height = span / 60 * ROW_H;
     var ti = todayIdx();
 
-    grid.style.setProperty("--cols", "54px repeat(" + days.length + ", minmax(128px, 1fr))");
+    grid.style.setProperty("--cols", "54px repeat(" + days.length + ", minmax(152px, 1fr))");
     grid.style.setProperty("--rowh", ROW_H + "px");
 
     var now = new Date();
@@ -767,14 +771,25 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
         var tc = openCount[r.subject] || 0;
         if(tc) parts.push(tc + (tc > 1 ? " tareas" : " tarea"));
         var meta = parts.filter(Boolean).join(" · ");
-        html += '<button class="blk ' + r.color + (h < 42 ? " tiny" : "") + '" ' +
+
+        // espacio libre para el nombre, una vez descontados el relleno y la hora
+        var avail = h - BK.pad - BK.time - BK.gap;
+        var lines = Math.min(3, Math.floor(avail / BK.line));
+        var tiny = lines < 1;
+        // la línea de detalle solo se muestra si sobra sitio; si no, el aula se
+        // añade junto a la hora para no perder el dato
+        var showMeta = !!meta && !tiny && (avail - lines*BK.line) >= (BK.gap + BK.meta);
+        var timeTxt = r.start + "–" + r.end + (meta && !showMeta && !tiny ? " · " + esc(meta) : "");
+
+        html += '<button class="blk ' + r.color + (tiny ? " tiny" : "") + '" ' +
                 'data-id="' + r.id + '" type="button" ' +
                 'style="top:' + top + 'px;height:' + h + 'px;left:calc(' + (w*it.col) + '% + 2px);width:calc(' + w + '% - 4px);' +
+                '--lines:' + Math.max(lines, 1) + ';' +
                 '--bg:var(--' + r.color + '-bg);--fg:var(--' + r.color + '-fg);--rail:var(--' + r.color + '-rail)" ' +
                 'title="' + esc(r.subject) + ' · ' + r.start + '–' + r.end + (meta ? ' · ' + esc(meta) : '') + '">' +
-                  '<span class="t">' + r.start + '–' + r.end + '</span>' +
+                  '<span class="t">' + timeTxt + '</span>' +
                   '<span class="s">' + esc(r.subject) + '</span>' +
-                  (meta ? '<span class="m">' + esc(meta) + '</span>' : '') +
+                  (showMeta ? '<span class="m">' + esc(meta) + '</span>' : '') +
                 '</button>';
       }
 
