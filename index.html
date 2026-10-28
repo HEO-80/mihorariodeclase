@@ -496,7 +496,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
   };
   function L(day, start, end, key){
     var m = M[key];
-    return {day:day, start:start, end:end, subject:m.subject, teacher:"", room:m.room, color:m.color};
+    return {day:day, start:start, end:end, subject:m.subject, teacher:"", room:m.room, color:m.color, modKey:key};
   }
   // day: 0 = lunes ... 4 = viernes. Los recreos (11:10–11:35 y 18:10–18:35) quedan como hueco.
   var SCHEDULE = [
@@ -544,7 +544,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
   };
   function B(day, start, end, key){
     var m = MB[key];
-    return {day:day, start:start, end:end, subject:m.subject, teacher:"", room:m.room, color:m.color};
+    return {day:day, start:start, end:end, subject:m.subject, teacher:"", room:m.room, color:m.color, modKey:""};
   }
   var BACHELOR = [
     B(2,"16:00","18:30","alg"),   // miércoles
@@ -611,7 +611,8 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
         subject: String(c.subject||"Clase").slice(0,60),
         teacher: String(c.teacher||"").slice(0,40),
         room: String(c.room||"").slice(0,24),
-        color: COLORS.indexOf(c.color) >= 0 ? c.color : "c1"
+        color: COLORS.indexOf(c.color) >= 0 ? c.color : "c1",
+        modKey: typeof c.modKey === "string" ? c.modKey : ""
       });
     }
     return out;
@@ -782,7 +783,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
         var timeTxt = r.start + "–" + r.end + (meta && !showMeta && !tiny ? " · " + esc(meta) : "");
 
         html += '<button class="blk ' + r.color + (tiny ? " tiny" : "") + '" ' +
-                'data-id="' + r.id + '" type="button" ' +
+                'data-id="' + r.id + '" data-mod="' + (r.modKey||"") + '" type="button" ' +
                 'style="top:' + top + 'px;height:' + h + 'px;left:calc(' + (w*it.col) + '% + 2px);width:calc(' + w + '% - 4px);' +
                 '--lines:' + Math.max(lines, 1) + ';' +
                 '--bg:var(--' + r.color + '-bg);--fg:var(--' + r.color + '-fg);--rail:var(--' + r.color + '-rail)" ' +
@@ -1036,13 +1037,25 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     if(!start || !end){ err.textContent = "Indica la hora de entrada y la de salida."; return; }
     if(toMin(end) <= toMin(start)){ err.textContent = "La salida debe ser posterior a la entrada."; return; }
 
+    // Look up modKey from subject name
+    var foundModKey = "";
+    for(var mk in M){
+      if(M[mk].subject.toLowerCase() === subject.toLowerCase()){ foundModKey = mk; break; }
+    }
+    // If editing, preserve existing modKey if subject didn't change
+    if(editingId && !foundModKey){
+      for(var ei=0;ei<state.classes.length;ei++){
+        if(state.classes[ei].id === editingId){ foundModKey = state.classes[ei].modKey || ""; break; }
+      }
+    }
     var rec = {
       id: editingId || uid(),
       day: parseInt(document.getElementById("f-day").value, 10),
       start: start, end: end, subject: subject,
       teacher: document.getElementById("f-teacher").value.trim(),
       room: document.getElementById("f-room").value.trim(),
-      color: pickedColor
+      color: pickedColor,
+      modKey: foundModKey
     };
 
     state.sample = false;
@@ -1126,6 +1139,13 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
   document.getElementById("grid").addEventListener("click", function(e){
     var el = e.target.closest ? e.target.closest(".blk") : null;
     if(!el) return;
+    var modKey = el.dataset.mod;
+    // If the block has a module key, navigate to the subject page
+    if(modKey){
+      window.location.href = "asignatura.html?mod=" + encodeURIComponent(modKey);
+      return;
+    }
+    // Otherwise fall back to the edit dialog
     for(var i=0;i<state.classes.length;i++){
       if(state.classes[i].id === el.dataset.id){ openDialog(state.classes[i]); return; }
     }

@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asignatura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#EBEEF2;
+  --surface:#FFFFFF;
+  --surface-2:#F5F7F9;
+  --ink:#161B23;
+  --ink-soft:#5E6976;
+  --ink-faint:#8A95A2;
+  --rule:#D2D8E0;
+  --rule-soft:#E3E8ED;
+  --signal:#C1372B;
+  --shadow:0 1px 2px rgba(22,27,35,.06), 0 8px 24px -14px rgba(22,27,35,.28);
+  --focus:#2F6FB5;
+  --ok:#2E8B57;
+
+  --c1-bg:#DCE8F7; --c1-fg:#1B3B5E; --c1-rail:#3C7BC0;
+  --c2-bg:#D4E9E5; --c2-fg:#15443C; --c2-rail:#2E8B7A;
+  --c3-bg:#F6E6CC; --c3-fg:#593C14; --c3-rail:#BF8426;
+  --c4-bg:#F7DEE1; --c4-fg:#5C2027; --c4-rail:#C05263;
+  --c5-bg:#E3DFF5; --c5-fg:#312860; --c5-rail:#7365C0;
+  --c6-bg:#DDEBD2; --c6-fg:#2B4416; --c6-rail:#639938;
+  --c7-bg:#DCE1E8; --c7-fg:#28313B; --c7-rail:#6C7B8C;
+  --c8-bg:#FAE0D4; --c8-fg:#5F311E; --c8-rail:#CC6B3F;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10141A;
+    --surface:#181D26;
+    --surface-2:#1F252F;
+    --ink:#E1E6ED;
+    --ink-soft:#8C97A5;
+    --ink-faint:#6C7683;
+    --rule:#2A323D;
+    --rule-soft:#222933;
+    --signal:#FF6E57;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 30px -16px rgba(0,0,0,.8);
+    --focus:#6FA8E0;
+    --ok:#5CB87A;
+
+    --c1-bg:#16293C; --c1-fg:#A9CCF0; --c1-rail:#4682C4;
+    --c2-bg:#12312C; --c2-fg:#92D6C7; --c2-rail:#34957F;
+    --c3-bg:#352816; --c3-fg:#E9C68C; --c3-rail:#C58D2E;
+    --c4-bg:#391D23; --c4-fg:#F0AAB3; --c4-rail:#C85A6B;
+    --c5-bg:#231E3C; --c5-fg:#BDB2F0; --c5-rail:#7A6CC8;
+    --c6-bg:#1D2E16; --c6-fg:#B6D89A; --c6-rail:#6BA340;
+    --c7-bg:#232A33; --c7-fg:#B6C2CF; --c7-rail:#8C9AAA;
+    --c8-bg:#36211A; --c8-fg:#EFB294; --c8-rail:#D47447;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10141A;
+  --surface:#181D26;
+  --surface-2:#1F252F;
+  --ink:#E1E6ED;
+  --ink-soft:#8C97A5;
+  --ink-faint:#6C7683;
+  --rule:#2A323D;
+  --rule-soft:#222933;
+  --signal:#FF6E57;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 30px -16px rgba(0,0,0,.8);
+  --focus:#6FA8E0;
+  --ok:#5CB87A;
+
+  --c1-bg:#16293C; --c1-fg:#A9CCF0; --c1-rail:#4682C4;
+  --c2-bg:#12312C; --c2-fg:#92D6C7; --c2-rail:#34957F;
+  --c3-bg:#352816; --c3-fg:#E9C68C; --c3-rail:#C58D2E;
+  --c4-bg:#391D23; --c4-fg:#F0AAB3; --c4-rail:#C85A6B;
+  --c5-bg:#231E3C; --c5-fg:#BDB2F0; --c5-rail:#7A6CC8;
+  --c6-bg:#1D2E16; --c6-fg:#B6D89A; --c6-rail:#6BA340;
+  --c7-bg:#232A33; --c7-fg:#B6C2CF; --c7-rail:#8C9AAA;
+  --c8-bg:#36211A; --c8-fg:#EFB294; --c8-rail:#D47447;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font:400 15px/1.5 "IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:900px;margin:0 auto;padding:22px 20px 56px;display:flex;flex-direction:column;gap:18px}
+
+/* ---- back link ---- */
+.back{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);
+  text-decoration:none;
+}
+.back:hover{color:var(--ink)}
+.back svg{width:16px;height:16px}
+
+/* ---- header ---- */
+.masthead{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.color-rail{
+  width:6px;border-radius:3px;min-height:56px;flex:none;
+  background:var(--rail);margin-top:2px;
+}
+.brand{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.brand h1{
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;
+  font-weight:700;font-size:34px;line-height:1.05;letter-spacing:.012em;
+  text-transform:uppercase;margin:0;
+}
+.brand .sub{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
+}
+
+/* ---- current unit banner ---- */
+.current-unit{
+  display:flex;align-items:center;gap:12px;
+  background:var(--bg);color:var(--fg);
+  border-radius:4px;padding:14px 18px;
+  box-shadow:inset 4px 0 0 var(--rail);
+}
+.current-unit .label{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  opacity:.7;
+}
+.current-unit .unit-name{
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;
+  font-weight:600;font-size:22px;line-height:1.15;letter-spacing:.01em;
+}
+.current-unit .empty-hint{
+  font-size:13.5px;opacity:.7;font-style:italic;
+}
+
+/* ---- sections ---- */
+.section{
+  background:var(--surface);border:1px solid var(--rule);border-radius:4px;
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 18px 12px;border-bottom:1px solid var(--rule);
+  background:var(--surface-2);flex-wrap:wrap;
+}
+.section-head h2{
+  margin:0;font-family:"Barlow Condensed","Arial Narrow",sans-serif;
+  font-weight:600;font-size:21px;text-transform:uppercase;letter-spacing:.04em;
+}
+.section-body{padding:0}
+
+/* ---- buttons ---- */
+button{font-family:inherit}
+.btn{
+  appearance:none;border:1px solid var(--rule);background:var(--surface);color:var(--ink);
+  border-radius:3px;padding:7px 12px;font-size:13px;font-weight:500;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;transition:border-color .12s,background .12s;
+}
+.btn:hover{border-color:var(--ink-faint)}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--focus);outline-offset:2px;
+}
+.btn-primary{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.btn-primary:hover{opacity:.88}
+.btn-danger{color:var(--signal);border-color:var(--rule)}
+.btn-danger:hover{border-color:var(--signal)}
+.btn-sm{padding:4px 9px;font-size:12px}
+.btn-icon{
+  appearance:none;border:0;background:none;color:var(--ink-faint);
+  cursor:pointer;padding:2px 4px;border-radius:3px;font-size:16px;line-height:1;
+}
+.btn-icon:hover{color:var(--signal)}
+
+/* ---- temario list ---- */
+.temario-list{list-style:none;margin:0;padding:0}
+.temario-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 18px;border-bottom:1px solid var(--rule-soft);
+}
+.temario-item:last-child{border-bottom:0}
+.temario-num{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;
+  font-weight:600;color:var(--ink-faint);min-width:28px;text-align:center;
+  letter-spacing:.06em;
+}
+.temario-title{flex:1;min-width:0;font-size:14.5px}
+.temario-status{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;
+  border-radius:3px;white-space:nowrap;
+}
+.temario-status.done{background:var(--c6-bg);color:var(--c6-fg)}
+.temario-status.current{background:var(--c3-bg);color:var(--c3-fg);font-weight:600}
+.temario-status.pending{background:var(--surface-2);color:var(--ink-faint)}
+.temario-actions{display:flex;gap:2px}
+.temario-empty{padding:24px 18px;color:var(--ink-faint);font-size:14px;text-align:center}
+
+/* ---- activities list ---- */
+.act-list{list-style:none;margin:0;padding:0}
+.act-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 18px;border-bottom:1px solid var(--rule-soft);
+}
+.act-item:last-child{border-bottom:0}
+.act-item input[type=checkbox]{width:17px;height:17px;accent-color:var(--ink);flex:none;cursor:pointer;margin:0}
+.act-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.act-title{font-size:14.5px}
+.act-item.done .act-title{text-decoration:line-through;color:var(--ink-faint)}
+.act-meta{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--ink-faint);
+}
+.act-type{
+  padding:1px 7px;border-radius:2px;
+  font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:11px;
+}
+.act-type.practica{background:var(--c1-bg);color:var(--c1-fg)}
+.act-type.proyecto{background:var(--c5-bg);color:var(--c5-fg)}
+.act-type.tarea{background:var(--c2-bg);color:var(--c2-fg)}
+.act-type.examen{background:var(--c4-bg);color:var(--c4-fg)}
+.act-type.otro{background:var(--surface-2);color:var(--ink-soft)}
+.act-due{font-variant-numeric:tabular-nums}
+.act-due.late{color:var(--signal);font-weight:600}
+.act-notes{font-size:13px;color:var(--ink-soft);line-height:1.45}
+.act-empty{padding:24px 18px;color:var(--ink-faint);font-size:14px;text-align:center}
+
+/* ---- add form row ---- */
+.add-row{
+  display:grid;grid-template-columns:1fr auto auto auto;gap:8px;
+  padding:12px 18px;border-top:1px solid var(--rule);background:var(--surface-2);
+}
+.add-row input[type=text]{
+  font:400 14px/1.4 "IBM Plex Sans",system-ui,sans-serif;
+  background:var(--surface);color:var(--ink);
+  border:1px solid var(--rule);border-radius:3px;padding:7px 9px;width:100%;
+}
+.add-row select,.add-row input[type=date]{
+  font:400 13px/1.4 "IBM Plex Mono",ui-monospace,monospace;
+  background:var(--surface);color:var(--ink);
+  border:1px solid var(--rule);border-radius:3px;padding:7px 9px;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---- dates/exams ---- */
+.date-list{list-style:none;margin:0;padding:0}
+.date-item{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 18px;border-bottom:1px solid var(--rule-soft);
+}
+.date-item:last-child{border-bottom:0}
+.date-cal{
+  display:flex;flex-direction:column;align-items:center;
+  min-width:48px;padding:6px 8px;border-radius:4px;
+  background:var(--surface-2);border:1px solid var(--rule-soft);
+}
+.date-cal .day{
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;
+  font-weight:700;font-size:22px;line-height:1;
+}
+.date-cal .month{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);
+}
+.date-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.date-title{font-size:14.5px;font-weight:500}
+.date-rel{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--ink-faint);
+}
+.date-rel.soon{color:var(--signal);font-weight:600}
+.date-past{opacity:.5}
+.date-empty{padding:24px 18px;color:var(--ink-faint);font-size:14px;text-align:center}
+
+/* ---- dialog ---- */
+dialog{
+  border:1px solid var(--rule);border-radius:5px;background:var(--surface);color:var(--ink);
+  padding:0;width:min(480px,calc(100vw - 32px));box-shadow:var(--shadow);
+}
+dialog::backdrop{background:rgba(10,13,18,.5)}
+.dlg{display:flex;flex-direction:column}
+.dlg h2{
+  margin:0;padding:16px 20px 14px;border-bottom:1px solid var(--rule);
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:23px;text-transform:uppercase;letter-spacing:.04em;
+}
+.fields{padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+.f.full{grid-column:1 / -1}
+label{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
+}
+input[type=text],input[type=date],select,textarea{
+  font:400 14px/1.4 "IBM Plex Sans",system-ui,sans-serif;
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--rule);border-radius:3px;padding:8px 9px;width:100%;
+}
+textarea{resize:vertical;min-height:60px;font-size:13.5px}
+input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.dlg-foot{
+  display:flex;gap:8px;padding:14px 20px;border-top:1px solid var(--rule);
+  background:var(--surface-2);align-items:center;
+}
+.dlg-foot .spacer{flex:1}
+
+/* ---- stats footer ---- */
+.stats{
+  display:flex;gap:26px;flex-wrap:wrap;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;
+  color:var(--ink-faint);letter-spacing:.06em;text-transform:uppercase;
+  font-variant-numeric:tabular-nums;
+}
+.stats b{color:var(--ink-soft);font-weight:600}
+
+@media (prefers-color-scheme: dark){ input[type=date]{color-scheme:dark} }
+
+@media (max-width:640px){
+  .wrap{padding:16px 12px 40px}
+  .brand h1{font-size:28px}
+  .add-row{grid-template-columns:1fr 1fr}
+  .add-row input[type=text]{grid-column:1 / -1}
+  .add-row .btn{grid-column:1 / -1;justify-content:center}
+  .fields{grid-template-columns:1fr}
+  .temario-item{padding:10px 14px}
+  .act-item{padding:10px 14px}
+  .date-item{padding:10px 14px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{
+  body{background:#fff}
+  .back,.btn,.add-row,.btn-icon,.temario-actions{display:none}
+  .section{box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <a class="back" href="index.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Volver al horario
+  </a>
+
+  <header class="masthead" id="masthead">
+    <div class="color-rail" id="color-rail"></div>
+    <div class="brand">
+      <h1 id="title">—</h1>
+      <span class="sub" id="subtitle">—</span>
+    </div>
+  </header>
+
+  <div class="current-unit" id="current-unit">
+    <div>
+      <div class="label">Ahora estamos en</div>
+      <div class="unit-name" id="current-unit-name">—</div>
+    </div>
+  </div>
+
+  <!-- TEMARIO -->
+  <section class="section" id="sec-temario">
+    <div class="section-head">
+      <h2>Temario</h2>
+      <button class="btn btn-sm" id="add-unit">＋ Añadir unidad</button>
+    </div>
+    <div class="section-body">
+      <ul class="temario-list" id="temario-list"></ul>
+      <p class="temario-empty" id="temario-empty" hidden>No hay unidades definidas. Añade la primera.</p>
+    </div>
+  </section>
+
+  <!-- ACTIVIDADES Y PROYECTOS -->
+  <section class="section" id="sec-activities">
+    <div class="section-head">
+      <h2>Actividades y Proyectos</h2>
+    </div>
+    <div class="section-body">
+      <ul class="act-list" id="act-list"></ul>
+      <p class="act-empty" id="act-empty" hidden>No hay actividades. Añade la primera abajo.</p>
+    </div>
+    <form class="add-row" id="act-form" autocomplete="off">
+      <input type="text" id="act-text" maxlength="120" placeholder="Nueva actividad o proyecto" aria-label="Nueva actividad">
+      <select id="act-type" aria-label="Tipo">
+        <option value="tarea">Tarea</option>
+        <option value="practica">Práctica</option>
+        <option value="proyecto">Proyecto</option>
+        <option value="examen">Examen</option>
+        <option value="otro">Otro</option>
+      </select>
+      <input type="date" id="act-date" aria-label="Fecha límite">
+      <button type="submit" class="btn btn-primary btn-sm">Añadir</button>
+    </form>
+  </section>
+
+  <!-- FECHAS CLAVE -->
+  <section class="section" id="sec-dates">
+    <div class="section-head">
+      <h2>Fechas clave</h2>
+      <button class="btn btn-sm" id="add-date">＋ Añadir fecha</button>
+    </div>
+    <div class="section-body">
+      <ul class="date-list" id="date-list"></ul>
+      <p class="date-empty" id="date-empty" hidden>No hay fechas marcadas.</p>
+    </div>
+  </section>
+
+  <div class="stats" id="stats"></div>
+</div>
+
+<!-- Dialog for adding/editing temario units -->
+<dialog id="dlg-unit">
+  <form method="dialog" class="dlg" id="form-unit">
+    <h2 id="dlg-unit-title">Añadir unidad</h2>
+    <div class="fields">
+      <div class="f">
+        <label for="fu-num">Número</label>
+        <input type="text" id="fu-num" maxlength="10" placeholder="1" autocomplete="off">
+      </div>
+      <div class="f">
+        <label for="fu-status">Estado</label>
+        <select id="fu-status">
+          <option value="pending">Pendiente</option>
+          <option value="current">En curso</option>
+          <option value="done">Terminada</option>
+        </select>
+      </div>
+      <div class="f full">
+        <label for="fu-title">Título</label>
+        <input type="text" id="fu-title" maxlength="120" placeholder="Nombre de la unidad" autocomplete="off">
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button type="button" class="btn btn-danger" id="fu-del" hidden>Eliminar</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="fu-cancel">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="fu-save">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Dialog for adding/editing dates -->
+<dialog id="dlg-date">
+  <form method="dialog" class="dlg" id="form-date">
+    <h2 id="dlg-date-title">Añadir fecha</h2>
+    <div class="fields">
+      <div class="f full">
+        <label for="fd-title">Descripción</label>
+        <input type="text" id="fd-title" maxlength="120" placeholder="Examen, entrega, reunión..." autocomplete="off">
+      </div>
+      <div class="f">
+        <label for="fd-date">Fecha</label>
+        <input type="date" id="fd-date">
+      </div>
+      <div class="f">
+        <label for="fd-type">Tipo</label>
+        <select id="fd-type">
+          <option value="examen">Examen</option>
+          <option value="entrega">Entrega</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="f full">
+        <label for="fd-notes">Notas (opcional)</label>
+        <textarea id="fd-notes" rows="2" placeholder="Detalles adicionales"></textarea>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button type="button" class="btn btn-danger" id="fd-del" hidden>Eliminar</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="fd-cancel">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="fd-save">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(function(){
+  "use strict";
+
+  // ========== MODULE DEFINITIONS (same as index.html) ==========
+  var MODULES = {
+    ofi:  {subject:"Aplicaciones ofimáticas",                       room:"SMR 1º",  color:"c1"},
+    som:  {subject:"Sistemas operativos monopuesto",                room:"SMR 1º",  color:"c7"},
+    dig:  {subject:"Digitalización",                                room:"SMR 1º",  color:"c2"},
+    seg:  {subject:"Seguridad informática",                         room:"SMR 2º",  color:"c1"},
+    sri:  {subject:"Servicios de red e internet",                   room:"ASIR 2º", color:"c6"},
+    aso:  {subject:"Administración de sistemas operativos",         room:"ASIR 2º", color:"c6"},
+    iaw:  {subject:"Implantación de aplicaciones web",              room:"ASIR 2º", color:"c6"},
+    pim:  {subject:"Proyecto intermodular",                         room:"ASIR 2º", color:"c6"},
+    sad:  {subject:"Seguridad y alta disponibilidad",               room:"ASIR 2º", color:"c5"},
+    sost: {subject:"Sostenibilidad aplicada al sistema productivo", room:"ASIR 2º", color:"c5"},
+    dsp:  {subject:"Digitalización aplicada a los sectores productivos", room:"ASIR 1º", color:"c5"},
+    psp:  {subject:"PSP",                                           room:"DAM 2º",  color:"c4"},
+    ad:   {subject:"Acceso a Datos",                                room:"DAM 2º",  color:"c3"},
+    cib:  {subject:"Curso Ciberseguridad · Incidencias",            room:"Curso",   color:"c8"}
+  };
+
+  // ========== SEED DATA (initial temario per module) ==========
+  var SEEDS = {
+    som: {
+      temario: [
+        {num:"UD1", title:"Fundamentos de sistemas operativos", status:"done"},
+        {num:"UD2", title:"Virtualización", status:"current"},
+        {num:"UD3", title:"Instalación de sistemas operativos", status:"pending"}
+      ]
+    },
+    sri: {
+      temario: [
+        {num:"UD1", title:"DNS (BIND)", status:"done"},
+        {num:"UD2", title:"DHCP", status:"current"},
+        {num:"UD3", title:"Servidores web (Apache)", status:"pending"},
+        {num:"UD4", title:"FTP (vsftpd / SFTP)", status:"pending"},
+        {num:"UD5", title:"Correo electrónico (Postfix + Dovecot)", status:"pending"},
+        {num:"UD6", title:"Mensajería, noticias y listas de distribución", status:"pending"},
+        {num:"UD7", title:"Audio streaming (Icecast + VLC)", status:"pending"},
+        {num:"UD8", title:"Vídeo streaming (FFmpeg + Nginx HLS)", status:"pending"},
+        {num:"Extra", title:"Introducción a Docker", status:"pending"}
+      ]
+    },
+    aso: {
+      temario: [
+        {num:"UD1", title:"Directorio Activo (Active Directory)", status:"done"},
+        {num:"UD2", title:"Gestión de procesos", status:"current"},
+        {num:"UD3", title:"Scripting y automatización (PowerShell)", status:"pending"}
+      ]
+    },
+    iaw: {
+      temario: [
+        {num:"UD1", title:"Servidores Web (Apache, Nginx, SSL, Virtual Hosts)", status:"done"},
+        {num:"UD2", title:"WordPress y CMS (Guy)", status:"current"},
+        {num:"UD3", title:"PHP y MySQL (Guy)", status:"pending"},
+        {num:"UD4", title:"Seguridad web y ofimática web (Nextcloud)", status:"pending"},
+        {num:"UD5", title:"Servidores de aplicaciones (Tomcat, Node.js)", status:"pending"}
+      ]
+    },
+    psp: {
+      temario: [
+        {num:"UT1", title:"Procesos, hilos y servicios (ProcessBuilder, Runnable/Callable)", status:"done"},
+        {num:"UT2", title:"Programación concurrente (regiones críticas, semáforos)", status:"current"},
+        {num:"UT3", title:"Programación de hilos (synchronized, wait/notify, Semaphore)", status:"pending"}
+      ]
+    },
+    ad: {
+      temario: [
+        {num:"1ªE", title:"Power BI (limpieza y análisis de datos)", status:"current"},
+        {num:"2ªE", title:"API CRUD con C# y Visual Studio", status:"pending"}
+      ]
+    },
+    dig: {
+      temario: [
+        {num:"UD1", title:"La 4ª Revolución Industrial", status:"done"},
+        {num:"UD2", title:"Evolución web y negocio digital", status:"current"},
+        {num:"UD3", title:"Cloud, Edge, Fog y Mist computing", status:"pending"},
+        {num:"UD4", title:"Inteligencia Artificial aplicada", status:"pending"},
+        {num:"UD5", title:"Tecnologías Habilitadoras Digitales (IoT, Big Data, 5G...)", status:"pending"},
+        {num:"UD6", title:"Proyecto de transformación digital", status:"pending"}
+      ]
+    },
+    sost: {
+      temario: [
+        {num:"UD1", title:"Sostenibilidad y marcos ASG", status:"current"},
+        {num:"UD2", title:"Retos ambientales y sociales actuales", status:"pending"},
+        {num:"UD3", title:"Sostenibilidad aplicada al desempeño profesional", status:"pending"},
+        {num:"UD4", title:"Economía circular y productos responsables", status:"pending"},
+        {num:"UD5", title:"Aplicación práctica de la sostenibilidad", status:"pending"},
+        {num:"UD6", title:"Plan de sostenibilidad de una empresa (proyecto)", status:"pending"}
+      ]
+    },
+    ofi: {
+      temario: [
+        {num:"UD1", title:"PowerPoint y presentaciones", status:"done"},
+        {num:"UD2", title:"Word: documentos y formato", status:"current"},
+        {num:"UD3", title:"Herramientas online (Gamma, Canva)", status:"pending"},
+        {num:"UD4", title:"CapCut y edición de vídeo", status:"pending"},
+        {num:"UD5", title:"Notion y organización digital", status:"pending"}
+      ]
+    },
+    seg: {
+      temario: [
+        {num:"UD1", title:"Introducción a la seguridad informática", status:"current"},
+        {num:"UD2", title:"Seguridad activa y pasiva", status:"pending"},
+        {num:"UD3", title:"Seguridad en redes", status:"pending"},
+        {num:"UD4", title:"Criptografía y certificados digitales", status:"pending"},
+        {num:"UD5", title:"Legislación y normativa de seguridad", status:"pending"}
+      ]
+    },
+    sad: {
+      temario: [
+        {num:"UD1", title:"Seguridad y alta disponibilidad: fundamentos", status:"current"}
+      ]
+    },
+    dsp: {
+      temario: [
+        {num:"UD1", title:"Digitalización aplicada a los sectores productivos", status:"current"}
+      ]
+    },
+    pim: {
+      temario: [
+        {num:"UD1", title:"Proyecto intermodular", status:"current"}
+      ]
+    },
+    cib: {
+      temario: [
+        {num:"UD1", title:"Gestión de incidencias de ciberseguridad", status:"current"}
+      ]
+    }
+  };
+
+  // ========== UTILITY ==========
+  var MONTHS_SHORT = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  var DAYS_SHORT = ["dom","lun","mar","mié","jue","vie","sáb"];
+
+  function uid(){
+    if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "u" + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+  }
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];
+    });
+  }
+  function pad2(n){ return (n<10?"0":"")+n; }
+  function todayStr(){ var d = new Date(); return d.getFullYear() + "-" + pad2(d.getMonth()+1) + "-" + pad2(d.getDate()); }
+
+  function dueLabel(iso){
+    if(!iso) return "";
+    var p = iso.split("-"), d = new Date(+p[0], +p[1]-1, +p[2]);
+    var n = new Date(), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+    var diff = Math.round((d - t0) / 86400000);
+    if(diff === 0) return "hoy";
+    if(diff === 1) return "mañana";
+    if(diff === -1) return "ayer";
+    var dayName = DAYS_SHORT[d.getDay()];
+    var fecha = dayName + " " + d.getDate() + " " + MONTHS_SHORT[d.getMonth()];
+    if(diff > 1 && diff <= 14) return fecha + " · en " + diff + " días";
+    if(diff < -1 && diff >= -14) return fecha + " · hace " + (-diff) + " días";
+    return fecha;
+  }
+  function isPast(iso){
+    if(!iso) return false;
+    return iso < todayStr();
+  }
+  function isSoon(iso){
+    if(!iso) return false;
+    var p = iso.split("-"), d = new Date(+p[0], +p[1]-1, +p[2]);
+    var n = new Date(), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+    var diff = Math.round((d - t0) / 86400000);
+    return diff >= 0 && diff <= 7;
+  }
+
+  // ========== GET MODULE KEY FROM URL ==========
+  var params = new URLSearchParams(window.location.search);
+  var modKey = params.get("mod");
+  var mod = MODULES[modKey];
+
+  if(!mod){
+    document.querySelector(".wrap").innerHTML =
+      '<a class="back" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Volver al horario</a>' +
+      '<p style="text-align:center;color:var(--ink-faint);padding:40px">Módulo no encontrado. Vuelve al horario y pincha en una clase.</p>';
+    return;
+  }
+
+  // ========== STORAGE ==========
+  var STORE_KEY = "asignatura-" + modKey + "-v1";
+
+  function loadData(){
+    try{
+      var raw = localStorage.getItem(STORE_KEY);
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    return null;
+  }
+  function saveData(data){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }catch(e){}
+  }
+
+  // Initialize or load data
+  var seed = SEEDS[modKey] || {};
+  var stored = loadData();
+  var data = stored || {
+    temario: (seed.temario || []).map(function(u){ return {id:uid(), num:u.num, title:u.title, status:u.status}; }),
+    activities: [],
+    dates: []
+  };
+  // Ensure arrays exist
+  if(!data.temario) data.temario = [];
+  if(!data.activities) data.activities = [];
+  if(!data.dates) data.dates = [];
+
+  // ========== RENDER HEADER ==========
+  document.title = mod.subject + " — Dashboard";
+  document.getElementById("title").textContent = mod.subject;
+  document.getElementById("subtitle").textContent = mod.room;
+  document.getElementById("color-rail").style.setProperty("--rail", "var(--" + mod.color + "-rail)");
+  var cu = document.getElementById("current-unit");
+  cu.style.setProperty("--bg", "var(--" + mod.color + "-bg)");
+  cu.style.setProperty("--fg", "var(--" + mod.color + "-fg)");
+  cu.style.setProperty("--rail", "var(--" + mod.color + "-rail)");
+
+  // ========== RENDER FUNCTIONS ==========
+  function renderCurrentUnit(){
+    var current = null;
+    for(var i=0;i<data.temario.length;i++){
+      if(data.temario[i].status === "current"){ current = data.temario[i]; break; }
+    }
+    var el = document.getElementById("current-unit-name");
+    if(current){
+      el.textContent = current.num + " — " + current.title;
+      el.className = "unit-name";
+    }else{
+      el.textContent = "Sin unidad en curso";
+      el.className = "unit-name empty-hint";
+    }
+  }
+
+  function renderTemario(){
+    var list = document.getElementById("temario-list");
+    var empty = document.getElementById("temario-empty");
+
+    if(!data.temario.length){
+      list.innerHTML = "";
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+
+    var html = "";
+    for(var i=0;i<data.temario.length;i++){
+      var u = data.temario[i];
+      var statusLabel = u.status === "done" ? "Terminada" : u.status === "current" ? "En curso" : "Pendiente";
+      html += '<li class="temario-item" data-id="' + esc(u.id) + '">' +
+                '<span class="temario-num">' + esc(u.num) + '</span>' +
+                '<span class="temario-title">' + esc(u.title) + '</span>' +
+                '<span class="temario-status ' + u.status + '">' + statusLabel + '</span>' +
+                '<div class="temario-actions">' +
+                  '<button type="button" class="btn-icon t-edit" title="Editar">✎</button>' +
+                '</div>' +
+              '</li>';
+    }
+    list.innerHTML = html;
+  }
+
+  function renderActivities(){
+    var list = document.getElementById("act-list");
+    var empty = document.getElementById("act-empty");
+    var today = todayStr();
+
+    // Sort: pending first (by due date), then done
+    var sorted = data.activities.slice().sort(function(a,b){
+      if(a.done !== b.done) return a.done ? 1 : -1;
+      var da = a.due || "9999-99-99", db = b.due || "9999-99-99";
+      return da < db ? -1 : da > db ? 1 : 0;
+    });
+
+    if(!sorted.length){
+      list.innerHTML = "";
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+
+    var html = "";
+    for(var i=0;i<sorted.length;i++){
+      var a = sorted[i];
+      var typeLabel = {practica:"Práctica", proyecto:"Proyecto", tarea:"Tarea", examen:"Examen", otro:"Otro"}[a.type] || a.type;
+      var dueText = a.due ? dueLabel(a.due) : "";
+      var isLate = !a.done && a.due && a.due < today;
+
+      html += '<li class="act-item' + (a.done ? " done" : "") + '" data-id="' + esc(a.id) + '">' +
+                '<input type="checkbox"' + (a.done ? " checked" : "") + ' aria-label="Marcar como hecha">' +
+                '<div class="act-body">' +
+                  '<span class="act-title">' + esc(a.title) + '</span>' +
+                  '<span class="act-meta">' +
+                    '<span class="act-type ' + a.type + '">' + typeLabel + '</span>' +
+                    (dueText ? '<span class="act-due' + (isLate ? " late" : "") + '">' + dueText + '</span>' : '') +
+                  '</span>' +
+                  (a.notes ? '<span class="act-notes">' + esc(a.notes) + '</span>' : '') +
+                '</div>' +
+                '<button type="button" class="btn-icon act-del" aria-label="Eliminar">×</button>' +
+              '</li>';
+    }
+    list.innerHTML = html;
+  }
+
+  function renderDates(){
+    var list = document.getElementById("date-list");
+    var empty = document.getElementById("date-empty");
+
+    // Sort by date
+    var sorted = data.dates.slice().sort(function(a,b){
+      return (a.date || "9999") < (b.date || "9999") ? -1 : 1;
+    });
+
+    if(!sorted.length){
+      list.innerHTML = "";
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+
+    var today = todayStr();
+    var html = "";
+    for(var i=0;i<sorted.length;i++){
+      var d = sorted[i];
+      var past = d.date && d.date < today;
+      var soon = isSoon(d.date);
+      var p = (d.date||"").split("-");
+      var dateObj = p.length === 3 ? new Date(+p[0], +p[1]-1, +p[2]) : null;
+      var dayNum = dateObj ? dateObj.getDate() : "?";
+      var monthStr = dateObj ? MONTHS_SHORT[dateObj.getMonth()].toUpperCase() : "";
+      var relText = d.date ? dueLabel(d.date) : "";
+
+      html += '<li class="date-item' + (past ? " date-past" : "") + '" data-id="' + esc(d.id) + '">' +
+                '<div class="date-cal">' +
+                  '<span class="day">' + dayNum + '</span>' +
+                  '<span class="month">' + monthStr + '</span>' +
+                '</div>' +
+                '<div class="date-body">' +
+                  '<span class="date-title">' + esc(d.title) + '</span>' +
+                  (relText ? '<span class="date-rel' + (soon && !past ? " soon" : "") + '">' + relText + '</span>' : '') +
+                  (d.notes ? '<span class="act-notes">' + esc(d.notes) + '</span>' : '') +
+                '</div>' +
+                '<div class="temario-actions">' +
+                  '<button type="button" class="btn-icon date-edit" title="Editar">✎</button>' +
+                  '<button type="button" class="btn-icon date-del" aria-label="Eliminar">×</button>' +
+                '</div>' +
+              '</li>';
+    }
+    list.innerHTML = html;
+  }
+
+  function renderStats(){
+    var done = 0, total = data.temario.length;
+    for(var i=0;i<data.temario.length;i++) if(data.temario[i].status === "done") done++;
+    var actOpen = 0;
+    for(var j=0;j<data.activities.length;j++) if(!data.activities[j].done) actOpen++;
+    var upcoming = 0;
+    var today = todayStr();
+    for(var k=0;k<data.dates.length;k++) if(data.dates[k].date && data.dates[k].date >= today) upcoming++;
+
+    document.getElementById("stats").innerHTML =
+      '<span><b>' + done + '/' + total + '</b> unidades completadas</span>' +
+      '<span><b>' + actOpen + '</b> actividades pendientes</span>' +
+      '<span><b>' + upcoming + '</b> fechas próximas</span>';
+  }
+
+  function renderAll(){
+    renderCurrentUnit();
+    renderTemario();
+    renderActivities();
+    renderDates();
+    renderStats();
+  }
+
+  // ========== TEMARIO DIALOG ==========
+  var dlgUnit = document.getElementById("dlg-unit");
+  var editingUnitId = null;
+
+  document.getElementById("add-unit").addEventListener("click", function(){
+    editingUnitId = null;
+    document.getElementById("dlg-unit-title").textContent = "Añadir unidad";
+    document.getElementById("fu-num").value = "UD" + (data.temario.length + 1);
+    document.getElementById("fu-title").value = "";
+    document.getElementById("fu-status").value = "pending";
+    document.getElementById("fu-del").hidden = true;
+    dlgUnit.showModal();
+    document.getElementById("fu-title").focus();
+  });
+
+  document.getElementById("temario-list").addEventListener("click", function(e){
+    var editBtn = e.target.closest ? e.target.closest(".t-edit") : null;
+    if(!editBtn) return;
+    var li = editBtn.closest(".temario-item");
+    if(!li) return;
+    var id = li.dataset.id;
+    var unit = null;
+    for(var i=0;i<data.temario.length;i++) if(data.temario[i].id === id){ unit = data.temario[i]; break; }
+    if(!unit) return;
+
+    editingUnitId = id;
+    document.getElementById("dlg-unit-title").textContent = "Editar unidad";
+    document.getElementById("fu-num").value = unit.num;
+    document.getElementById("fu-title").value = unit.title;
+    document.getElementById("fu-status").value = unit.status;
+    document.getElementById("fu-del").hidden = false;
+    dlgUnit.showModal();
+    document.getElementById("fu-title").focus();
+  });
+
+  // Cycle status on click on the status badge
+  document.getElementById("temario-list").addEventListener("click", function(e){
+    var badge = e.target.closest ? e.target.closest(".temario-status") : null;
+    if(!badge) return;
+    var li = badge.closest(".temario-item");
+    if(!li) return;
+    var id = li.dataset.id;
+    for(var i=0;i<data.temario.length;i++){
+      if(data.temario[i].id === id){
+        var cycle = {pending:"current", current:"done", done:"pending"};
+        data.temario[i].status = cycle[data.temario[i].status] || "pending";
+        break;
+      }
+    }
+    saveData(data);
+    renderAll();
+  });
+
+  document.getElementById("fu-save").addEventListener("click", function(){
+    var title = document.getElementById("fu-title").value.trim();
+    if(!title){ document.getElementById("fu-title").focus(); return; }
+    var rec = {
+      id: editingUnitId || uid(),
+      num: document.getElementById("fu-num").value.trim() || "—",
+      title: title,
+      status: document.getElementById("fu-status").value
+    };
+    if(editingUnitId){
+      for(var i=0;i<data.temario.length;i++){
+        if(data.temario[i].id === editingUnitId){ data.temario[i] = rec; break; }
+      }
+    }else{
+      data.temario.push(rec);
+    }
+    dlgUnit.close();
+    saveData(data);
+    renderAll();
+  });
+  document.getElementById("fu-del").addEventListener("click", function(){
+    if(!editingUnitId) return;
+    data.temario = data.temario.filter(function(u){ return u.id !== editingUnitId; });
+    dlgUnit.close();
+    saveData(data);
+    renderAll();
+  });
+  document.getElementById("fu-cancel").addEventListener("click", function(){ dlgUnit.close(); });
+  document.getElementById("form-unit").addEventListener("keydown", function(e){
+    if(e.key === "Enter" && e.target.tagName === "INPUT"){ e.preventDefault(); document.getElementById("fu-save").click(); }
+  });
+
+  // ========== ACTIVITIES ==========
+  document.getElementById("act-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var inp = document.getElementById("act-text");
+    var text = inp.value.trim();
+    if(!text){ inp.focus(); return; }
+    data.activities.push({
+      id: uid(),
+      title: text.slice(0,120),
+      type: document.getElementById("act-type").value,
+      due: document.getElementById("act-date").value || "",
+      done: false,
+      notes: ""
+    });
+    inp.value = "";
+    document.getElementById("act-date").value = "";
+    saveData(data);
+    renderAll();
+    inp.focus();
+  });
+
+  document.getElementById("act-list").addEventListener("change", function(e){
+    if(e.target.type !== "checkbox") return;
+    var li = e.target.closest ? e.target.closest(".act-item") : null;
+    if(!li) return;
+    var id = li.dataset.id;
+    for(var i=0;i<data.activities.length;i++){
+      if(data.activities[i].id === id){ data.activities[i].done = e.target.checked; break; }
+    }
+    saveData(data);
+    renderAll();
+  });
+
+  document.getElementById("act-list").addEventListener("click", function(e){
+    var del = e.target.closest ? e.target.closest(".act-del") : null;
+    if(!del) return;
+    var li = del.closest(".act-item");
+    if(!li) return;
+    data.activities = data.activities.filter(function(a){ return a.id !== li.dataset.id; });
+    saveData(data);
+    renderAll();
+  });
+
+  // ========== DATES DIALOG ==========
+  var dlgDate = document.getElementById("dlg-date");
+  var editingDateId = null;
+
+  document.getElementById("add-date").addEventListener("click", function(){
+    editingDateId = null;
+    document.getElementById("dlg-date-title").textContent = "Añadir fecha";
+    document.getElementById("fd-title").value = "";
+    document.getElementById("fd-date").value = "";
+    document.getElementById("fd-type").value = "examen";
+    document.getElementById("fd-notes").value = "";
+    document.getElementById("fd-del").hidden = true;
+    dlgDate.showModal();
+    document.getElementById("fd-title").focus();
+  });
+
+  document.getElementById("date-list").addEventListener("click", function(e){
+    var editBtn = e.target.closest ? e.target.closest(".date-edit") : null;
+    if(editBtn){
+      var li = editBtn.closest(".date-item");
+      if(!li) return;
+      var id = li.dataset.id;
+      var dt = null;
+      for(var i=0;i<data.dates.length;i++) if(data.dates[i].id === id){ dt = data.dates[i]; break; }
+      if(!dt) return;
+
+      editingDateId = id;
+      document.getElementById("dlg-date-title").textContent = "Editar fecha";
+      document.getElementById("fd-title").value = dt.title;
+      document.getElementById("fd-date").value = dt.date || "";
+      document.getElementById("fd-type").value = dt.type || "otro";
+      document.getElementById("fd-notes").value = dt.notes || "";
+      document.getElementById("fd-del").hidden = false;
+      dlgDate.showModal();
+      document.getElementById("fd-title").focus();
+      return;
+    }
+
+    var delBtn = e.target.closest ? e.target.closest(".date-del") : null;
+    if(delBtn){
+      var li2 = delBtn.closest(".date-item");
+      if(!li2) return;
+      data.dates = data.dates.filter(function(d){ return d.id !== li2.dataset.id; });
+      saveData(data);
+      renderAll();
+    }
+  });
+
+  document.getElementById("fd-save").addEventListener("click", function(){
+    var title = document.getElementById("fd-title").value.trim();
+    var date = document.getElementById("fd-date").value;
+    if(!title){ document.getElementById("fd-title").focus(); return; }
+    if(!date){ document.getElementById("fd-date").focus(); return; }
+
+    var rec = {
+      id: editingDateId || uid(),
+      title: title.slice(0,120),
+      date: date,
+      type: document.getElementById("fd-type").value,
+      notes: document.getElementById("fd-notes").value.trim().slice(0,300)
+    };
+    if(editingDateId){
+      for(var i=0;i<data.dates.length;i++){
+        if(data.dates[i].id === editingDateId){ data.dates[i] = rec; break; }
+      }
+    }else{
+      data.dates.push(rec);
+    }
+    dlgDate.close();
+    saveData(data);
+    renderAll();
+  });
+  document.getElementById("fd-del").addEventListener("click", function(){
+    if(!editingDateId) return;
+    data.dates = data.dates.filter(function(d){ return d.id !== editingDateId; });
+    dlgDate.close();
+    saveData(data);
+    renderAll();
+  });
+  document.getElementById("fd-cancel").addEventListener("click", function(){ dlgDate.close(); });
+  document.getElementById("form-date").addEventListener("keydown", function(e){
+    if(e.key === "Enter" && e.target.tagName === "INPUT"){ e.preventDefault(); document.getElementById("fd-save").click(); }
+  });
+
+  // ========== INITIAL RENDER ==========
+  if(!stored) saveData(data); // persist seed on first visit
+  renderAll();
+
+})();
+</script>
+</body>
+</html>
