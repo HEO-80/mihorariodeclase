@@ -605,6 +605,13 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
       var s = toMin(c.start), e = toMin(c.end);
       if(isNaN(d) || d<0 || d>6) continue;
       if(!(e > s)) continue;
+      var mk = typeof c.modKey === "string" ? c.modKey : "";
+      if(!mk){
+        var subj = String(c.subject||"").toLowerCase();
+        for(var k in M){
+          if(M[k].subject.toLowerCase() === subj){ mk = k; break; }
+        }
+      }
       out.push({
         id: typeof c.id === "string" && c.id ? c.id : uid(),
         day: d, start: toHHMM(s), end: toHHMM(e),
@@ -612,7 +619,7 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
         teacher: String(c.teacher||"").slice(0,40),
         room: String(c.room||"").slice(0,24),
         color: COLORS.indexOf(c.color) >= 0 ? c.color : "c1",
-        modKey: typeof c.modKey === "string" ? c.modKey : ""
+        modKey: mk
       });
     }
     return out;
