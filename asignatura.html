@@ -178,7 +178,7 @@ button{font-family:inherit}
 /* ---- temario list ---- */
 .temario-list{list-style:none;margin:0;padding:0}
 .temario-item{
-  display:flex;align-items:center;gap:12px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
   padding:12px 18px;border-bottom:1px solid var(--rule-soft);
 }
 .temario-item:last-child{border-bottom:0}
@@ -197,6 +197,9 @@ button{font-family:inherit}
 .temario-status.current{background:var(--c3-bg);color:var(--c3-fg);font-weight:600}
 .temario-status.pending{background:var(--surface-2);color:var(--ink-faint)}
 .temario-actions{display:flex;gap:2px}
+.temario-links{display:flex;flex-wrap:wrap;gap:6px;width:100%;padding:4px 0 0 0}
+.temario-link{font-size:12px;color:var(--accent);text-decoration:none;padding:3px 8px;border:1px solid var(--accent);border-radius:4px;white-space:nowrap;transition:background .15s}
+.temario-link:hover{background:var(--accent);color:#fff}
 .temario-empty{padding:24px 18px;color:var(--ink-faint);font-size:14px;text-align:center}
 
 /* ---- activities list ---- */
@@ -522,8 +525,14 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     aso: {
       temario: [
         {num:"UD1", title:"Directorio Activo (Active Directory)", status:"done"},
-        {num:"UD2", title:"Gestión de procesos en Windows y Linux", status:"current"},
-        {num:"UD3", title:"Automatización y Scripting en PowerShell", status:"pending"},
+        {num:"UD2", title:"Gestión de procesos en Windows y Linux", status:"current", links:[
+          {name:"Servicios y Procesos en Windows", url:"https://gamma.app/docs/UD2-12-Servicios-Y-Procesos-en-Windows-393efmak1gylkjg?mode=doc"},
+          {name:"Gestión de Procesos en Windows y Linux", url:"https://gamma.app/docs/UD2-Gestion-de-Procesos-en-Windows-y-Linux-v41f2fzsmb4lrwi?mode=doc"}
+        ]},
+        {num:"UD3", title:"Automatización y Scripting en PowerShell", status:"pending", links:[
+          {name:"Automatización y Scripting en PowerShell", url:"https://gamma.app/docs/UD3-Automatizacion-y-Scripting-en-PowerShell-g8t2dlherqvqcpj?mode=doc"},
+          {name:"Tu Primer Script en PowerShell", url:"https://gamma.app/docs/Tu-Primer-Script-en-PowerShell-z0ev4nwm5pc68fq?mode=doc"}
+        ]},
         {num:"UD4", title:"Unidad didáctica 4", status:"pending"},
         {num:"UD5", title:"Unidad didáctica 5", status:"pending"},
         {num:"UD6", title:"Unidad didáctica 6", status:"pending"}
@@ -699,9 +708,9 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   var seed = SEEDS[modKey] || {};
   var stored = loadData();
   var data = stored || {
-    temario: (seed.temario || []).map(function(u){ return {id:uid(), num:u.num, title:u.title, status:u.status}; }),
-    activities: [],
-    dates: []
+    temario: (seed.temario || []).map(function(u){ return {id:uid(), num:u.num, title:u.title, status:u.status, links:u.links||[]}; }),
+    activities: (seed.activities || []).map(function(a){ return {id:uid(), title:a.text, type:a.type||"tarea", done:!!a.done, date:a.date||"", notes:""}; }),
+    dates: (seed.dates || []).map(function(d){ return {id:uid(), title:d.label, date:d.date||"", type:"otro", notes:""}; })
   };
   // Ensure arrays exist
   if(!data.temario) data.temario = [];
@@ -749,6 +758,14 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     for(var i=0;i<data.temario.length;i++){
       var u = data.temario[i];
       var statusLabel = u.status === "done" ? "Terminada" : u.status === "current" ? "En curso" : "Pendiente";
+      var linksHtml = "";
+      if(u.links && u.links.length){
+        linksHtml = '<div class="temario-links">';
+        for(var j=0;j<u.links.length;j++){
+          linksHtml += '<a href="' + esc(u.links[j].url) + '" target="_blank" rel="noopener" class="temario-link">📄 ' + esc(u.links[j].name) + '</a>';
+        }
+        linksHtml += '</div>';
+      }
       html += '<li class="temario-item" data-id="' + esc(u.id) + '">' +
                 '<span class="temario-num">' + esc(u.num) + '</span>' +
                 '<span class="temario-title">' + esc(u.title) + '</span>' +
@@ -756,6 +773,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
                 '<div class="temario-actions">' +
                   '<button type="button" class="btn-icon t-edit" title="Editar">✎</button>' +
                 '</div>' +
+                linksHtml +
               '</li>';
     }
     list.innerHTML = html;
