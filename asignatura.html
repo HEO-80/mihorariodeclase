@@ -556,11 +556,39 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     },
     iaw: {
       temario: [
-        {num:"UD1", title:"Servidores Web (Apache, Nginx, SSL, Virtual Hosts)", status:"done"},
-        {num:"UD2", title:"WordPress y CMS (Guy)", status:"current"},
+        {num:"UD1", title:"Introducción a las Aplicaciones Web — Servidores Web (Apache, LAMP, Virtual Hosts, Nginx, SSL/HTTPS, UFW)", status:"current", links:[
+          {name:"T4 Implantación de Aplicaciones Web (PDF)", url:""},
+          {name:"Unidad 1 Introducción a las Aplicaciones Web (DOCX)", url:""},
+          {name:"Práctica 1 — Monta tu laboratorio de servidor Web (DOCX)", url:""}
+        ]},
+        {num:"UD2", title:"CMS y WordPress (Guy) — Instalación, configuración, usuarios/roles, temas/child-theme, despliegue", status:"current", links:[
+          {name:"Presentación 1 — Introducción a CMS", url:""},
+          {name:"Presentación 2 — Instalación WordPress en XAMPP", url:""},
+          {name:"Presentación 3 — Configuración básica / Panel de admin", url:""},
+          {name:"Presentación 4 — Usuarios, roles y privilegios", url:""},
+          {name:"Presentación 5 — Temas, child-theme", url:""},
+          {name:"Presentación 6 — WordPress cierre", url:""}
+        ]},
         {num:"UD3", title:"PHP y MySQL (Guy)", status:"pending"},
         {num:"UD4", title:"Seguridad web y ofimática web (Nextcloud)", status:"pending"},
         {num:"UD5", title:"Servidores de aplicaciones (Tomcat, Node.js)", status:"pending"}
+      ],
+      activities: [
+        {text:"UD.1 Tarea 1 / Práctica 1 — Monta tu laboratorio de servidor Web", type:"practica", done:true, date:"2026-10-01"},
+        {text:"UD.1 Tarea 2 — Apache, LAMP y Virtual Hosts", type:"tarea", done:true, date:"2026-10-29"},
+        {text:"UD.1 Tarea 3 — Nginx como proxy inverso, SSL/HTTPS y firewall UFW", type:"tarea", done:false, date:"2026-11-06"},
+        {text:"UD.2 Tarea 1 — Introducción CMS", type:"tarea", done:true, date:"2026-09-27"},
+        {text:"UD.2 Tarea 2 — Instalación WordPress", type:"tarea", done:true, date:"2026-09-29"},
+        {text:"UD.2 Tarea 3 — Usuarios y roles en WordPress", type:"tarea", done:true, date:"2026-10-09"},
+        {text:"UD.2 Tarea 4 — Child-theme (WordPress)", type:"tarea", done:false, date:"2026-10-25"},
+        {text:"UD.1 Proyecto 1ª Evaluación — Despliegue completo de un sitio web con WordPress", type:"proyecto", done:false, date:"2026-11-26"}
+      ],
+      dates: [
+        {label:"Cierre Práctica 1 (laboratorio servidor Web)", date:"2026-10-01"},
+        {label:"Cierre Tarea 2 (Apache, LAMP, VHosts)", date:"2026-10-29"},
+        {label:"Cierre Tarea 3 (Nginx, SSL, UFW)", date:"2026-11-06"},
+        {label:"Cierre Tarea 4 Child-theme WordPress", date:"2026-10-25"},
+        {label:"Cierre Proyecto 1ª Eval (WordPress completo)", date:"2026-11-26"}
       ]
     },
     psp: {
