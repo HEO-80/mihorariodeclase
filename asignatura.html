@@ -637,27 +637,30 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
           {name:"Comandos de PowerShell (DOCX)", url:""},
           {name:"Mi terminal de desarrollador (PPTX)", url:""}
         ]},
-        {num:"U2", title:"Programación concurrente", status:"current"},
-        {num:"U3", title:"Programación de hilos", status:"pending"}
+        {num:"U2", title:"Programación concurrente — Secciones críticas, exclusión mutua, semáforos (Semaphore, acquire/release)", status:"done"},
+        {num:"U3", title:"Programación de hilos — synchronized, wait/notify, monitores, deadlock, productor-consumidor", status:"current"}
       ],
       activities: [
         {text:"UD.1 Tarea 1 — Mi primer programa con hilos", type:"tarea", done:true, date:"2026-09-25"},
-        {text:"UD.1 Tarea 2 — Práctica guiada UT1: hilos, procesos y resultados", type:"tarea", done:true, date:"2026-10-23"},
+        {text:"UD.1 Tarea 2 — Práctica guiada UT1: hilos, procesos y resultados (15%)", type:"tarea", done:true, date:"2026-10-23"},
         {text:"Unidad 1 Actividad 1 — Mi TERMINAL DE DEVELOPER", type:"tarea", done:true, date:"2026-10-23"},
-        {text:"Unidad 1 Actividad 2 — Investigación: Cómo trabaja tu sistema operativo", type:"tarea", done:false, date:"2026-10-30"},
-        {text:"Unidad 2 Actividad 1", type:"tarea", done:false, date:"2027-01-30"},
-        {text:"Unidad 2 Actividad 2", type:"tarea", done:false, date:"2027-01-30"},
-        {text:"UD.2 Tarea 1", type:"tarea", done:false, date:""},
-        {text:"UD.2 Tarea 2", type:"tarea", done:false, date:""},
-        {text:"Unidad 3 Actividad 1", type:"tarea", done:false, date:"2027-01-30"},
-        {text:"Unidad 3 Actividad 2", type:"tarea", done:false, date:"2027-01-30"}
+        {text:"Unidad 1 Actividad 2 — Investigación: Cómo trabaja tu sistema operativo (25%)", type:"tarea", done:false, date:"2026-10-30"},
+        {text:"Ejercicio guiado UT2 — ContadorCompartido con Semaphore (paso a paso)", type:"practica", done:false, date:"2026-11-13"},
+        {text:"Ejercicio guiado UT3 — Pares/Impares con synchronized y wait/notify (paso a paso)", type:"practica", done:false, date:"2026-11-13"},
+        {text:"Parking Concurrente — Semaphore(5), 8 hilos, AtomicInteger, MANIFEST.MF (30%)", type:"proyecto", done:false, date:"2026-11-20"},
+        {text:"Examen 1ª Evaluación — UT1 + UT2 + UT3 (30%)", type:"examen", done:false, date:"2026-11-23"}
       ],
       dates: [
         {label:"UD1 Tarea 1 cierre", date:"2026-09-25"},
-        {label:"UD1 Tarea 2 cierre", date:"2026-10-23"},
+        {label:"UD1 Tarea 2 cierre (práctica guiada 15%)", date:"2026-10-23"},
         {label:"Act 1 Mi Terminal cierre", date:"2026-10-23"},
-        {label:"Act 2 Investigación SO cierre", date:"2026-10-30"},
-        {label:"U2/U3 Actividades cierre", date:"2027-01-30"}
+        {label:"Act 2 Investigación SO cierre (25%)", date:"2026-10-30"},
+        {label:"Explicación UT2 — Semáforos y secciones críticas", date:"2026-10-30"},
+        {label:"Explicación UT3 — synchronized, monitores, deadlock", date:"2026-11-06"},
+        {label:"Entrega ejercicios guiados + enunciado Parking", date:"2026-11-09"},
+        {label:"Cierre ejercicios guiados UT2+UT3", date:"2026-11-13"},
+        {label:"Entrega Parking Concurrente (30%)", date:"2026-11-20"},
+        {label:"EXAMEN 1ª Evaluación UT1+UT2+UT3 (30%)", date:"2026-11-23"}
       ]
     },
     ad: {
@@ -864,7 +867,9 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   }
 
   // ========== STORAGE ==========
-  var STORE_KEY = "asignatura-" + modKey + "-v1";
+  // Bump version per module to force seed refresh (change v1→v2 etc. when seed data is updated)
+  var STORE_VERSIONS = {psp:"v2"};
+  var STORE_KEY = "asignatura-" + modKey + "-" + (STORE_VERSIONS[modKey] || "v1");
 
   function loadData(){
     try{
