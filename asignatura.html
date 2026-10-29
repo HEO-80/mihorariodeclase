@@ -603,8 +603,29 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     },
     ad: {
       temario: [
-        {num:"1ªE", title:"Power BI (limpieza y análisis de datos)", status:"current"},
-        {num:"2ªE", title:"API CRUD con C# y Visual Studio", status:"pending"}
+        {num:"UD1", title:"Fundamentos de Power BI — Qué es, navegación, configuración de proyectos", status:"done", links:[
+          {name:"1.1 Fundamentos de Power BI", url:""},
+          {name:"1.2 Qué es Power BI — Visión General", url:""},
+          {name:"1.3 Navegación por Power BI Desktop", url:""},
+          {name:"1.4 Configuración de un proyecto en Power BI", url:""}
+        ]},
+        {num:"UD2", title:"Conexión, transformación y modelado de datos en Power BI", status:"current", links:[
+          {name:"2.1 Conexión a Diferentes Fuentes de Datos", url:""},
+          {name:"2.2 Conexión y Carga de Datos", url:""},
+          {name:"2.3 Limpieza y Transformación con Power Query Editor", url:""},
+          {name:"2.4 Creación de Tablas y Relaciones", url:""}
+        ]},
+        {num:"2ªE", title:"API CRUD con C# y Visual Studio conectada a base de datos", status:"pending"},
+        {num:"3ªE", title:"Tercera evaluación (por definir)", status:"pending"}
+      ],
+      activities: [
+        {text:"UD1 Tarea 1 — Limpieza y análisis de ventas: Excel vs Power BI", type:"tarea", done:true, date:"2026-09-25"},
+        {text:"UD1 Tarea 2 — Power Query y modelado de datos en Power BI", type:"tarea", done:true, date:"2026-10-23"}
+      ],
+      dates: [
+        {label:"UD1 Apertura", date:"2026-09-18"},
+        {label:"UD1 Tarea 1 cierre", date:"2026-09-25"},
+        {label:"UD1 Tarea 2 cierre", date:"2026-10-23"}
       ]
     },
     dig: {
