@@ -358,6 +358,8 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
       <span class="sub" id="subtitle">Océano Atlántico · Curso 26-27</span>
     </div>
     <div class="tools">
+      <a href="correccion.html" class="btn" title="Instrucciones de corrección">📋 Corrección</a>
+      <button class="btn" id="theme-toggle" title="Cambiar tema claro/oscuro">🌙</button>
       <button class="btn btn-primary" id="add">＋ Añadir clase</button>
       <button class="btn" id="print">Imprimir</button>
       <button class="btn btn-danger" id="clear">Restaurar horario</button>
@@ -1212,6 +1214,23 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
 
   // keep the "now" line and the status strip honest
   setInterval(render, 60000);
+
+  // ---- Dark/Light theme toggle ----
+  var themeBtn = document.getElementById("theme-toggle");
+  function applyTheme(t){
+    document.documentElement.setAttribute("data-theme", t);
+    themeBtn.textContent = t === "dark" ? "☀️" : "🌙";
+    try{ localStorage.setItem("theme-pref", t); }catch(e){}
+  }
+  (function(){
+    var saved;
+    try{ saved = localStorage.getItem("theme-pref"); }catch(e){}
+    if(saved === "dark" || saved === "light") applyTheme(saved);
+  })();
+  themeBtn.addEventListener("click", function(){
+    var cur = document.documentElement.getAttribute("data-theme");
+    applyTheme(cur === "dark" ? "light" : "dark");
+  });
 })();
 </script>
 </body>

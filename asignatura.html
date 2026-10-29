@@ -342,10 +342,13 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
 <body>
 
 <div class="wrap">
-  <a class="back" href="index.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    Volver al horario
-  </a>
+  <div style="display:flex;align-items:center;justify-content:space-between">
+    <a class="back" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver al horario
+    </a>
+    <button type="button" id="theme-toggle" style="appearance:none;border:1px solid var(--rule);background:var(--surface);color:var(--ink);border-radius:6px;padding:6px 12px;font-size:14px;cursor:pointer" title="Cambiar tema">🌙</button>
+  </div>
 
   <header class="masthead" id="masthead">
     <div class="color-rail" id="color-rail"></div>
@@ -1134,6 +1137,23 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   // ========== INITIAL RENDER ==========
   if(!stored) saveData(data); // persist seed on first visit
   renderAll();
+
+  // ---- Theme toggle ----
+  var themeBtn = document.getElementById("theme-toggle");
+  function applyTheme(t){
+    document.documentElement.setAttribute("data-theme", t);
+    themeBtn.textContent = t === "dark" ? "☀️" : "🌙";
+    try{ localStorage.setItem("theme-pref", t); }catch(e){}
+  }
+  (function(){
+    var saved;
+    try{ saved = localStorage.getItem("theme-pref"); }catch(e){}
+    if(saved === "dark" || saved === "light") applyTheme(saved);
+  })();
+  themeBtn.addEventListener("click", function(){
+    var cur = document.documentElement.getAttribute("data-theme");
+    applyTheme(cur === "dark" ? "light" : "dark");
+  });
 
 })();
 </script>

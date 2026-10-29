@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Instrucciones de Corrección</title>
+<style>
+:root{
+  --bg:#f8f9fb;--surface:#fff;--ink:#1a1a2e;--ink-soft:#555;--ink-faint:#999;
+  --accent:#2563eb;--accent-hover:#1d4ed8;--rule-soft:#e5e7eb;
+  --success:#16a34a;--success-bg:#dcfce7;
+  --font-sans:Inter,system-ui,-apple-system,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1117;--surface:#1a1c25;--ink:#e2e4e9;--ink-soft:#a0a4ad;--ink-faint:#666;
+  --accent:#60a5fa;--accent-hover:#93bbfd;--rule-soft:#2a2d37;
+  --success:#4ade80;--success-bg:#14532d;
+}}
+:root[data-theme="dark"]{
+  --bg:#0f1117;--surface:#1a1c25;--ink:#e2e4e9;--ink-soft:#a0a4ad;--ink-faint:#666;
+  --accent:#60a5fa;--accent-hover:#93bbfd;--rule-soft:#2a2d37;
+  --success:#4ade80;--success-bg:#14532d;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--ink);line-height:1.6;padding:16px}
+.container{max-width:800px;margin:0 auto}
+.back{display:inline-flex;align-items:center;gap:4px;color:var(--accent);text-decoration:none;font-size:14px;margin-bottom:16px}
+.back:hover{text-decoration:underline}
+h1{font-size:22px;font-weight:700;margin-bottom:4px}
+.subtitle{color:var(--ink-soft);font-size:14px;margin-bottom:20px}
+.card{background:var(--surface);border-radius:12px;border:1px solid var(--rule-soft);overflow:hidden}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--rule-soft)}
+.card-header h2{font-size:16px;font-weight:600}
+.btn-row{display:flex;gap:8px}
+.btn{padding:6px 14px;border-radius:6px;border:1px solid var(--rule-soft);background:var(--surface);color:var(--ink);font-size:13px;cursor:pointer;font-family:var(--font-sans);transition:all .15s}
+.btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-success{background:var(--success);color:#fff;border-color:var(--success)}
+textarea{width:100%;min-height:500px;padding:18px;border:none;outline:none;font-family:'JetBrains Mono',Consolas,monospace;font-size:13px;line-height:1.7;background:var(--surface);color:var(--ink);resize:vertical}
+textarea:focus{background:var(--bg)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--success-bg);color:var(--success);padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:99}
+.toast.show{opacity:1}
+.info{padding:14px 18px;font-size:13px;color:var(--ink-faint);border-top:1px solid var(--rule-soft)}
+</style>
+</head>
+<body>
+<div class="container">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <a href="index.html" class="back" style="margin-bottom:0">← Volver al horario</a>
+    <button type="button" class="btn" id="theme-toggle" title="Cambiar tema">🌙</button>
+  </div>
+  <h1>Instrucciones Generales de Corrección</h1>
+  <p class="subtitle">Edita aquí tus instrucciones — se guardan automáticamente en el navegador. Cópialas y pégalas junto con el enunciado y la rúbrica.</p>
+
+  <div class="card">
+    <div class="card-header">
+      <h2>📋 Prompt de corrección</h2>
+      <div class="btn-row">
+        <button type="button" class="btn" id="btn-reset" title="Restaurar texto original">Restaurar</button>
+        <button type="button" class="btn btn-primary" id="btn-copy">Copiar todo</button>
+      </div>
+    </div>
+    <textarea id="editor" spellcheck="false"></textarea>
+    <div class="info">💾 Se guarda automáticamente al escribir · Última edición: <span id="last-saved">—</span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- Theme toggle (shared with index.html via localStorage) ----
+var themeBtn = document.getElementById("theme-toggle");
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  themeBtn.textContent = t === "dark" ? "☀️" : "🌙";
+  try{ localStorage.setItem("theme-pref", t); }catch(e){}
+}
+(function(){
+  var saved;
+  try{ saved = localStorage.getItem("theme-pref"); }catch(e){}
+  if(saved === "dark" || saved === "light") applyTheme(saved);
+})();
+themeBtn.addEventListener("click", function(){
+  var cur = document.documentElement.getAttribute("data-theme");
+  applyTheme(cur === "dark" ? "light" : "dark");
+});
+
+var STORAGE_KEY = "correccion-instrucciones-v1";
+
+var DEFAULT_TEXT = "INSTRUCCIONES GENERALES DE CORRECCIÓN\n\nRol: Eres un asistente de corrección para un profesor de FP. Tu trabajo es corregir entregas de alumnos comparando el trabajo entregado contra el enunciado y la rúbrica proporcionados.\n\nDocumentos que recibirás en cada corrección:\n- Enunciado de la tarea\n- Rúbrica de evaluación\n- Trabajo del alumno (puede ser PDF, Word, Excel, código fuente, SQL, etc.)\n- Opcionalmente: archivos complementarios (capturas, código, bases de datos)\n\nVerificaciones obligatorias (aplicar siempre aunque no estén en la rúbrica):\n\n• El trabajo debe tener portada con: nombre completo del alumno, título del trabajo, fecha de entrega, nombre del módulo y curso.\n  - Si falta la portada entera: -0,5 puntos.\n  - Si falta algún dato (nombre, fecha, etc.): -0,1 cada cosa.\n\n• Revisar faltas de ortografía graves. Penalizar -0,25 por cada falta grave, hasta un máximo de -1 punto.\n\n• Si el trabajo es una copia literal de otro alumno o generado íntegramente por IA sin elaboración propia: puntuar con 0.\n\n• El nombre del documento tiene que ser modulo_nombreAlumno_ejercicio.pdf (o .docx, etc.).\n\nFormato de salida obligatorio:\n\nNota numérica final: X/10, desglosada por cada criterio de la rúbrica (indicar puntos obtenidos / puntos posibles en cada apartado).\n\nFeedback para el alumno (4-5 líneas, tono cercano y directo):\n- Empezar saludando al alumno por su nombre de forma natural y variada. Ejemplos: \"¡Hola María!\", \"Muy bien Pedro,\", \"Buenas Ana,\".\n- Mencionar brevemente lo que ha hecho bien, sin exagerar — reconocer el trabajo de forma normal.\n- A continuación, señalar lo que falta, lo que está mal o lo que hay que mejorar, conectando con un \"Aunque...\", \"Eso sí,...\", \"Sin embargo,...\".\n- Justificar brevemente por qué se han restado puntos, citando el criterio de la rúbrica.\n- Cerrar con un tono constructivo breve, tipo \"Revísalo para la próxima\" o \"Con esos ajustes lo tendrás perfecto\".\n\nNotas internas para el profesor (opcional):\n- Plagios detectados, dudas sobre la interpretación de algún apartado, o si el alumno ha hecho algo que no estaba en el enunciado pero tiene mérito.\n\nReglas importantes:\n- Sé estricto pero justo. No regales puntos ni inventes méritos que no existan.\n- No te inventes contenido que no esté en el trabajo del alumno. Si algo no está, puntúa como que falta.\n- Si un apartado de la rúbrica no se puede evaluar porque el alumno no lo ha entregado, puntúa con 0 y explícalo.\n- Si el trabajo incluye código, revísalo línea a línea — no asumas que funciona solo porque está ahí.\n- Adapta tu nivel de exigencia al ciclo: grado medio es más flexible en redacción y presentación; grado superior exige más rigor técnico y profesionalidad.";
+
+var editor = document.getElementById("editor");
+var toast = document.getElementById("toast");
+var lastSaved = document.getElementById("last-saved");
+
+// Load
+function load(){
+  try{
+    var stored = localStorage.getItem(STORAGE_KEY);
+    if(stored){
+      var obj = JSON.parse(stored);
+      editor.value = obj.text;
+      lastSaved.textContent = obj.saved || "—";
+      return;
+    }
+  }catch(e){}
+  editor.value = DEFAULT_TEXT;
+}
+load();
+
+// Save on input (debounced)
+var saveTimer;
+editor.addEventListener("input", function(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    var now = new Date();
+    var ts = now.toLocaleDateString("es-ES") + " " + now.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({text:editor.value, saved:ts}));
+      lastSaved.textContent = ts;
+    }catch(e){}
+  }, 500);
+});
+
+// Copy
+document.getElementById("btn-copy").addEventListener("click", function(){
+  navigator.clipboard.writeText(editor.value).then(function(){
+    showToast("✅ Copiado al portapapeles");
+  }).catch(function(){
+    editor.select();
+    document.execCommand("copy");
+    showToast("✅ Copiado");
+  });
+});
+
+// Reset
+document.getElementById("btn-reset").addEventListener("click", function(){
+  if(confirm("¿Restaurar el texto original? Se perderán los cambios.")){
+    editor.value = DEFAULT_TEXT;
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+    lastSaved.textContent = "—";
+    showToast("Restaurado al original");
+  }
+});
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(function(){ toast.classList.remove("show"); }, 2000);
+}
+</script>
+</body>
+</html>
