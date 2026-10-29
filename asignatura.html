@@ -596,9 +596,35 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     },
     psp: {
       temario: [
-        {num:"UT1", title:"Procesos, hilos y servicios (ProcessBuilder, Runnable/Callable)", status:"done"},
-        {num:"UT2", title:"Programación concurrente (regiones críticas, semáforos)", status:"current"},
-        {num:"UT3", title:"Programación de hilos (synchronized, wait/notify, Semaphore)", status:"pending"}
+        {num:"U1", title:"Conceptos generales: procesos, hilos, servicios — ProcessBuilder, Runnable, Callable, Future", status:"done", links:[
+          {name:"UT1 — Programación Multiproceso: prácticas guiadas (DOCX)", url:""},
+          {name:"UT1 — ProcessBuilder, Runnable vs Callable y Future (PDF)", url:""},
+          {name:"UT1 — ProcessBuilder, Runnable vs Callable y Future explicados (DOCX)", url:""},
+          {name:"Mi terminal de desarrollador (PDF)", url:""},
+          {name:"Comandos de PowerShell (DOCX)", url:""},
+          {name:"Mi terminal de desarrollador (PPTX)", url:""}
+        ]},
+        {num:"U2", title:"Programación concurrente", status:"current"},
+        {num:"U3", title:"Programación de hilos", status:"pending"}
+      ],
+      activities: [
+        {text:"UD.1 Tarea 1 — Mi primer programa con hilos", type:"tarea", done:true, date:"2026-09-25"},
+        {text:"UD.1 Tarea 2 — Práctica guiada UT1: hilos, procesos y resultados", type:"tarea", done:true, date:"2026-10-23"},
+        {text:"Unidad 1 Actividad 1 — Mi TERMINAL DE DEVELOPER", type:"tarea", done:true, date:"2026-10-23"},
+        {text:"Unidad 1 Actividad 2 — Investigación: Cómo trabaja tu sistema operativo", type:"tarea", done:false, date:"2026-10-30"},
+        {text:"Unidad 2 Actividad 1", type:"tarea", done:false, date:"2027-01-30"},
+        {text:"Unidad 2 Actividad 2", type:"tarea", done:false, date:"2027-01-30"},
+        {text:"UD.2 Tarea 1", type:"tarea", done:false, date:""},
+        {text:"UD.2 Tarea 2", type:"tarea", done:false, date:""},
+        {text:"Unidad 3 Actividad 1", type:"tarea", done:false, date:"2027-01-30"},
+        {text:"Unidad 3 Actividad 2", type:"tarea", done:false, date:"2027-01-30"}
+      ],
+      dates: [
+        {label:"UD1 Tarea 1 cierre", date:"2026-09-25"},
+        {label:"UD1 Tarea 2 cierre", date:"2026-10-23"},
+        {label:"Act 1 Mi Terminal cierre", date:"2026-10-23"},
+        {label:"Act 2 Investigación SO cierre", date:"2026-10-30"},
+        {label:"U2/U3 Actividades cierre", date:"2027-01-30"}
       ]
     },
     ad: {
