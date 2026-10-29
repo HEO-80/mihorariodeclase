@@ -514,15 +514,48 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     },
     sri: {
       temario: [
-        {num:"UD1", title:"DNS (BIND)", status:"done"},
-        {num:"UD2", title:"DHCP", status:"current"},
-        {num:"UD3", title:"Servidores web (Apache)", status:"pending"},
+        {num:"UD1", title:"Servicios DNS — Nombres de Dominio, BIND9 en Ubuntu, NETWORLD", status:"done", links:[
+          {name:"Presentación Servicios de Red e Internet (PDF)", url:""},
+          {name:"Unidad 1 Servicios DNS (PDF)", url:""},
+          {name:"Unidad 1 Servicios en red — Servicios de Nombres de Dominio (DNS) (DOCX)", url:""},
+          {name:"Instalar y configurar servidor DNS con Bind9 en Ubuntu 20.04 | NETWORLD", url:""},
+          {name:"Modos de Red (PDF)", url:""},
+          {name:"Git Control de Versiones para Desarrolladores (PDF)", url:""},
+          {name:"Qué es Git y para qué sirve (PDF)", url:""}
+        ]},
+        {num:"UD2", title:"DHCP — Configuración Automática de Red, infraestructura DHCP para oficina", status:"current", links:[
+          {name:"SRI · Unidad 2 — DHCP (PPTX)", url:""},
+          {name:"Unidad 2 — Configuración Automática de Red (DHCP) (DOCX)", url:""},
+          {name:"Tutorial guiado — Primeros pasos con DHCP paso a paso (DOCX)", url:""},
+          {name:"Vídeo práctica en máquina virtual Linux server DHCP", url:""},
+          {name:"A2.1 Modos de red — Direcciones IP (PDF)", url:""}
+        ]},
+        {num:"UD3", title:"Servidores Web (HTTP/HTTPS)", status:"pending", links:[
+          {name:"UNIDAD 3 — Servidores Web HTTP y HTTPS (PDF)", url:""},
+          {name:"Unidad 3 — Servidores Web (HTTP_HTTPS) (DOCX)", url:""},
+          {name:"Tutorial guiado — Primeros pasos con un servidor web http paso a paso (DOCX)", url:""}
+        ]},
         {num:"UD4", title:"FTP (vsftpd / SFTP)", status:"pending"},
         {num:"UD5", title:"Correo electrónico (Postfix + Dovecot)", status:"pending"},
         {num:"UD6", title:"Mensajería, noticias y listas de distribución", status:"pending"},
         {num:"UD7", title:"Audio streaming (Icecast + VLC)", status:"pending"},
         {num:"UD8", title:"Vídeo streaming (FFmpeg + Nginx HLS)", status:"pending"},
         {num:"Extra", title:"Introducción a Docker", status:"pending"}
+      ],
+      activities: [
+        {text:"UD.1 Tarea 1 — Mi primer servidor DNS con BIND", type:"tarea", done:true, date:"2026-09-22"},
+        {text:"UD.1 Tarea 2", type:"tarea", done:true, date:""},
+        {text:"Práctica 1 — Primeros pasos con Git y GitHub", type:"tarea", done:false, date:"2026-09-29"},
+        {text:"UD.2 Tarea 1 Proyecto de Unidad 2 — Infraestructura DHCP para una oficina", type:"tarea", done:false, date:"2026-10-30"},
+        {text:"A2.1 Modos de red", type:"tarea", done:false, date:"2026-10-21"},
+        {text:"UD.3 Tarea 1 Proyecto de Unidad 3 — Portal web de la empresa", type:"tarea", done:false, date:""},
+        {text:"UD.3 Tarea 2", type:"tarea", done:false, date:""}
+      ],
+      dates: [
+        {label:"UD1 Tarea 1 cierre", date:"2026-09-22"},
+        {label:"Práctica Git/GitHub cierre", date:"2026-09-29"},
+        {label:"A2.1 Modos de red cierre", date:"2026-10-21"},
+        {label:"UD2 Proyecto DHCP cierre", date:"2026-10-30"}
       ]
     },
     aso: {
