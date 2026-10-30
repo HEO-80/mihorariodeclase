@@ -207,12 +207,14 @@ button{font-family:inherit}
 .act-item{
   display:flex;align-items:center;gap:12px;
   padding:12px 18px;border-bottom:1px solid var(--rule-soft);
+  transition:background .15s;
 }
 .act-item:last-child{border-bottom:0}
-.act-item input[type=checkbox]{width:17px;height:17px;accent-color:var(--ink);flex:none;cursor:pointer;margin:0}
+.act-item.st-evaluada{opacity:.65}
 .act-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .act-title{font-size:14.5px}
-.act-item.done .act-title{text-decoration:line-through;color:var(--ink-faint)}
+.act-item.st-evaluada .act-title{text-decoration:line-through;color:var(--ink-faint)}
+.act-item.st-entregada .act-title{color:var(--ink-soft)}
 .act-meta{
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
   font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--ink-faint);
@@ -230,6 +232,33 @@ button{font-family:inherit}
 .act-due.late{color:var(--signal);font-weight:600}
 .act-notes{font-size:13px;color:var(--ink-soft);line-height:1.45}
 .act-empty{padding:24px 18px;color:var(--ink-faint);font-size:14px;text-align:center}
+
+/* ---- activity status badge ---- */
+.act-status{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;
+  letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;
+  border-radius:3px;white-space:nowrap;cursor:pointer;user-select:none;
+  transition:filter .15s;flex:none;
+}
+.act-status:hover{filter:brightness(1.1)}
+.act-status.pending{background:var(--surface-2);color:var(--ink-faint)}
+.act-status.en-curso{background:var(--c3-bg);color:var(--c3-fg);font-weight:600}
+.act-status.entregada{background:var(--c1-bg);color:var(--c1-fg)}
+.act-status.evaluada{background:var(--c6-bg);color:var(--c6-fg)}
+
+/* ---- status legend ---- */
+.status-legend{
+  display:flex;flex-wrap:wrap;gap:8px 16px;
+  padding:10px 18px;border-bottom:1px solid var(--rule-soft);
+  font-size:12px;color:var(--ink-soft);
+}
+.legend-item{display:inline-flex;align-items:center;gap:5px}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex:none}
+.legend-dot.pending{background:var(--surface-2);border:1px solid var(--ink-faint)}
+.legend-dot.en-curso{background:var(--c3-bg);border:1px solid var(--c3-rail)}
+.legend-dot.entregada{background:var(--c1-bg);border:1px solid var(--c1-rail)}
+.legend-dot.evaluada{background:var(--c6-bg);border:1px solid var(--c6-rail)}
 
 /* ---- add form row ---- */
 .add-row{
@@ -383,6 +412,12 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       <h2>Actividades y Proyectos</h2>
     </div>
     <div class="section-body">
+      <div class="status-legend">
+        <span class="legend-item"><span class="legend-dot pending"></span>Pendiente</span>
+        <span class="legend-item"><span class="legend-dot en-curso"></span>En curso</span>
+        <span class="legend-item"><span class="legend-dot entregada"></span>Entregada</span>
+        <span class="legend-item"><span class="legend-dot evaluada"></span>Evaluada ✓</span>
+      </div>
       <ul class="act-list" id="act-list"></ul>
       <p class="act-empty" id="act-empty" hidden>No hay actividades. Añade la primera abajo.</p>
     </div>
@@ -546,13 +581,13 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"Extra", title:"Introducción a Docker", status:"pending"}
       ],
       activities: [
-        {text:"UD.1 Tarea 1 — Mi primer servidor DNS con BIND", type:"tarea", done:true, date:"2026-09-22"},
-        {text:"UD.1 Tarea 2", type:"tarea", done:true, date:""},
-        {text:"Práctica 1 — Primeros pasos con Git y GitHub", type:"tarea", done:false, date:"2026-09-29"},
-        {text:"UD.2 Tarea 1 Proyecto de Unidad 2 — Infraestructura DHCP para una oficina", type:"tarea", done:false, date:"2026-10-30"},
-        {text:"A2.1 Modos de red", type:"tarea", done:false, date:"2026-10-21"},
-        {text:"UD.3 Tutorial guiado — Apache, Virtual Hosts y HTTPS (70%)", type:"practica", done:false, date:"2026-11-20"},
-        {text:"UD.3 Examen — 20 test + 4 desarrollo (30%)", type:"examen", done:false, date:"2026-11-27"}
+        {text:"UD.1 Tarea 1 — Mi primer servidor DNS con BIND", type:"tarea", status:"evaluada", date:"2026-09-22"},
+        {text:"UD.1 Tarea 2", type:"tarea", status:"evaluada", date:""},
+        {text:"Práctica 1 — Primeros pasos con Git y GitHub", type:"tarea", status:"pending", date:"2026-09-29"},
+        {text:"UD.2 Tarea 1 Proyecto de Unidad 2 — Infraestructura DHCP para una oficina", type:"tarea", status:"en-curso", date:"2026-10-30"},
+        {text:"A2.1 Modos de red", type:"tarea", status:"pending", date:"2026-10-21"},
+        {text:"UD.3 Tutorial guiado — Apache, Virtual Hosts y HTTPS (70%)", type:"practica", status:"pending", date:"2026-11-20"},
+        {text:"UD.3 Examen — 20 test + 4 desarrollo (30%)", type:"examen", status:"pending", date:"2026-11-27"}
       ],
       dates: [
         {label:"UD1 Tarea 1 cierre", date:"2026-09-22"},
@@ -579,14 +614,14 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"UD6", title:"Unidad didáctica 6", status:"pending"}
       ],
       activities: [
-        {text:"UD.1 Tarea 1 — Montaje de un dominio Active Directory con Windows Server", type:"tarea", done:true, date:"2026-10-07"},
-        {text:"UD.1 Tarea 2 — Personalización de mi terminal PowerShell de admin", type:"tarea", done:true, date:"2026-10-22"},
-        {text:"RETO EXTRA Dojo", type:"otro", done:false, date:"2026-12-01"},
-        {text:"A2.1 Licenciamiento de Windows Cliente y Servidor", type:"tarea", done:true, date:"2026-09-29"},
-        {text:"A3.1 Gestión con PowerShell", type:"tarea", done:false, date:"2026-11-04"},
-        {text:"Tarea UD2+UD3 — Automatización con PowerShell: alta masiva de usuarios desde Excel + monitorización de procesos", type:"proyecto", done:false, date:""},
-        {text:"Práctica guiada PowerShell", type:"practica", done:false, date:""},
-        {text:"Práctica guiada CMD", type:"practica", done:false, date:""}
+        {text:"UD.1 Tarea 1 — Montaje de un dominio Active Directory con Windows Server", type:"tarea", status:"evaluada", date:"2026-10-07"},
+        {text:"UD.1 Tarea 2 — Personalización de mi terminal PowerShell de admin", type:"tarea", status:"evaluada", date:"2026-10-22"},
+        {text:"RETO EXTRA Dojo", type:"otro", status:"pending", date:"2026-12-01"},
+        {text:"A2.1 Licenciamiento de Windows Cliente y Servidor", type:"tarea", status:"evaluada", date:"2026-09-29"},
+        {text:"A3.1 Gestión con PowerShell", type:"tarea", status:"en-curso", date:"2026-11-04"},
+        {text:"Tarea UD2+UD3 — Automatización con PowerShell: alta masiva de usuarios desde Excel + monitorización de procesos", type:"proyecto", status:"en-curso", date:""},
+        {text:"Práctica guiada PowerShell", type:"practica", status:"pending", date:""},
+        {text:"Práctica guiada CMD", type:"practica", status:"pending", date:""}
       ],
       dates: [
         {label:"Cierre UD.1 Tarea 1 (AD)", date:"2026-10-07"},
@@ -615,14 +650,14 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"UD5", title:"Servidores de aplicaciones (Tomcat, Node.js)", status:"pending"}
       ],
       activities: [
-        {text:"UD.1 Tarea 1 / Práctica 1 — Monta tu laboratorio de servidor Web", type:"practica", done:true, date:"2026-10-01"},
-        {text:"UD.1 Tarea 2 — Apache, LAMP y Virtual Hosts", type:"tarea", done:true, date:"2026-10-29"},
-        {text:"UD.1 Tarea 3 — Nginx como proxy inverso, SSL/HTTPS y firewall UFW", type:"tarea", done:false, date:"2026-11-06"},
-        {text:"UD.2 Tarea 1 — Introducción CMS", type:"tarea", done:true, date:"2026-09-27"},
-        {text:"UD.2 Tarea 2 — Instalación WordPress", type:"tarea", done:true, date:"2026-09-29"},
-        {text:"UD.2 Tarea 3 — Usuarios y roles en WordPress", type:"tarea", done:true, date:"2026-10-09"},
-        {text:"UD.2 Tarea 4 — Child-theme (WordPress)", type:"tarea", done:false, date:"2026-10-25"},
-        {text:"UD.1 Proyecto 1ª Evaluación — Despliegue completo de un sitio web con WordPress", type:"proyecto", done:false, date:"2026-11-26"}
+        {text:"UD.1 Tarea 1 / Práctica 1 — Monta tu laboratorio de servidor Web", type:"practica", status:"evaluada", date:"2026-10-01"},
+        {text:"UD.1 Tarea 2 — Apache, LAMP y Virtual Hosts", type:"tarea", status:"evaluada", date:"2026-10-29"},
+        {text:"UD.1 Tarea 3 — Nginx como proxy inverso, SSL/HTTPS y firewall UFW", type:"tarea", status:"en-curso", date:"2026-11-06"},
+        {text:"UD.2 Tarea 1 — Introducción CMS", type:"tarea", status:"evaluada", date:"2026-09-27"},
+        {text:"UD.2 Tarea 2 — Instalación WordPress", type:"tarea", status:"evaluada", date:"2026-09-29"},
+        {text:"UD.2 Tarea 3 — Usuarios y roles en WordPress", type:"tarea", status:"evaluada", date:"2026-10-09"},
+        {text:"UD.2 Tarea 4 — Child-theme (WordPress)", type:"tarea", status:"en-curso", date:"2026-10-25"},
+        {text:"UD.1 Proyecto 1ª Evaluación — Despliegue completo de un sitio web con WordPress", type:"proyecto", status:"pending", date:"2026-11-26"}
       ],
       dates: [
         {label:"Cierre Práctica 1 (laboratorio servidor Web)", date:"2026-10-01"},
@@ -646,14 +681,14 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"U3", title:"Programación de hilos — synchronized, wait/notify, monitores, deadlock, productor-consumidor", status:"current"}
       ],
       activities: [
-        {text:"UD.1 Tarea 1 — Mi primer programa con hilos", type:"tarea", done:true, date:"2026-09-25"},
-        {text:"UD.1 Tarea 2 — Práctica guiada UT1: hilos, procesos y resultados (15%)", type:"tarea", done:true, date:"2026-10-23"},
-        {text:"Unidad 1 Actividad 1 — Mi TERMINAL DE DEVELOPER", type:"tarea", done:true, date:"2026-10-23"},
-        {text:"Unidad 1 Actividad 2 — Investigación: Cómo trabaja tu sistema operativo (25%)", type:"tarea", done:false, date:"2026-10-30"},
-        {text:"Ejercicio guiado UT2 — ContadorCompartido con Semaphore (paso a paso)", type:"practica", done:false, date:"2026-11-13"},
-        {text:"Ejercicio guiado UT3 — Pares/Impares con synchronized y wait/notify (paso a paso)", type:"practica", done:false, date:"2026-11-13"},
-        {text:"Parking Concurrente — Semaphore(5), 8 hilos, AtomicInteger, MANIFEST.MF (30%)", type:"proyecto", done:false, date:"2026-11-20"},
-        {text:"Examen 1ª Evaluación — UT1 + UT2 + UT3 (30%)", type:"examen", done:false, date:"2026-11-23"}
+        {text:"UD.1 Tarea 1 — Mi primer programa con hilos", type:"tarea", status:"evaluada", date:"2026-09-25"},
+        {text:"UD.1 Tarea 2 — Práctica guiada UT1: hilos, procesos y resultados (15%)", type:"tarea", status:"evaluada", date:"2026-10-23"},
+        {text:"Unidad 1 Actividad 1 — Mi TERMINAL DE DEVELOPER", type:"tarea", status:"evaluada", date:"2026-10-23"},
+        {text:"Unidad 1 Actividad 2 — Investigación: Cómo trabaja tu sistema operativo (25%)", type:"tarea", status:"en-curso", date:"2026-10-30"},
+        {text:"Ejercicio guiado UT2 — ContadorCompartido con Semaphore (paso a paso)", type:"practica", status:"pending", date:"2026-11-13"},
+        {text:"Ejercicio guiado UT3 — Pares/Impares con synchronized y wait/notify (paso a paso)", type:"practica", status:"pending", date:"2026-11-13"},
+        {text:"Parking Concurrente — Semaphore(5), 8 hilos, AtomicInteger, MANIFEST.MF (30%)", type:"proyecto", status:"pending", date:"2026-11-20"},
+        {text:"Examen 1ª Evaluación — UT1 + UT2 + UT3 (30%)", type:"examen", status:"pending", date:"2026-11-23"}
       ],
       dates: [
         {label:"UD1 Tarea 1 cierre", date:"2026-09-25"},
@@ -686,8 +721,8 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"3ªE", title:"Tercera evaluación (por definir)", status:"pending"}
       ],
       activities: [
-        {text:"UD1 Tarea 1 — Limpieza y análisis de ventas: Excel vs Power BI", type:"tarea", done:true, date:"2026-09-25"},
-        {text:"UD1 Tarea 2 — Power Query y modelado de datos en Power BI", type:"tarea", done:true, date:"2026-10-23"}
+        {text:"UD1 Tarea 1 — Limpieza y análisis de ventas: Excel vs Power BI", type:"tarea", status:"evaluada", date:"2026-09-25"},
+        {text:"UD1 Tarea 2 — Power Query y modelado de datos en Power BI", type:"tarea", status:"evaluada", date:"2026-10-23"}
       ],
       dates: [
         {label:"UD1 Apertura", date:"2026-09-18"},
@@ -734,18 +769,18 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"UD5", title:"Notion y organización digital", status:"pending"}
       ],
       activities: [
-        {text:"Tarea Presentación", type:"tarea", done:true, date:"2026-09-14"},
-        {text:"CV Inicio Curso", type:"tarea", done:true, date:"2026-09-14"},
-        {text:"UD1 Tarea 1 — Informe Técnico de Divulgación sobre una Tecnología Habilitadora Digital", type:"tarea", done:true, date:"2026-09-21"},
-        {text:"UD1 Tarea 2 — Combinación de correspondencia", type:"tarea", done:true, date:"2026-10-01"},
-        {text:"Tarea: Formulario de solicitud de material protegido", type:"tarea", done:false, date:"2026-10-19"},
-        {text:"UD1 Tarea 4 — Documento Colaborativo de Empresa: Macros, Tablas y Coautoría en Word", type:"tarea", done:false, date:"2026-11-05"},
-        {text:"A2.1 Creación de libro", type:"tarea", done:true, date:"2026-09-24"},
-        {text:"A2.2 Listas desplegables", type:"tarea", done:true, date:"2026-10-01"},
-        {text:"A2.3 Cálculos aritméticos", type:"tarea", done:true, date:"2026-10-03"},
-        {text:"A2.4 Análisis de precios extremos", type:"tarea", done:true, date:"2026-10-06"},
-        {text:"A2.5 Presentación visual y formato condicional", type:"tarea", done:false, date:"2026-10-08"},
-        {text:"A3.1 Reunión Virtual", type:"tarea", done:false, date:"2026-10-28"}
+        {text:"Tarea Presentación", type:"tarea", status:"evaluada", date:"2026-09-14"},
+        {text:"CV Inicio Curso", type:"tarea", status:"evaluada", date:"2026-09-14"},
+        {text:"UD1 Tarea 1 — Informe Técnico de Divulgación sobre una Tecnología Habilitadora Digital", type:"tarea", status:"evaluada", date:"2026-09-21"},
+        {text:"UD1 Tarea 2 — Combinación de correspondencia", type:"tarea", status:"evaluada", date:"2026-10-01"},
+        {text:"Tarea: Formulario de solicitud de material protegido", type:"tarea", status:"pending", date:"2026-10-19"},
+        {text:"UD1 Tarea 4 — Documento Colaborativo de Empresa: Macros, Tablas y Coautoría en Word", type:"tarea", status:"pending", date:"2026-11-05"},
+        {text:"A2.1 Creación de libro", type:"tarea", status:"evaluada", date:"2026-09-24"},
+        {text:"A2.2 Listas desplegables", type:"tarea", status:"evaluada", date:"2026-10-01"},
+        {text:"A2.3 Cálculos aritméticos", type:"tarea", status:"evaluada", date:"2026-10-03"},
+        {text:"A2.4 Análisis de precios extremos", type:"tarea", status:"evaluada", date:"2026-10-06"},
+        {text:"A2.5 Presentación visual y formato condicional", type:"tarea", status:"en-curso", date:"2026-10-08"},
+        {text:"A3.1 Reunión Virtual", type:"tarea", status:"en-curso", date:"2026-10-28"}
       ],
       dates: [
         {label:"UD1 inicio", date:"2026-09-14"},
@@ -780,14 +815,14 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         ]}
       ],
       activities: [
-        {text:"Firewall de Windows — práctica completa (interfaz gráfica + PowerShell)", type:"tarea", done:false, date:"2026-10-31"},
-        {text:"MÓDULO — INCIDENTES DE CIBERSEGURIDAD Práctica 1", type:"tarea", done:false, date:"2026-11-02"},
-        {text:"A1.1 Análisis de Vulnerabilidades", type:"tarea", done:true, date:"2026-10-03"},
-        {text:"A1.2 Circuito de casos", type:"tarea", done:true, date:"2026-10-02"},
-        {text:"TEST 1 Unidad 2 — Implantación de Mecanismos de Seguridad Activa", type:"test", done:true, date:"2026-10-07"},
-        {text:"A2.1 Investigación de un incidente de seguridad", type:"tarea", done:false, date:"2026-10-20"},
-        {text:"A3.1 Trabajo de análisis", type:"tarea", done:false, date:"2026-11-05"},
-        {text:"A4.1 Cifrado, VPN y Firewall", type:"tarea", done:false, date:"2026-10-28"}
+        {text:"Firewall de Windows — práctica completa (interfaz gráfica + PowerShell)", type:"tarea", status:"en-curso", date:"2026-10-31"},
+        {text:"MÓDULO — INCIDENTES DE CIBERSEGURIDAD Práctica 1", type:"tarea", status:"pending", date:"2026-11-02"},
+        {text:"A1.1 Análisis de Vulnerabilidades", type:"tarea", status:"evaluada", date:"2026-10-03"},
+        {text:"A1.2 Circuito de casos", type:"tarea", status:"evaluada", date:"2026-10-02"},
+        {text:"TEST 1 Unidad 2 — Implantación de Mecanismos de Seguridad Activa", type:"test", status:"evaluada", date:"2026-10-07"},
+        {text:"A2.1 Investigación de un incidente de seguridad", type:"tarea", status:"pending", date:"2026-10-20"},
+        {text:"A3.1 Trabajo de análisis", type:"tarea", status:"pending", date:"2026-11-05"},
+        {text:"A4.1 Cifrado, VPN y Firewall", type:"tarea", status:"pending", date:"2026-10-28"}
       ],
       dates: [
         {label:"A1.1 Vulnerabilidades cierre", date:"2026-10-03"},
@@ -892,13 +927,21 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   var stored = loadData();
   var data = stored || {
     temario: (seed.temario || []).map(function(u){ return {id:uid(), num:u.num, title:u.title, status:u.status, links:u.links||[]}; }),
-    activities: (seed.activities || []).map(function(a){ return {id:uid(), title:a.text, type:a.type||"tarea", done:!!a.done, date:a.date||"", notes:""}; }),
+    activities: (seed.activities || []).map(function(a){ return {id:uid(), title:a.text, type:a.type||"tarea", status:a.status||(a.done?"evaluada":"pending"), date:a.date||"", notes:""}; }),
     dates: (seed.dates || []).map(function(d){ return {id:uid(), title:d.label, date:d.date||"", type:"otro", notes:""}; })
   };
   // Ensure arrays exist
   if(!data.temario) data.temario = [];
   if(!data.activities) data.activities = [];
   if(!data.dates) data.dates = [];
+  // Migrate old done:boolean → status string
+  for(var mi=0;mi<data.activities.length;mi++){
+    var act = data.activities[mi];
+    if(!act.status){
+      act.status = act.done ? "evaluada" : "pending";
+      delete act.done;
+    }
+  }
 
   // ========== RENDER HEADER ==========
   document.title = mod.subject + " — Dashboard";
@@ -962,14 +1005,19 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     list.innerHTML = html;
   }
 
+  var STATUS_ORDER = {"en-curso":0, pending:1, entregada:2, evaluada:3};
+  var STATUS_LABELS = {pending:"Pendiente", "en-curso":"En curso", entregada:"Entregada", evaluada:"Evaluada"};
+  var STATUS_ICONS = {pending:"○", "en-curso":"▶", entregada:"◉", evaluada:"✓"};
+
   function renderActivities(){
     var list = document.getElementById("act-list");
     var empty = document.getElementById("act-empty");
     var today = todayStr();
 
-    // Sort: pending first (by due date), then done
+    // Sort: en-curso first, then pending, entregada, evaluada last
     var sorted = data.activities.slice().sort(function(a,b){
-      if(a.done !== b.done) return a.done ? 1 : -1;
+      var sa = STATUS_ORDER[a.status] || 0, sb = STATUS_ORDER[b.status] || 0;
+      if(sa !== sb) return sa - sb;
       var da = a.due || "9999-99-99", db = b.due || "9999-99-99";
       return da < db ? -1 : da > db ? 1 : 0;
     });
@@ -984,12 +1032,13 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     var html = "";
     for(var i=0;i<sorted.length;i++){
       var a = sorted[i];
+      var st = a.status || "pending";
       var typeLabel = {practica:"Práctica", proyecto:"Proyecto", tarea:"Tarea", examen:"Examen", otro:"Otro"}[a.type] || a.type;
       var dueText = a.due ? dueLabel(a.due) : "";
-      var isLate = !a.done && a.due && a.due < today;
+      var isLate = (st === "pending" || st === "en-curso") && a.due && a.due < today;
 
-      html += '<li class="act-item' + (a.done ? " done" : "") + '" data-id="' + esc(a.id) + '">' +
-                '<input type="checkbox"' + (a.done ? " checked" : "") + ' aria-label="Marcar como hecha">' +
+      html += '<li class="act-item st-' + st + '" data-id="' + esc(a.id) + '">' +
+                '<span class="act-status ' + st + '" title="Clic para cambiar estado">' + STATUS_ICONS[st] + ' ' + STATUS_LABELS[st] + '</span>' +
                 '<div class="act-body">' +
                   '<span class="act-title">' + esc(a.title) + '</span>' +
                   '<span class="act-meta">' +
@@ -1054,15 +1103,24 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   function renderStats(){
     var done = 0, total = data.temario.length;
     for(var i=0;i<data.temario.length;i++) if(data.temario[i].status === "done") done++;
-    var actOpen = 0;
-    for(var j=0;j<data.activities.length;j++) if(!data.activities[j].done) actOpen++;
+    var actPending = 0, actEnCurso = 0, actEntregada = 0, actEvaluada = 0;
+    for(var j=0;j<data.activities.length;j++){
+      var st = data.activities[j].status || "pending";
+      if(st === "pending") actPending++;
+      else if(st === "en-curso") actEnCurso++;
+      else if(st === "entregada") actEntregada++;
+      else if(st === "evaluada") actEvaluada++;
+    }
     var upcoming = 0;
     var today = todayStr();
     for(var k=0;k<data.dates.length;k++) if(data.dates[k].date && data.dates[k].date >= today) upcoming++;
 
     document.getElementById("stats").innerHTML =
-      '<span><b>' + done + '/' + total + '</b> unidades completadas</span>' +
-      '<span><b>' + actOpen + '</b> actividades pendientes</span>' +
+      '<span><b>' + done + '/' + total + '</b> unidades</span>' +
+      '<span>▶ <b>' + actEnCurso + '</b> en curso</span>' +
+      '<span>○ <b>' + actPending + '</b> pendientes</span>' +
+      '<span>◉ <b>' + actEntregada + '</b> por evaluar</span>' +
+      '<span>✓ <b>' + actEvaluada + '</b> evaluadas</span>' +
       '<span><b>' + upcoming + '</b> fechas próximas</span>';
   }
 
@@ -1170,7 +1228,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       title: text.slice(0,120),
       type: document.getElementById("act-type").value,
       due: document.getElementById("act-date").value || "",
-      done: false,
+      status: "pending",
       notes: ""
     });
     inp.value = "";
@@ -1180,26 +1238,32 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     inp.focus();
   });
 
-  document.getElementById("act-list").addEventListener("change", function(e){
-    if(e.target.type !== "checkbox") return;
-    var li = e.target.closest ? e.target.closest(".act-item") : null;
-    if(!li) return;
-    var id = li.dataset.id;
-    for(var i=0;i<data.activities.length;i++){
-      if(data.activities[i].id === id){ data.activities[i].done = e.target.checked; break; }
-    }
-    saveData(data);
-    renderAll();
-  });
-
+  // Cycle activity status on badge click
   document.getElementById("act-list").addEventListener("click", function(e){
+    var badge = e.target.closest ? e.target.closest(".act-status") : null;
+    if(badge){
+      var li = badge.closest(".act-item");
+      if(!li) return;
+      var id = li.dataset.id;
+      var cycle = {pending:"en-curso", "en-curso":"entregada", entregada:"evaluada", evaluada:"pending"};
+      for(var i=0;i<data.activities.length;i++){
+        if(data.activities[i].id === id){
+          data.activities[i].status = cycle[data.activities[i].status] || "pending";
+          break;
+        }
+      }
+      saveData(data);
+      renderAll();
+      return;
+    }
     var del = e.target.closest ? e.target.closest(".act-del") : null;
-    if(!del) return;
-    var li = del.closest(".act-item");
-    if(!li) return;
-    data.activities = data.activities.filter(function(a){ return a.id !== li.dataset.id; });
-    saveData(data);
-    renderAll();
+    if(del){
+      var li2 = del.closest(".act-item");
+      if(!li2) return;
+      data.activities = data.activities.filter(function(a){ return a.id !== li2.dataset.id; });
+      saveData(data);
+      renderAll();
+    }
   });
 
   // ========== DATES DIALOG ==========
