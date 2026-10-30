@@ -336,6 +336,105 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
   .strip{grid-template-columns:1fr}
   .fields{grid-template-columns:1fr}
 }
+/* ---- evaluación panel ---- */
+.eval-panel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);padding:16px 18px 8px}
+.eval-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.eval-head h2{
+  margin:0;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:23px;text-transform:uppercase;letter-spacing:.04em;
+}
+.eval-filters{display:flex;gap:6px}
+.eval-group{margin-bottom:14px}
+.eval-group-head{
+  display:flex;align-items:center;gap:8px;margin-bottom:6px;
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:17px;letter-spacing:.03em;
+}
+.eval-group-dot{width:10px;height:10px;border-radius:2px;flex:none}
+.eval-item{
+  display:flex;align-items:center;gap:10px;padding:8px 2px;border-top:1px solid var(--rule-soft);
+  font-size:14px;cursor:pointer;
+}
+.eval-item:hover{background:var(--surface-2)}
+.eval-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10px;
+  letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;
+  border-radius:3px;white-space:nowrap;flex:none;
+}
+.eval-badge.en-curso{background:var(--c3-bg);color:var(--c3-fg);font-weight:600}
+.eval-badge.entregada{background:var(--c1-bg);color:var(--c1-fg)}
+.eval-badge.pending{background:var(--surface-2);color:var(--ink-faint)}
+.eval-type{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;
+  color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em;flex:none;min-width:60px;
+}
+.eval-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.eval-date{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;
+  color:var(--ink-faint);flex:none;white-space:nowrap;
+}
+.eval-date.late{color:var(--signal);font-weight:600}
+.eval-date.soon{color:var(--c3-fg);font-weight:500}
+.eval-empty{color:var(--ink-faint);font-size:14px;padding:12px 2px}
+
+/* ---- calendar ---- */
+.cal-panel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);padding:16px 18px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.cal-head h2{
+  margin:0;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:23px;text-transform:uppercase;letter-spacing:.04em;
+}
+.cal-nav{display:flex;gap:4px}
+.cal-nav .btn{padding:6px 10px;font-size:13px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft);border-radius:3px;overflow:hidden}
+.cal-dow{
+  background:var(--surface-2);padding:6px 4px;text-align:center;
+  font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);
+}
+.cal-day{
+  background:var(--surface);padding:6px 6px 8px;min-height:80px;
+  display:flex;flex-direction:column;gap:2px;
+}
+.cal-day.outside{background:var(--surface-2);opacity:.5}
+.cal-day.today{background:var(--today);outline:2px solid var(--signal);outline-offset:-2px;z-index:1}
+.cal-num{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;font-weight:600;
+  color:var(--ink-soft);margin-bottom:2px;
+}
+.cal-day.today .cal-num{color:var(--signal)}
+.cal-evt{
+  font-size:10.5px;line-height:1.3;padding:1px 4px;border-radius:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:default;
+}
+.cal-evt.examen{background:var(--c4-bg);color:var(--c4-fg)}
+.cal-evt.tarea{background:var(--c1-bg);color:var(--c1-fg)}
+.cal-evt.practica{background:var(--c3-bg);color:var(--c3-fg)}
+.cal-evt.proyecto{background:var(--c6-bg);color:var(--c6-fg)}
+.cal-evt.test{background:var(--c5-bg);color:var(--c5-fg)}
+.cal-evt.otro{background:var(--c7-bg);color:var(--c7-fg)}
+
+/* ---- notes ---- */
+.notes-panel{background:var(--surface);border:1px solid var(--rule);border-radius:4px;box-shadow:var(--shadow);padding:16px 18px}
+.notes-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.notes-head h2{
+  margin:0;font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:600;
+  font-size:23px;text-transform:uppercase;letter-spacing:.04em;
+}
+.notes-saved{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--ink-faint)}
+#notes-area{
+  width:100%;min-height:120px;padding:12px;border:1px solid var(--rule-soft);border-radius:3px;
+  background:var(--surface-2);color:var(--ink);font:400 14px/1.6 "IBM Plex Sans",system-ui,sans-serif;
+  resize:vertical;outline:none;
+}
+#notes-area:focus{border-color:var(--focus)}
+
+@media (max-width:640px){
+  .cal-day{min-height:56px;padding:4px}
+  .cal-evt{font-size:9.5px}
+}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 @media print{
@@ -395,6 +494,17 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     </div>
   </div>
 
+  <section class="eval-panel" id="eval-panel" aria-label="Evaluación pendiente">
+    <div class="eval-head">
+      <h2>📋 Pendiente de revisar</h2>
+      <div class="eval-filters">
+        <button type="button" class="chip-btn" data-ef="urgent" aria-pressed="true">Urgente</button>
+        <button type="button" class="chip-btn" data-ef="all" aria-pressed="false">Todo</button>
+      </div>
+    </div>
+    <div id="eval-list"></div>
+  </section>
+
   <section class="tasks" aria-label="Tareas">
     <div class="tasks-head">
       <h2 id="t-title">Tareas</h2>
@@ -412,6 +522,26 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     </form>
     <ul class="t-list" id="t-list"></ul>
     <p class="t-empty" id="t-empty" hidden></p>
+  </section>
+
+  <section class="cal-panel" id="cal-panel" aria-label="Calendario mensual">
+    <div class="cal-head">
+      <h2 id="cal-title">Octubre 2026</h2>
+      <div class="cal-nav">
+        <button type="button" class="btn" id="cal-prev">◀</button>
+        <button type="button" class="btn" id="cal-today">Hoy</button>
+        <button type="button" class="btn" id="cal-next">▶</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </section>
+
+  <section class="notes-panel" id="notes-panel" aria-label="Notas">
+    <div class="notes-head">
+      <h2>📝 Notas</h2>
+      <span class="notes-saved" id="notes-saved"></span>
+    </div>
+    <textarea id="notes-area" placeholder="Escribe notas, recordatorios, información importante..." spellcheck="false"></textarea>
   </section>
 
   <div class="stats">
@@ -1212,8 +1342,263 @@ input[type=time],input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monos
     if(v && v !== view) applyView(v);
   });
 
+  // ========== EVAL PANEL: read all module activities from localStorage ==========
+  var STORE_VERSIONS = {psp:"v2"};
+  var MOD_KEYS = Object.keys(M);
+  var evalFilter = "urgent";
+
+  function readAllModuleData(){
+    var all = [];
+    for(var i=0;i<MOD_KEYS.length;i++){
+      var mk = MOD_KEYS[i];
+      var sk = "asignatura-" + mk + "-" + (STORE_VERSIONS[mk] || "v1");
+      try{
+        var raw = localStorage.getItem(sk);
+        if(!raw) continue;
+        var d = JSON.parse(raw);
+        if(!d || !d.activities) continue;
+        for(var j=0;j<d.activities.length;j++){
+          var a = d.activities[j];
+          all.push({
+            modKey: mk,
+            subject: M[mk].subject,
+            color: M[mk].color,
+            title: a.title || a.text || "",
+            type: a.type || "tarea",
+            status: a.status || "pending",
+            date: a.date || ""
+          });
+        }
+        // also collect dates for the calendar
+        if(d.dates){
+          for(var k=0;k<d.dates.length;k++){
+            var dt = d.dates[k];
+            all.push({
+              modKey: mk,
+              subject: M[mk].subject,
+              color: M[mk].color,
+              title: dt.title || dt.label || "",
+              type: dt.type || "otro",
+              status: "_date_",
+              date: dt.date || ""
+            });
+          }
+        }
+      }catch(e){}
+    }
+    return all;
+  }
+
+  function evalDateLabel(iso){
+    if(!iso) return "";
+    var p = iso.split("-"), d = new Date(+p[0], +p[1]-1, +p[2]);
+    var n = new Date(), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+    var diff = Math.round((d - t0) / 86400000);
+    var ds = DAYS_SHORT[(d.getDay()+6)%7].toLowerCase();
+    var fecha = ds + " " + d.getDate() + "/" + (d.getMonth()+1);
+    if(diff === 0) return {text:"hoy", cls:"late"};
+    if(diff === 1) return {text:"mañana", cls:"soon"};
+    if(diff < 0) return {text:fecha + " · hace " + (-diff) + "d", cls:"late"};
+    if(diff <= 3) return {text:fecha + " · en " + diff + "d", cls:"soon"};
+    if(diff <= 14) return {text:fecha + " · en " + diff + "d", cls:""};
+    return {text:fecha, cls:""};
+  }
+
+  function renderEvalPanel(){
+    var allData = readAllModuleData();
+    // filter only items that need attention: entregada, en-curso, or pending with close date
+    var today = todayStr();
+    var items = [];
+    for(var i=0;i<allData.length;i++){
+      var a = allData[i];
+      if(a.status === "_date_" || a.status === "evaluada") continue;
+      if(evalFilter === "urgent"){
+        // entregada (pending grading) or en-curso, or pending with date within 7 days
+        if(a.status === "entregada" || a.status === "en-curso") { items.push(a); continue; }
+        if(a.status === "pending" && a.date){
+          var p = a.date.split("-"), dd = new Date(+p[0], +p[1]-1, +p[2]);
+          var n = new Date(), t0 = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+          var diff = Math.round((dd - t0) / 86400000);
+          if(diff <= 7) items.push(a);
+        }
+      } else {
+        items.push(a);
+      }
+    }
+
+    // sort: entregada first (needs grading), then en-curso, then pending; within each by date
+    var STATUS_PRI = {"entregada":0, "en-curso":1, "pending":2};
+    items.sort(function(a,b){
+      var sa = STATUS_PRI[a.status] || 9, sb = STATUS_PRI[b.status] || 9;
+      if(sa !== sb) return sa - sb;
+      var da = a.date || "9999-99-99", db = b.date || "9999-99-99";
+      return da < db ? -1 : da > db ? 1 : 0;
+    });
+
+    // group by module
+    var groups = {}, order = [];
+    for(var j=0;j<items.length;j++){
+      var mk = items[j].modKey;
+      if(!groups[mk]) { groups[mk] = []; order.push(mk); }
+      groups[mk].push(items[j]);
+    }
+
+    var STATUS_LABELS = {"pending":"Pendiente", "en-curso":"En curso", "entregada":"Entregada"};
+    var STATUS_ICONS = {"pending":"○", "en-curso":"▶", "entregada":"◉"};
+
+    var html = "";
+    if(order.length === 0){
+      html = '<p class="eval-empty">✓ No hay nada pendiente de revisar ahora mismo.</p>';
+    } else {
+      for(var g=0;g<order.length;g++){
+        var gk = order[g], list = groups[gk];
+        html += '<div class="eval-group">' +
+          '<div class="eval-group-head">' +
+          '<span class="eval-group-dot" style="background:var(--' + M[gk].color + '-rail)"></span>' +
+          esc(M[gk].subject) + ' <span style="color:var(--ink-faint);font-weight:400;font-size:14px">(' + list.length + ')</span>' +
+          '</div>';
+        for(var n=0;n<list.length;n++){
+          var it = list[n];
+          var dl = it.date ? evalDateLabel(it.date) : null;
+          html += '<div class="eval-item" data-mod="' + gk + '" onclick="location.href=\'asignatura.html?mod=' + gk + '\'">' +
+            '<span class="eval-badge ' + it.status + '">' + (STATUS_ICONS[it.status]||"") + ' ' + (STATUS_LABELS[it.status]||"") + '</span>' +
+            '<span class="eval-type">' + esc(it.type) + '</span>' +
+            '<span class="eval-text" title="' + esc(it.title) + '">' + esc(it.title) + '</span>' +
+            (dl ? '<span class="eval-date ' + dl.cls + '">' + dl.text + '</span>' : '') +
+            '</div>';
+        }
+        html += '</div>';
+      }
+    }
+    document.getElementById("eval-list").innerHTML = html;
+
+    // update filter buttons
+    var fbtns = document.querySelectorAll(".eval-filters .chip-btn");
+    for(var f=0;f<fbtns.length;f++) fbtns[f].setAttribute("aria-pressed", fbtns[f].dataset.ef === evalFilter ? "true" : "false");
+  }
+
+  document.querySelector(".eval-filters").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("button") : null;
+    if(!b || !b.dataset.ef) return;
+    evalFilter = b.dataset.ef;
+    renderEvalPanel();
+  });
+
+  // ========== MONTHLY CALENDAR ==========
+  var MONTH_NAMES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+  var calYear, calMonth;
+  (function(){ var now = new Date(); calYear = now.getFullYear(); calMonth = now.getMonth(); })();
+
+  function renderCalendar(){
+    document.getElementById("cal-title").textContent = MONTH_NAMES[calMonth] + " " + calYear;
+
+    // collect all events from module data (dates arrays + activities with dates)
+    var allData = readAllModuleData();
+    var evtsByDate = {};
+    for(var i=0;i<allData.length;i++){
+      var a = allData[i];
+      if(!a.date) continue;
+      if(!evtsByDate[a.date]) evtsByDate[a.date] = [];
+      // avoid duplicates (same title same date from both dates[] and activities[])
+      var dup = false;
+      for(var dd=0;dd<evtsByDate[a.date].length;dd++){
+        if(evtsByDate[a.date][dd].title === a.title){ dup = true; break; }
+      }
+      if(!dup) evtsByDate[a.date].push(a);
+    }
+
+    var firstDay = new Date(calYear, calMonth, 1);
+    var startDow = (firstDay.getDay() + 6) % 7; // 0=Mon
+    var daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+    var today = new Date();
+    var todayISO = today.getFullYear() + "-" + pad2(today.getMonth()+1) + "-" + pad2(today.getDate());
+
+    var html = "";
+    var DOW = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
+    for(var d=0;d<7;d++) html += '<div class="cal-dow">' + DOW[d] + '</div>';
+
+    // fill leading blanks
+    var prevMonth = new Date(calYear, calMonth, 0);
+    var prevDays = prevMonth.getDate();
+    for(var p=startDow-1;p>=0;p--){
+      var pn = prevDays - p;
+      html += '<div class="cal-day outside"><span class="cal-num">' + pn + '</span></div>';
+    }
+
+    // actual days
+    for(var day=1;day<=daysInMonth;day++){
+      var iso = calYear + "-" + pad2(calMonth+1) + "-" + pad2(day);
+      var isToday = iso === todayISO;
+      html += '<div class="cal-day' + (isToday ? " today" : "") + '">';
+      html += '<span class="cal-num">' + day + '</span>';
+      var evts = evtsByDate[iso] || [];
+      // show max 3 events per day
+      for(var e=0;e<Math.min(evts.length,3);e++){
+        var ev = evts[e];
+        var evType = ev.type || "otro";
+        // short label: module abbreviation
+        var shortMod = ev.modKey ? ev.modKey.toUpperCase() : "";
+        html += '<div class="cal-evt ' + evType + '" title="' + esc(ev.subject) + ': ' + esc(ev.title) + '">' +
+          shortMod + ' ' + esc(ev.title).substring(0,25) + '</div>';
+      }
+      if(evts.length > 3) html += '<div class="cal-evt otro">+' + (evts.length-3) + ' más</div>';
+      html += '</div>';
+    }
+
+    // trailing blanks
+    var totalCells = startDow + daysInMonth;
+    var remaining = (7 - totalCells % 7) % 7;
+    for(var r=1;r<=remaining;r++){
+      html += '<div class="cal-day outside"><span class="cal-num">' + r + '</span></div>';
+    }
+
+    document.getElementById("cal-grid").innerHTML = html;
+  }
+
+  document.getElementById("cal-prev").addEventListener("click", function(){
+    calMonth--; if(calMonth<0){ calMonth=11; calYear--; }
+    renderCalendar();
+  });
+  document.getElementById("cal-next").addEventListener("click", function(){
+    calMonth++; if(calMonth>11){ calMonth=0; calYear++; }
+    renderCalendar();
+  });
+  document.getElementById("cal-today").addEventListener("click", function(){
+    var now = new Date(); calYear = now.getFullYear(); calMonth = now.getMonth();
+    renderCalendar();
+  });
+
+  // ========== NOTES ==========
+  var NOTES_KEY = "horario-notas-v1";
+  var notesArea = document.getElementById("notes-area");
+  var notesSaved = document.getElementById("notes-saved");
+  (function(){
+    try{
+      var raw = localStorage.getItem(NOTES_KEY);
+      if(raw){
+        var obj = JSON.parse(raw);
+        notesArea.value = obj.text || "";
+        notesSaved.textContent = obj.ts ? "Guardado: " + obj.ts : "";
+      }
+    }catch(e){}
+  })();
+  var notesTimer;
+  notesArea.addEventListener("input", function(){
+    clearTimeout(notesTimer);
+    notesTimer = setTimeout(function(){
+      var now = new Date();
+      var ts = now.toLocaleDateString("es-ES") + " " + now.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});
+      try{ localStorage.setItem(NOTES_KEY, JSON.stringify({text:notesArea.value, ts:ts})); }catch(e){}
+      notesSaved.textContent = "Guardado: " + ts;
+    }, 500);
+  });
+
+  // Initial render of new panels
+  renderEvalPanel();
+  renderCalendar();
+
   // keep the "now" line and the status strip honest
-  setInterval(render, 60000);
+  setInterval(function(){ render(); renderEvalPanel(); renderCalendar(); }, 60000);
 
   // ---- Dark/Light theme toggle ----
   var themeBtn = document.getElementById("theme-toggle");
