@@ -545,6 +545,9 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"UD1", title:"Fundamentos de sistemas operativos", status:"done"},
         {num:"UD2", title:"Virtualización", status:"current"},
         {num:"UD3", title:"Instalación de sistemas operativos", status:"pending"}
+      ],
+      activities: [
+        {text:"Tarea — Máquinas virtuales (última tarea 1ª evaluación)", type:"tarea", status:"pending", date:""}
       ]
     },
     sri: {
@@ -794,7 +797,8 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {text:"A2.3 Cálculos aritméticos", type:"tarea", status:"evaluada", date:"2026-10-03"},
         {text:"A2.4 Análisis de precios extremos", type:"tarea", status:"evaluada", date:"2026-10-06"},
         {text:"A2.5 Presentación visual y formato condicional", type:"tarea", status:"en-curso", date:"2026-10-08"},
-        {text:"A3.1 Reunión Virtual", type:"tarea", status:"en-curso", date:"2026-10-28"}
+        {text:"A3.1 Reunión Virtual", type:"tarea", status:"en-curso", date:"2026-10-28"},
+        {text:"Examen 1ª Evaluación — Test", type:"examen", status:"pending", date:"2026-11-23"}
       ],
       dates: [
         {label:"UD1 inicio", date:"2026-09-14"},
@@ -803,7 +807,8 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {label:"Formulario cierre", date:"2026-10-19"},
         {label:"UD1 Tarea 4 cierre", date:"2026-11-05"},
         {label:"A2.5 cierre", date:"2026-10-08"},
-        {label:"A3.1 Reunión Virtual cierre", date:"2026-10-28"}
+        {label:"A3.1 Reunión Virtual cierre", date:"2026-10-28"},
+        {label:"EXAMEN 1ª Evaluación OFI (test)", date:"2026-11-23"}
       ]
     },
     seg: {
@@ -813,6 +818,12 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"UD3", title:"Seguridad en redes", status:"pending"},
         {num:"UD4", title:"Criptografía y certificados digitales", status:"pending"},
         {num:"UD5", title:"Legislación y normativa de seguridad", status:"pending"}
+      ],
+      activities: [
+        {text:"Tarea SAI (por publicar viernes 13/11)", type:"tarea", status:"pending", date:""}
+      ],
+      dates: [
+        {label:"Publicar tarea SAI en Moodle", date:"2026-11-13"}
       ]
     },
     sad: {
@@ -863,6 +874,12 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     pim: {
       temario: [
         {num:"UD1", title:"Proyecto intermodular", status:"current"}
+      ],
+      activities: [
+        {text:"Tarea Proyecto Intermodular — entrega 1ª evaluación", type:"tarea", status:"pending", date:"2026-11-27"}
+      ],
+      dates: [
+        {label:"Entrega tarea PIM 1ª evaluación", date:"2026-11-27"}
       ]
     },
     cib: {
@@ -928,7 +945,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
 
   // ========== STORAGE ==========
   // Bump version per module to force seed refresh (change v1→v2 etc. when seed data is updated)
-  var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2"};
+  var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2", ofi:"v2", seg:"v2", som:"v2", pim:"v2"};
   var STORE_KEY = "asignatura-" + modKey + "-" + (STORE_VERSIONS[modKey] || "v1");
 
   function loadData(){
