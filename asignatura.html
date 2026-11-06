@@ -547,7 +547,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"UD3", title:"Instalación de sistemas operativos", status:"pending"}
       ],
       activities: [
-        {text:"Tarea — Máquinas virtuales (última tarea 1ª evaluación)", type:"tarea", status:"pending", date:""}
+        {text:"Tarea — Máquinas virtuales (última tarea 1ª evaluación)", type:"tarea", status:"pending", date:"2026-11-27"}
       ]
     },
     sri: {
@@ -847,7 +847,8 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {text:"TEST 1 Unidad 2 — Implantación de Mecanismos de Seguridad Activa", type:"test", status:"evaluada", date:"2026-10-07"},
         {text:"A2.1 Investigación de un incidente de seguridad", type:"tarea", status:"pending", date:"2026-10-20"},
         {text:"A3.1 Trabajo de análisis", type:"tarea", status:"pending", date:"2026-11-05"},
-        {text:"A4.1 Cifrado, VPN y Firewall", type:"tarea", status:"pending", date:"2026-10-28"}
+        {text:"A4.1 Cifrado, VPN y Firewall", type:"tarea", status:"pending", date:"2026-10-28"},
+        {text:"Tarea incidentes de ciberseguridad (misma que CIB)", type:"tarea", status:"pending", date:"2026-11-27"}
       ],
       dates: [
         {label:"A1.1 Vulnerabilidades cierre", date:"2026-10-03"},
@@ -857,7 +858,8 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {label:"A4.1 Cifrado/VPN/Firewall cierre", date:"2026-10-28"},
         {label:"Firewall Windows cierre", date:"2026-10-31"},
         {label:"Práctica Ciberseguridad cierre", date:"2026-11-02"},
-        {label:"A3.1 Trabajo análisis cierre", date:"2026-11-05"}
+        {label:"A3.1 Trabajo análisis cierre", date:"2026-11-05"},
+        {label:"Tarea incidentes ciberseguridad cierre", date:"2026-11-27"}
       ]
     },
     dsp: {
@@ -884,7 +886,13 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     },
     cib: {
       temario: [
-        {num:"UD1", title:"Gestión de incidencias de ciberseguridad", status:"current"}
+        {num:"UD1", title:"Gestión de incidencias de ciberseguridad", status:"current"},
+        {num:"UD2", title:"Wazuh — instalación, monitorización y detección", status:"pending"},
+        {num:"Proyecto", title:"Detección de cambios — script PowerShell de infección + análisis con Wazuh", status:"pending"}
+      ],
+      activities: [
+        {text:"Práctica Wazuh — Instalación y primeros pasos", type:"practica", status:"pending", date:""},
+        {text:"Proyecto final — Detectar cambios de un script PowerShell malicioso con Wazuh", type:"proyecto", status:"pending", date:""}
       ]
     }
   };
@@ -945,7 +953,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
 
   // ========== STORAGE ==========
   // Bump version per module to force seed refresh (change v1→v2 etc. when seed data is updated)
-  var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2", ofi:"v2", seg:"v2", som:"v2", pim:"v2"};
+  var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2", ofi:"v2", seg:"v2", som:"v3", pim:"v2", sad:"v2", cib:"v2"};
   var STORE_KEY = "asignatura-" + modKey + "-" + (STORE_VERSIONS[modKey] || "v1");
 
   function loadData(){
