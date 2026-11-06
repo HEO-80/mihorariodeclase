@@ -589,16 +589,16 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {text:"Práctica 1 — Primeros pasos con Git y GitHub", type:"tarea", status:"pending", date:"2026-09-29"},
         {text:"UD.2 Tarea 1 Proyecto de Unidad 2 — Infraestructura DHCP para una oficina", type:"tarea", status:"en-curso", date:"2026-10-30"},
         {text:"A2.1 Modos de red", type:"tarea", status:"pending", date:"2026-10-21"},
-        {text:"UD.3 Tutorial guiado — Apache, Virtual Hosts y HTTPS (70%)", type:"practica", status:"pending", date:"2026-11-20"},
-        {text:"UD.3 Examen — 20 test + 4 desarrollo (30%)", type:"examen", status:"pending", date:"2026-11-27"}
+        {text:"UD.3 Tarea 1 Proyecto — Portal web de la empresa (70%)", type:"tarea", status:"pending", date:"2026-11-17"},
+        {text:"UD.3 Examen — Servidores Web HTTP/HTTPS (30%)", type:"examen", status:"pending", date:"2026-11-20"}
       ],
       dates: [
         {label:"UD1 Tarea 1 cierre", date:"2026-09-22"},
         {label:"Práctica Git/GitHub cierre", date:"2026-09-29"},
         {label:"A2.1 Modos de red cierre", date:"2026-10-21"},
         {label:"UD2 Proyecto DHCP cierre", date:"2026-10-30"},
-        {label:"UD3 Tutorial Web cierre", date:"2026-11-20"},
-        {label:"UD3 Examen Web", date:"2026-11-27"}
+        {label:"UD3 Tarea Portal Web cierre", date:"2026-11-17"},
+        {label:"EXAMEN UD3 Servidores Web", date:"2026-11-20"}
       ]
     },
     aso: {
@@ -953,7 +953,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
 
   // ========== STORAGE ==========
   // Bump version per module to force seed refresh (change v1→v2 etc. when seed data is updated)
-  var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2", ofi:"v2", seg:"v2", som:"v3", pim:"v2", sad:"v2", cib:"v2"};
+  var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2", ofi:"v2", seg:"v2", som:"v3", pim:"v2", sad:"v2", cib:"v2", sri:"v2"};
   var STORE_KEY = "asignatura-" + modKey + "-" + (STORE_VERSIONS[modKey] || "v1");
 
   function loadData(){
