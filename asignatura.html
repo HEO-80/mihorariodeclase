@@ -688,7 +688,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {text:"Ejercicio guiado UT2 — ContadorCompartido con Semaphore (paso a paso)", type:"practica", status:"pending", date:"2026-11-13"},
         {text:"Ejercicio guiado UT3 — Pares/Impares con synchronized y wait/notify (paso a paso)", type:"practica", status:"pending", date:"2026-11-13"},
         {text:"Parking Concurrente — Semaphore(5), 8 hilos, AtomicInteger, MANIFEST.MF (30%)", type:"proyecto", status:"pending", date:"2026-11-20"},
-        {text:"Examen 1ª Evaluación — UT1 + UT2 + UT3 (30%)", type:"examen", status:"pending", date:"2026-11-23"}
+        {text:"Examen 1ª Evaluación — UT1 + UT2 + UT3 (30%)", type:"examen", status:"pending", date:"2026-11-20"}
       ],
       dates: [
         {label:"UD1 Tarea 1 cierre", date:"2026-09-25"},
@@ -700,7 +700,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {label:"Entrega ejercicios guiados + enunciado Parking", date:"2026-11-09"},
         {label:"Cierre ejercicios guiados UT2+UT3", date:"2026-11-13"},
         {label:"Entrega Parking Concurrente (30%)", date:"2026-11-20"},
-        {label:"EXAMEN 1ª Evaluación UT1+UT2+UT3 (30%)", date:"2026-11-23"}
+        {label:"EXAMEN 1ª Evaluación UT1+UT2+UT3 (30%)", date:"2026-11-20"}
       ]
     },
     ad: {
@@ -722,12 +722,14 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ],
       activities: [
         {text:"UD1 Tarea 1 — Limpieza y análisis de ventas: Excel vs Power BI", type:"tarea", status:"evaluada", date:"2026-09-25"},
-        {text:"UD1 Tarea 2 — Power Query y modelado de datos en Power BI", type:"tarea", status:"evaluada", date:"2026-10-23"}
+        {text:"UD1 Tarea 2 — Power Query y modelado de datos en Power BI", type:"tarea", status:"evaluada", date:"2026-10-23"},
+        {text:"Examen 1ª Evaluación — Acceso a Datos (Power BI)", type:"examen", status:"pending", date:"2026-11-23"}
       ],
       dates: [
         {label:"UD1 Apertura", date:"2026-09-18"},
         {label:"UD1 Tarea 1 cierre", date:"2026-09-25"},
-        {label:"UD1 Tarea 2 cierre", date:"2026-10-23"}
+        {label:"UD1 Tarea 2 cierre", date:"2026-10-23"},
+        {label:"EXAMEN 1ª Evaluación Acceso a Datos", date:"2026-11-23"}
       ]
     },
     dig: {
@@ -738,6 +740,12 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"UD4", title:"Inteligencia Artificial aplicada", status:"pending"},
         {num:"UD5", title:"Tecnologías Habilitadoras Digitales (IoT, Big Data, 5G...)", status:"pending"},
         {num:"UD6", title:"Proyecto de transformación digital", status:"pending"}
+      ],
+      activities: [
+        {text:"Examen 1ª Evaluación — Digitalización (grado medio)", type:"examen", status:"pending", date:"2026-11-18"}
+      ],
+      dates: [
+        {label:"EXAMEN 1ª Evaluación Digitalización (SMR)", date:"2026-11-18"}
       ]
     },
     sost: {
@@ -748,6 +756,12 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"UD4", title:"Economía circular y productos responsables", status:"pending"},
         {num:"UD5", title:"Aplicación práctica de la sostenibilidad", status:"pending"},
         {num:"UD6", title:"Plan de sostenibilidad de una empresa (proyecto)", status:"pending"}
+      ],
+      activities: [
+        {text:"Examen 1ª Evaluación — Test + preguntas (Safe Exam Browser)", type:"examen", status:"pending", date:"2026-11-18"}
+      ],
+      dates: [
+        {label:"EXAMEN 1ª Evaluación (Safe Exam Browser)", date:"2026-11-18"}
       ]
     },
     ofi: {
@@ -838,6 +852,12 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     dsp: {
       temario: [
         {num:"UD1", title:"Digitalización aplicada a los sectores productivos", status:"current"}
+      ],
+      activities: [
+        {text:"Examen 1ª Evaluación — Digitalización (grado superior)", type:"examen", status:"pending", date:"2026-11-18"}
+      ],
+      dates: [
+        {label:"EXAMEN 1ª Evaluación Digitalización (ASIR)", date:"2026-11-18"}
       ]
     },
     pim: {
@@ -908,7 +928,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
 
   // ========== STORAGE ==========
   // Bump version per module to force seed refresh (change v1→v2 etc. when seed data is updated)
-  var STORE_VERSIONS = {psp:"v2"};
+  var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2"};
   var STORE_KEY = "asignatura-" + modKey + "-" + (STORE_VERSIONS[modKey] || "v1");
 
   function loadData(){
