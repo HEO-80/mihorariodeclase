@@ -1212,9 +1212,11 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
   // ========== EVAL PANEL ==========
   // ========== EVENTOS FIJOS (exámenes, entregas importantes) ==========
   var FIXED_EVENTS = [
-    {modKey:"dig",  title:"Examen UD1 — Industria 4.0 (SMR)",  type:"examen", status:"pending", date:"2026-11-18"},
-    {modKey:"sost", title:"Examen Sostenibilidad",              type:"examen", status:"pending", date:"2026-11-18"},
-    {modKey:"dsp",  title:"Examen UD1 — Industria 4.0 (ASIR)", type:"examen", status:"pending", date:"2026-11-25"}
+    {modKey:"dig",  title:"Examen UD1 — Industria 4.0 (SMR)",                      type:"examen",   status:"pending", date:"2026-11-18"},
+    {modKey:"sost", title:"Examen Sostenibilidad",                                  type:"examen",   status:"pending", date:"2026-11-18"},
+    {modKey:"psp",  title:"Examen PSP — test + preguntas de resolver",              type:"examen",   status:"pending", date:"2026-11-21"},
+    {modKey:"ad",   title:"Examen Acceso a Datos — práctica Power BI, Python y BD", type:"practica", status:"pending", date:"2026-11-23"},
+    {modKey:"dsp",  title:"Examen UD1 — Industria 4.0 (ASIR)",                     type:"examen",   status:"pending", date:"2026-11-25"}
   ];
 
   var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2", ofi:"v2", seg:"v2", som:"v3", pim:"v2", sad:"v2", cib:"v2", sri:"v2"};
