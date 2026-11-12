@@ -1163,6 +1163,12 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
   }
 
   // ========== EVAL PANEL ==========
+  // ========== EVENTOS FIJOS (exámenes, entregas importantes) ==========
+  var FIXED_EVENTS = [
+    {modKey:"dig", title:"Examen UD1 — Industria 4.0 (SMR)", type:"examen", status:"pending", date:"2026-11-18"},
+    {modKey:"dsp", title:"Examen UD1 — Industria 4.0 (ASIR)", type:"examen", status:"pending", date:"2026-11-25"}
+  ];
+
   var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2", ofi:"v2", seg:"v2", som:"v3", pim:"v2", sad:"v2", cib:"v2", sri:"v2"};
   var MOD_KEYS = Object.keys(M);
   var evalFilter = "urgent";
@@ -1189,6 +1195,21 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
         }
       }catch(e){}
     }
+    // Añadir eventos fijos (exámenes, etc.)
+    for(var fi=0;fi<FIXED_EVENTS.length;fi++){
+      var fe = FIXED_EVENTS[fi];
+      var feSubj = M[fe.modKey] ? M[fe.modKey].subject : fe.modKey;
+      var feColor = M[fe.modKey] ? M[fe.modKey].color : "c7";
+      // Evitar duplicados si ya existe uno con mismo título y fecha
+      var feDup = false;
+      for(var fd=0;fd<all.length;fd++){
+        if(all[fd].title === fe.title && all[fd].date === fe.date){ feDup = true; break; }
+      }
+      if(!feDup){
+        all.push({modKey:fe.modKey, subject:feSubj, color:feColor, title:fe.title, type:fe.type, status:fe.status, date:fe.date});
+      }
+    }
+
     return all;
   }
 
