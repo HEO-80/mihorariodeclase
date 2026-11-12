@@ -635,12 +635,12 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     },
     iaw: {
       temario: [
-        {num:"UD1", title:"Introducción a las Aplicaciones Web — Servidores Web (Apache, LAMP, Virtual Hosts, Nginx, SSL/HTTPS, UFW)", status:"current", links:[
+        {num:"UD1", title:"Introducción a las Aplicaciones Web — Servidores Web (Apache, LAMP, Virtual Hosts, Nginx, SSL/HTTPS, UFW)", status:"done", links:[
           {name:"T4 Implantación de Aplicaciones Web (PDF)", url:""},
           {name:"Unidad 1 Introducción a las Aplicaciones Web (DOCX)", url:""},
           {name:"Práctica 1 — Monta tu laboratorio de servidor Web (DOCX)", url:""}
         ]},
-        {num:"UD2", title:"CMS y WordPress (Guy) — Instalación, configuración, usuarios/roles, temas/child-theme, despliegue", status:"current", links:[
+        {num:"UD2", title:"CMS y WordPress (Profesor) — Instalación, configuración, usuarios/roles, temas/child-theme, despliegue", status:"done", links:[
           {name:"Presentación 1 — Introducción a CMS", url:""},
           {name:"Presentación 2 — Instalación WordPress en XAMPP", url:""},
           {name:"Presentación 3 — Configuración básica / Panel de admin", url:""},
@@ -648,26 +648,56 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
           {name:"Presentación 5 — Temas, child-theme", url:""},
           {name:"Presentación 6 — WordPress cierre", url:""}
         ]},
-        {num:"UD3", title:"PHP y MySQL (Guy)", status:"pending"},
-        {num:"UD4", title:"Seguridad web y ofimática web (Nextcloud)", status:"pending"},
-        {num:"UD5", title:"Servidores de aplicaciones (Tomcat, Node.js)", status:"pending"}
+
+        /* ───── 2ª EVALUACIÓN (Hector) ───── */
+        {num:"UD3", title:"PHP desde cero — Variables, formularios GET/POST, arrays, bucles, integración HTML+PHP", status:"pending", links:[]},
+        {num:"UD4", title:"PHP + Base de datos — Conexión PDO a MariaDB/MySQL, consultas SQL, CRUD completo (crear, leer, editar, borrar)", status:"pending", links:[]},
+        {num:"UD5", title:"Sesiones y autenticación — Login con sesiones PHP, control de acceso, protección de rutas", status:"pending", links:[]},
+        {num:"UD6", title:"Git y control de versiones — Repositorios, commits, ramas, trabajo colaborativo", status:"pending", links:[]},
+        {num:"UD7", title:"Despliegue y seguridad — Despliegue de aplicación PHP en servidor real, hardening, actualizaciones, conceptos SQLi/XSS, SSL producción", status:"pending", links:[]},
+        {num:"UD8", title:"Ofimática web colaborativa — Despliegue de Nextcloud: instalación, usuarios, trabajo cooperativo", status:"pending", links:[]},
+
+        /* ───── 2ª EVALUACIÓN (Profesor) ───── */
+        {num:"UD9", title:"WordPress avanzado (Profesor) — Administración: backups, export/import XML, RSS, logs, plantillas", status:"pending", links:[]},
+        {num:"UD10", title:"Modificar WordPress por dentro (Profesor) — functions.php, estructura de directorios, código del CMS", status:"pending", links:[]}
       ],
       activities: [
+        /* ── 1ª Evaluación ── */
         {text:"UD.1 Tarea 1 / Práctica 1 — Monta tu laboratorio de servidor Web", type:"practica", status:"evaluada", date:"2026-10-01"},
         {text:"UD.1 Tarea 2 — Apache, LAMP y Virtual Hosts", type:"tarea", status:"evaluada", date:"2026-10-29"},
-        {text:"UD.1 Tarea 3 — Nginx como proxy inverso, SSL/HTTPS y firewall UFW", type:"tarea", status:"en-curso", date:"2026-11-06"},
+        {text:"UD.1 Tarea 3 — Nginx como proxy inverso, SSL/HTTPS y firewall UFW (explicación, no entregable)", type:"tarea", status:"evaluada", date:"2026-11-06"},
         {text:"UD.2 Tarea 1 — Introducción CMS", type:"tarea", status:"evaluada", date:"2026-09-27"},
         {text:"UD.2 Tarea 2 — Instalación WordPress", type:"tarea", status:"evaluada", date:"2026-09-29"},
         {text:"UD.2 Tarea 3 — Usuarios y roles en WordPress", type:"tarea", status:"evaluada", date:"2026-10-09"},
-        {text:"UD.2 Tarea 4 — Child-theme (WordPress)", type:"tarea", status:"en-curso", date:"2026-10-25"},
-        {text:"UD.1 Proyecto 1ª Evaluación — Despliegue completo de un sitio web con WordPress", type:"proyecto", status:"pending", date:"2026-11-26"}
+        {text:"UD.2 Tarea 4 — Child-theme (WordPress)", type:"tarea", status:"evaluada", date:"2026-10-25"},
+        {text:"Proyecto 1ª Evaluación — Despliegue completo de un sitio web con WordPress", type:"proyecto", status:"evaluada", date:"2026-11-19"},
+
+        /* ── 2ª Evaluación (Hector) ── */
+        {text:"Explicación PHP desde cero: variables, formularios, arrays, bucles", type:"clase", status:"pending", date:""},
+        {text:"Explicación PHP + MariaDB: conexión PDO, consultas SQL, CRUD", type:"clase", status:"pending", date:""},
+        {text:"Explicación sesiones y autenticación: login, control de acceso", type:"clase", status:"pending", date:""},
+        {text:"Explicación Git: repositorios, commits, ramas", type:"clase", status:"pending", date:""},
+        {text:"Explicación despliegue y seguridad: hardening, SQLi/XSS, SSL producción", type:"clase", status:"pending", date:""},
+        {text:"Proyecto 2ª Eval #1 — App PHP con CRUD + login con sesiones, desplegada en servidor real con HTTPS y Git", type:"proyecto", status:"pending", date:""},
+        {text:"Proyecto 2ª Eval #2 — Despliegue de Nextcloud: instalación, usuarios, trabajo cooperativo", type:"proyecto", status:"pending", date:"2026-02-17"},
+
+        /* ── 2ª Evaluación (Profesor) ── */
+        {text:"Tarea Profesor — Administración avanzada de WordPress (backups, export/import, RSS, logs)", type:"tarea", status:"pending", date:"2026-01-08"},
+        {text:"Tarea Profesor — Modificar WordPress por dentro (functions.php, estructura, código)", type:"tarea", status:"pending", date:"2026-01-28"}
       ],
       dates: [
+        /* ── 1ª Evaluación ── */
         {label:"Cierre Práctica 1 (laboratorio servidor Web)", date:"2026-10-01"},
         {label:"Cierre Tarea 2 (Apache, LAMP, VHosts)", date:"2026-10-29"},
         {label:"Cierre Tarea 3 (Nginx, SSL, UFW)", date:"2026-11-06"},
         {label:"Cierre Tarea 4 Child-theme WordPress", date:"2026-10-25"},
-        {label:"Cierre Proyecto 1ª Eval (WordPress completo)", date:"2026-11-26"}
+        {label:"Cierre Proyecto 1ª Eval (WordPress completo)", date:"2026-11-19"},
+        /* ── 2ª Evaluación ── */
+        {label:"Inicio 2ª evaluación", date:"2026-12-01"},
+        {label:"Tarea Profesor — Admin WP (entrega)", date:"2026-01-08"},
+        {label:"Tarea Profesor — Modificar WP (entrega)", date:"2026-01-28"},
+        {label:"Proyecto #2 Nextcloud (entrega)", date:"2026-02-17"},
+        {label:"Notas finales puestas", date:"2026-02-22"}
       ]
     },
     psp: {
