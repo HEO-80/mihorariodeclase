@@ -4,6 +4,8 @@ Tablero semanal de clases + seguimiento de asignaturas en una sola página HTML.
 
 > **🔗 Ver la página en vivo:** [https://heo-80.github.io/mihorariodeclase/](https://heo-80.github.io/mihorariodeclase/)
 
+![Vista del horario semanal](screenshot.png)
+
 ---
 
 ## Qué incluye
