@@ -497,6 +497,42 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
   .eval-panel,.cal-panel{margin-left:14px;margin-right:14px}
   .stats{padding:0 14px 20px}
 }
+/* ---- DAY DETAIL DIALOG ---- */
+.day-dlg{max-width:420px}
+.day-dlg h2{display:flex;align-items:center;gap:10px}
+.day-dlg h2 .day-dow{font-weight:400;color:var(--ink2);font-size:15px}
+.day-section{padding:6px 22px}
+.day-section-title{
+  font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:12px 0 6px;
+}
+.day-class{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;
+  border-radius:var(--r-sm);margin-bottom:4px;
+}
+.day-class-dot{width:8px;height:8px;border-radius:3px;flex:none}
+.day-class-time{
+  font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--ink3);
+  flex:none;min-width:90px;
+}
+.day-class-name{font-size:13.5px;font-weight:600;flex:1;min-width:0}
+.day-class-room{font-size:11.5px;color:var(--ink2);flex:none}
+.day-event{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;
+  border-radius:var(--r-sm);margin-bottom:4px;
+}
+.day-event-icon{font-size:14px;flex:none}
+.day-event-text{font-size:13.5px;font-weight:500;flex:1}
+.day-event-mod{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--ink3);flex:none}
+.day-task{
+  display:flex;align-items:center;gap:8px;padding:6px 10px;font-size:13px;
+}
+.day-task.done{color:var(--ink3);text-decoration:line-through}
+.day-empty{padding:14px 22px;color:var(--ink3);font-size:13px;text-align:center}
+
+.cal-d:not(.out){cursor:pointer}
+.cal-day:not(.outside){cursor:pointer}
+
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media print{
   body{background:#fff}
@@ -683,6 +719,17 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
       <button type="button" class="btn btn-accent" id="f-save">Guardar</button>
     </div>
   </form>
+</dialog>
+
+<dialog id="day-dlg" class="day-dlg">
+  <div class="dlg">
+    <h2 id="day-dlg-title">Miércoles 18 <span class="day-dow">noviembre 2026</span></h2>
+    <div id="day-dlg-body"></div>
+    <div class="dlg-foot">
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="day-dlg-close">Cerrar</button>
+    </div>
+  </div>
 </dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -1165,8 +1212,9 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
   // ========== EVAL PANEL ==========
   // ========== EVENTOS FIJOS (exámenes, entregas importantes) ==========
   var FIXED_EVENTS = [
-    {modKey:"dig", title:"Examen UD1 — Industria 4.0 (SMR)", type:"examen", status:"pending", date:"2026-11-18"},
-    {modKey:"dsp", title:"Examen UD1 — Industria 4.0 (ASIR)", type:"examen", status:"pending", date:"2026-11-25"}
+    {modKey:"dig",  title:"Examen UD1 — Industria 4.0 (SMR)",  type:"examen", status:"pending", date:"2026-11-18"},
+    {modKey:"sost", title:"Examen Sostenibilidad",              type:"examen", status:"pending", date:"2026-11-18"},
+    {modKey:"dsp",  title:"Examen UD1 — Industria 4.0 (ASIR)", type:"examen", status:"pending", date:"2026-11-25"}
   ];
 
   var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2", ofi:"v2", seg:"v2", som:"v3", pim:"v2", sad:"v2", cib:"v2", sri:"v2"};
@@ -1622,6 +1670,106 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
   window.addEventListener("hashchange", function(){
     var v=viewById((location.hash||"").replace("#",""));
     if(v&&v!==view) applyView(v);
+  });
+
+  // ========== DAY DETAIL DIALOG ==========
+  var dayDlg = document.getElementById("day-dlg");
+  document.getElementById("day-dlg-close").addEventListener("click", function(){ dayDlg.close(); });
+
+  function showDayDetail(iso){
+    var p = iso.split("-"), y=+p[0], m=+p[1]-1, d=+p[2];
+    var dt = new Date(y, m, d);
+    var dow = DAYS[(dt.getDay()+6)%7];
+    document.getElementById("day-dlg-title").innerHTML = esc(dow) + " " + d + " <span class=\"day-dow\">" + esc(MONTHS[m]) + " " + y + "</span>";
+
+    var dayIdx = (dt.getDay()+6)%7;
+    var html = "";
+
+    // 1) Clases del día
+    var dayClasses = [];
+    for(var i=0;i<state.classes.length;i++){
+      if(state.classes[i].day === dayIdx) dayClasses.push(state.classes[i]);
+    }
+    dayClasses.sort(function(a,b){ return toMin(a.start) - toMin(b.start); });
+
+    if(dayClasses.length){
+      html += '<div class="day-section"><div class="day-section-title">Clases</div>';
+      for(var c=0;c<dayClasses.length;c++){
+        var cl = dayClasses[c];
+        html += '<div class="day-class" style="background:var(--'+cl.color+')">';
+        html += '<span class="day-class-dot" style="background:var(--'+cl.color+'r)"></span>';
+        html += '<span class="day-class-time">'+cl.start+' – '+cl.end+'</span>';
+        html += '<span class="day-class-name" style="color:var(--'+cl.color+'f)">'+esc(cl.subject)+'</span>';
+        if(cl.room) html += '<span class="day-class-room">'+esc(cl.room)+'</span>';
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+
+    // 2) Eventos (exámenes, entregas, etc.)
+    var allData = readAllModuleData();
+    var dayEvents = [];
+    for(var j=0;j<allData.length;j++){
+      if(allData[j].date === iso) dayEvents.push(allData[j]);
+    }
+    if(dayEvents.length){
+      html += '<div class="day-section"><div class="day-section-title">Eventos</div>';
+      var TYPE_ICONS = {examen:"📝", tarea:"📄", practica:"🔧", proyecto:"📦", test:"✅", otro:"📌"};
+      for(var e=0;e<dayEvents.length;e++){
+        var ev = dayEvents[e];
+        var evIcon = TYPE_ICONS[ev.type] || "📌";
+        html += '<div class="day-event" style="background:var(--'+ev.color+')">';
+        html += '<span class="day-event-icon">'+evIcon+'</span>';
+        html += '<span class="day-event-text" style="color:var(--'+ev.color+'f)">'+esc(ev.title)+'</span>';
+        html += '<span class="day-event-mod">'+esc(ev.subject.length>25?ev.subject.slice(0,22)+"…":ev.subject)+'</span>';
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+
+    // 3) Tareas con fecha ese día
+    var dayTasks = [];
+    for(var t=0;t<tasks.length;t++){
+      if(tasks[t].due === iso && tasks[t].view === view.id) dayTasks.push(tasks[t]);
+    }
+    if(dayTasks.length){
+      html += '<div class="day-section"><div class="day-section-title">Tareas</div>';
+      for(var tk=0;tk<dayTasks.length;tk++){
+        var ta = dayTasks[tk];
+        html += '<div class="day-task'+(ta.done?" done":"")+'">'+
+          (ta.done?"☑":"☐")+' '+esc(ta.text)+
+          (ta.subject!=="General"?' <span style="color:var(--ink3);font-size:11px">· '+esc(ta.subject)+'</span>':"")+
+          '</div>';
+      }
+      html += '</div>';
+    }
+
+    if(!html) html = '<div class="day-empty">No hay nada programado para este día.</div>';
+
+    document.getElementById("day-dlg-body").innerHTML = html;
+    dayDlg.showModal();
+  }
+
+  // Click en mini-calendario
+  document.getElementById("cal-mini").addEventListener("click", function(e){
+    var cell = e.target.closest ? e.target.closest(".cal-d") : null;
+    if(!cell || cell.classList.contains("out")) return;
+    var day = parseInt(cell.textContent, 10);
+    if(isNaN(day)) return;
+    var iso = calMiniY + "-" + pad2(calMiniM+1) + "-" + pad2(day);
+    showDayDetail(iso);
+  });
+
+  // Click en calendario grande
+  document.getElementById("cal-grid").addEventListener("click", function(e){
+    var cell = e.target.closest ? e.target.closest(".cal-day") : null;
+    if(!cell || cell.classList.contains("outside")) return;
+    var numEl = cell.querySelector(".cal-num");
+    if(!numEl) return;
+    var day = parseInt(numEl.textContent, 10);
+    if(isNaN(day)) return;
+    var iso = calYear + "-" + pad2(calMonth+1) + "-" + pad2(day);
+    showDayDetail(iso);
   });
 
   // Theme
