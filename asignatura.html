@@ -361,14 +361,103 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   .date-item{padding:10px 14px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---- sidebar nav ---- */
+.sidebar{
+  position:fixed;top:0;left:0;width:180px;height:100vh;
+  background:var(--surface);border-right:1px solid var(--rule);
+  display:flex;flex-direction:column;gap:2px;padding:18px 0;
+  z-index:100;box-shadow:2px 0 8px rgba(22,27,35,.06);
+}
+.sidebar-btn{
+  appearance:none;border:none;background:none;
+  display:flex;align-items:center;gap:10px;
+  padding:12px 18px;font:500 14px/1.4 "IBM Plex Sans",system-ui,sans-serif;
+  color:var(--ink-soft);cursor:pointer;text-align:left;
+  border-left:3px solid transparent;transition:background .12s,color .12s,border-color .12s;
+}
+.sidebar-btn:hover{background:var(--surface-2);color:var(--ink)}
+.sidebar-btn.active{
+  border-left-color:var(--focus);color:var(--ink);font-weight:600;
+  background:var(--surface-2);
+}
+.sidebar-btn .sb-icon{font-size:16px;flex:none;width:22px;text-align:center}
+.sidebar-btn .sb-label{white-space:nowrap}
+
+/* desktop: push content right */
+@media (min-width:1101px){
+  .wrap{margin-left:200px}
+  .tab-bar{display:none}
+}
+
+/* mobile: hide sidebar, show horizontal tabs */
+@media (max-width:1100px){
+  .sidebar{display:none}
+  .tab-bar{
+    display:flex;gap:0;overflow-x:auto;
+    background:var(--surface);border-bottom:1px solid var(--rule);
+    position:sticky;top:0;z-index:100;
+  }
+  .tab-bar .sidebar-btn{
+    flex:1;min-width:0;justify-content:center;
+    border-left:0;border-bottom:3px solid transparent;
+    padding:10px 12px;font-size:13px;
+  }
+  .tab-bar .sidebar-btn.active{
+    border-bottom-color:var(--focus);border-left-color:transparent;
+  }
+}
+
+/* ---- RA list (same pattern as temario) ---- */
+.ra-list{list-style:none;margin:0;padding:0}
+.ra-item{
+  display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;
+  padding:12px 18px;border-bottom:1px solid var(--rule-soft);
+}
+.ra-item:last-child{border-bottom:0}
+.ra-id{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;
+  font-weight:600;color:var(--ink-faint);min-width:36px;text-align:center;
+  letter-spacing:.06em;padding-top:2px;
+}
+.ra-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.ra-title{font-size:14.5px;font-weight:500}
+.ra-criteria{font-size:13px;color:var(--ink-soft);line-height:1.45}
+.ra-status{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;
+  border-radius:3px;white-space:nowrap;flex:none;
+}
+.ra-status.done{background:var(--c6-bg);color:var(--c6-fg)}
+.ra-status.current{background:var(--c3-bg);color:var(--c3-fg);font-weight:600}
+.ra-status.pending{background:var(--surface-2);color:var(--ink-faint)}
+.ra-empty{padding:24px 18px;color:var(--ink-faint);font-size:14px;text-align:center}
+
 @media print{
   body{background:#fff}
-  .back,.btn,.add-row,.btn-icon,.temario-actions{display:none}
+  .back,.btn,.add-row,.btn-icon,.temario-actions,.sidebar,.tab-bar{display:none}
   .section{box-shadow:none}
+  .wrap{margin-left:0}
 }
 </style>
 </head>
 <body>
+
+<!-- Sidebar (desktop) -->
+<nav class="sidebar" id="sidebar">
+  <button type="button" class="sidebar-btn active" data-section="temario"><span class="sb-icon">📖</span><span class="sb-label">Temario</span></button>
+  <button type="button" class="sidebar-btn" data-section="activities"><span class="sb-icon">📝</span><span class="sb-label">Actividades</span></button>
+  <button type="button" class="sidebar-btn" data-section="contenido"><span class="sb-icon">📚</span><span class="sb-label">Contenido</span></button>
+  <button type="button" class="sidebar-btn" data-section="ras"><span class="sb-icon">🎯</span><span class="sb-label">RAs</span></button>
+</nav>
+
+<!-- Tab bar (mobile) -->
+<nav class="tab-bar" id="tab-bar">
+  <button type="button" class="sidebar-btn active" data-section="temario"><span class="sb-icon">📖</span><span class="sb-label">Temario</span></button>
+  <button type="button" class="sidebar-btn" data-section="activities"><span class="sb-icon">📝</span><span class="sb-label">Actividades</span></button>
+  <button type="button" class="sidebar-btn" data-section="contenido"><span class="sb-icon">📚</span><span class="sb-label">Contenido</span></button>
+  <button type="button" class="sidebar-btn" data-section="ras"><span class="sb-icon">🎯</span><span class="sb-label">RAs</span></button>
+</nav>
 
 <div class="wrap">
   <div style="display:flex;align-items:center;justify-content:space-between">
@@ -447,6 +536,18 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     </div>
   </section>
 
+  <!-- RESULTADOS DE APRENDIZAJE -->
+  <section class="section" id="sec-ras">
+    <div class="section-head">
+      <h2>Resultados de Aprendizaje</h2>
+      <button class="btn btn-sm" id="add-ra">＋ Añadir RA</button>
+    </div>
+    <div class="section-body">
+      <ul class="ra-list" id="ra-list"></ul>
+      <p class="ra-empty" id="ra-empty" hidden>No hay RAs definidos. Añade el primero.</p>
+    </div>
+  </section>
+
   <div class="stats" id="stats"></div>
 </div>
 
@@ -516,6 +617,41 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   </form>
 </dialog>
 
+<!-- Dialog for adding/editing RAs -->
+<dialog id="dlg-ra">
+  <form method="dialog" class="dlg" id="form-ra">
+    <h2 id="dlg-ra-title">Añadir RA</h2>
+    <div class="fields">
+      <div class="f">
+        <label for="fra-id">Identificador</label>
+        <input type="text" id="fra-id" maxlength="10" placeholder="RA1" autocomplete="off">
+      </div>
+      <div class="f">
+        <label for="fra-status">Estado</label>
+        <select id="fra-status">
+          <option value="pending">Pendiente</option>
+          <option value="current">En curso</option>
+          <option value="done">Superado</option>
+        </select>
+      </div>
+      <div class="f full">
+        <label for="fra-title">Título</label>
+        <input type="text" id="fra-title" maxlength="200" placeholder="Descripción del RA" autocomplete="off">
+      </div>
+      <div class="f full">
+        <label for="fra-criteria">Criterios de evaluación</label>
+        <textarea id="fra-criteria" rows="3" placeholder="a) Criterio 1  b) Criterio 2 ..."></textarea>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button type="button" class="btn btn-danger" id="fra-del" hidden>Eliminar</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="fra-cancel">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="fra-save">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
 <script>
 (function(){
   "use strict";
@@ -541,6 +677,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   // ========== SEED DATA (initial temario per module) ==========
   var SEEDS = {
     som: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Fundamentos de sistemas operativos", status:"done"},
         {num:"UD2", title:"Virtualización", status:"current"},
@@ -551,6 +688,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     sri: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Servicios DNS — Nombres de Dominio, BIND9 en Ubuntu, NETWORLD", status:"done", links:[
           {name:"Presentación Servicios de Red e Internet (PDF)", url:""},
@@ -602,6 +740,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     aso: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Directorio Activo (Active Directory)", status:"done"},
         {num:"UD2", title:"Gestión de procesos en Windows y Linux", status:"current", links:[
@@ -634,6 +773,13 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     iaw: {
+      ras: [
+        {id:"RA1", title:"Configura el entorno de desarrollo", criteria:"a) Servidores web y de aplicaciones  b) Bases de datos  c) Dependencias  d) VMs y contenedores", status:"done"},
+        {id:"RA2", title:"Instala gestores de contenidos (CMS)", criteria:"a) Instala CMS  b) Temas/módulos/plugins  c) Adapta a requisitos del cliente  d) Seguridad y rendimiento", status:"done"},
+        {id:"RA3", title:"Instala frameworks y entornos de desarrollo web", criteria:"a) Frameworks MVC  b) Herramientas de desarrollo/deploy/testing  c) Usuarios/permisos/seguridad", status:"pending"},
+        {id:"RA4", title:"Despliega aplicaciones web", criteria:"a) Despliegues manuales y automatizados  b) Rutas/BBDD/parámetros producción  c) Parches/actualizaciones  d) Verificación funcional y seguridad", status:"pending"},
+        {id:"RA5", title:"Documenta el proceso de implantación", criteria:"a) Registra pasos de instalación  b) Documentación técnica  c) Manuales de usuario", status:"current"}
+      ],
       temario: [
         {num:"UD1", title:"Introducción a las Aplicaciones Web — Servidores Web (Apache, LAMP, Virtual Hosts, Nginx, SSL/HTTPS, UFW)", status:"done", links:[
           {name:"T4 Implantación de Aplicaciones Web (PDF)", url:""},
@@ -701,6 +847,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     psp: {
+      ras: [],
       temario: [
         {num:"U1", title:"Conceptos generales: procesos, hilos, servicios — ProcessBuilder, Runnable, Callable, Future", status:"done", links:[
           {name:"UT1 — Programación Multiproceso: prácticas guiadas (DOCX)", url:""},
@@ -737,6 +884,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     ad: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Fundamentos de Power BI — Qué es, navegación, configuración de proyectos", status:"done", links:[
           {name:"1.1 Fundamentos de Power BI", url:""},
@@ -766,6 +914,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     dig: {
+      ras: [],
       temario: [
         {num:"UD1", title:"La 4ª Revolución Industrial", status:"done"},
         {num:"UD2", title:"Evolución web y negocio digital", status:"current"},
@@ -782,6 +931,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     sost: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Sostenibilidad y marcos ASG", status:"current"},
         {num:"UD2", title:"Retos ambientales y sociales actuales", status:"pending"},
@@ -798,6 +948,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     ofi: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Presentaciones y ecosistema ofimático — PowerPoint, informe técnico de divulgación, combinación de correspondencia, formularios y protección de documentos, macros/tablas/coautoría", status:"done", links:[
           {name:"Presentación Aplicaciones Ofimáticas", url:""},
@@ -842,6 +993,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     seg: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Introducción a la seguridad informática", status:"current"},
         {num:"UD2", title:"Seguridad activa y pasiva", status:"pending"},
@@ -857,6 +1009,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     sad: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Acceso remoto, seguridad perimetral y Firewall de Windows", status:"current", links:[
           {name:"UD3 Tema 4 Docente NO compartir (PDF)", url:""},
@@ -893,6 +1046,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     dsp: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Digitalización aplicada a los sectores productivos", status:"current"}
       ],
@@ -904,6 +1058,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     pim: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Proyecto intermodular", status:"current"}
       ],
@@ -915,6 +1070,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       ]
     },
     cib: {
+      ras: [],
       temario: [
         {num:"UD1", title:"Gestión de incidencias de ciberseguridad", status:"current"},
         {num:"UD2", title:"Wazuh — instalación, monitorización y detección", status:"pending"},
@@ -1003,12 +1159,14 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   var data = stored || {
     temario: (seed.temario || []).map(function(u){ return {id:uid(), num:u.num, title:u.title, status:u.status, links:u.links||[]}; }),
     activities: (seed.activities || []).map(function(a){ return {id:uid(), title:a.text, type:a.type||"tarea", status:a.status||(a.done?"evaluada":"pending"), date:a.date||"", notes:""}; }),
-    dates: (seed.dates || []).map(function(d){ return {id:uid(), title:d.label, date:d.date||"", type:"otro", notes:""}; })
+    dates: (seed.dates || []).map(function(d){ return {id:uid(), title:d.label, date:d.date||"", type:"otro", notes:""}; }),
+    ras: (seed.ras || []).map(function(r){ return {id:uid(), raId:r.id, title:r.title, criteria:r.criteria||"", status:r.status||"pending"}; })
   };
   // Ensure arrays exist
   if(!data.temario) data.temario = [];
   if(!data.activities) data.activities = [];
   if(!data.dates) data.dates = [];
+  if(!data.ras) data.ras = (seed.ras || []).map(function(r){ return {id:uid(), raId:r.id, title:r.title, criteria:r.criteria||"", status:r.status||"pending"}; });
   // Migrate old done:boolean → status string
   for(var mi=0;mi<data.activities.length;mi++){
     var act = data.activities[mi];
@@ -1199,11 +1357,44 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
       '<span><b>' + upcoming + '</b> fechas próximas</span>';
   }
 
+  var RA_STATUS_LABELS = {pending:"Pendiente", current:"En curso", done:"Superado"};
+
+  function renderRAs(){
+    var list = document.getElementById("ra-list");
+    var empty = document.getElementById("ra-empty");
+
+    if(!data.ras.length){
+      list.innerHTML = "";
+      empty.hidden = false;
+      return;
+    }
+    empty.hidden = true;
+
+    var html = "";
+    for(var i=0;i<data.ras.length;i++){
+      var r = data.ras[i];
+      var statusLabel = RA_STATUS_LABELS[r.status] || "Pendiente";
+      html += '<li class="ra-item" data-id="' + esc(r.id) + '">' +
+                '<span class="ra-id">' + esc(r.raId) + '</span>' +
+                '<div class="ra-body">' +
+                  '<span class="ra-title">' + esc(r.title) + '</span>' +
+                  (r.criteria ? '<span class="ra-criteria">' + esc(r.criteria) + '</span>' : '') +
+                '</div>' +
+                '<span class="ra-status ' + r.status + '">' + statusLabel + '</span>' +
+                '<div class="temario-actions">' +
+                  '<button type="button" class="btn-icon ra-edit" title="Editar">✎</button>' +
+                '</div>' +
+              '</li>';
+    }
+    list.innerHTML = html;
+  }
+
   function renderAll(){
     renderCurrentUnit();
     renderTemario();
     renderActivities();
     renderDates();
+    renderRAs();
     renderStats();
   }
 
@@ -1424,6 +1615,132 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
   document.getElementById("form-date").addEventListener("keydown", function(e){
     if(e.key === "Enter" && e.target.tagName === "INPUT"){ e.preventDefault(); document.getElementById("fd-save").click(); }
   });
+
+  // ========== RA DIALOG ==========
+  var dlgRa = document.getElementById("dlg-ra");
+  var editingRaId = null;
+
+  document.getElementById("add-ra").addEventListener("click", function(){
+    editingRaId = null;
+    document.getElementById("dlg-ra-title").textContent = "Añadir RA";
+    document.getElementById("fra-id").value = "RA" + (data.ras.length + 1);
+    document.getElementById("fra-title").value = "";
+    document.getElementById("fra-criteria").value = "";
+    document.getElementById("fra-status").value = "pending";
+    document.getElementById("fra-del").hidden = true;
+    dlgRa.showModal();
+    document.getElementById("fra-title").focus();
+  });
+
+  document.getElementById("ra-list").addEventListener("click", function(e){
+    var editBtn = e.target.closest ? e.target.closest(".ra-edit") : null;
+    if(editBtn){
+      var li = editBtn.closest(".ra-item");
+      if(!li) return;
+      var id = li.dataset.id;
+      var ra = null;
+      for(var i=0;i<data.ras.length;i++) if(data.ras[i].id === id){ ra = data.ras[i]; break; }
+      if(!ra) return;
+
+      editingRaId = id;
+      document.getElementById("dlg-ra-title").textContent = "Editar RA";
+      document.getElementById("fra-id").value = ra.raId;
+      document.getElementById("fra-title").value = ra.title;
+      document.getElementById("fra-criteria").value = ra.criteria || "";
+      document.getElementById("fra-status").value = ra.status;
+      document.getElementById("fra-del").hidden = false;
+      dlgRa.showModal();
+      document.getElementById("fra-title").focus();
+      return;
+    }
+    // Cycle status on badge click
+    var badge = e.target.closest ? e.target.closest(".ra-status") : null;
+    if(badge){
+      var li2 = badge.closest(".ra-item");
+      if(!li2) return;
+      var id2 = li2.dataset.id;
+      var cycle = {pending:"current", current:"done", done:"pending"};
+      for(var j=0;j<data.ras.length;j++){
+        if(data.ras[j].id === id2){
+          data.ras[j].status = cycle[data.ras[j].status] || "pending";
+          break;
+        }
+      }
+      saveData(data);
+      renderRAs();
+    }
+  });
+
+  document.getElementById("fra-save").addEventListener("click", function(){
+    var title = document.getElementById("fra-title").value.trim();
+    if(!title){ document.getElementById("fra-title").focus(); return; }
+    var rec = {
+      id: editingRaId || uid(),
+      raId: document.getElementById("fra-id").value.trim() || "RA",
+      title: title,
+      criteria: document.getElementById("fra-criteria").value.trim().slice(0,500),
+      status: document.getElementById("fra-status").value
+    };
+    if(editingRaId){
+      for(var i=0;i<data.ras.length;i++){
+        if(data.ras[i].id === editingRaId){ data.ras[i] = rec; break; }
+      }
+    }else{
+      data.ras.push(rec);
+    }
+    dlgRa.close();
+    saveData(data);
+    renderRAs();
+  });
+  document.getElementById("fra-del").addEventListener("click", function(){
+    if(!editingRaId) return;
+    data.ras = data.ras.filter(function(r){ return r.id !== editingRaId; });
+    dlgRa.close();
+    saveData(data);
+    renderRAs();
+  });
+  document.getElementById("fra-cancel").addEventListener("click", function(){ dlgRa.close(); });
+  document.getElementById("form-ra").addEventListener("keydown", function(e){
+    if(e.key === "Enter" && e.target.tagName === "INPUT"){ e.preventDefault(); document.getElementById("fra-save").click(); }
+  });
+
+  // ========== SIDEBAR / SECTION SWITCHING ==========
+  var SECTION_MAP = {
+    temario:    ["sec-temario", "sec-dates"],
+    activities: ["sec-activities"],
+    contenido:  ["sec-temario", "sec-activities", "sec-dates", "sec-ras"],
+    ras:        ["sec-ras"]
+  };
+  var ALL_SECTIONS = ["sec-temario", "sec-activities", "sec-dates", "sec-ras"];
+  var currentSection = "contenido";
+
+  function showSection(name){
+    currentSection = name;
+    var visible = SECTION_MAP[name] || ALL_SECTIONS;
+    for(var i=0;i<ALL_SECTIONS.length;i++){
+      var el = document.getElementById(ALL_SECTIONS[i]);
+      if(el) el.style.display = visible.indexOf(ALL_SECTIONS[i]) >= 0 ? "" : "none";
+    }
+    // Update active buttons in both sidebar and tab-bar
+    var allBtns = document.querySelectorAll(".sidebar-btn");
+    for(var j=0;j<allBtns.length;j++){
+      if(allBtns[j].dataset.section === name) allBtns[j].classList.add("active");
+      else allBtns[j].classList.remove("active");
+    }
+  }
+
+  // Wire up clicks on both sidebar and tab-bar
+  function handleNavClick(e){
+    var btn = e.target.closest ? e.target.closest(".sidebar-btn") : null;
+    if(!btn) return;
+    var section = btn.dataset.section;
+    if(section) showSection(section);
+  }
+  document.getElementById("sidebar").addEventListener("click", handleNavClick);
+  document.getElementById("tab-bar").addEventListener("click", handleNavClick);
+
+  // Start with "Contenido" (all visible)
+  showSection("contenido");
 
   // ========== INITIAL RENDER ==========
   if(!stored) saveData(data); // persist seed on first visit
