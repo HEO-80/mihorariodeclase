@@ -775,9 +775,9 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
   ];
 
   var MB = {
-    alg: {subject:"Álgebra y matemática discreta",          room:"Estudio",         color:"c5"},
-    fis: {subject:"Fundamentos físicos de la informática",  room:"Estudio",         color:"c2"},
-    deo: {subject:"Deontología y legislación (en inglés)",  room:"Estudio",         color:"c4"},
+    cmn: {subject:"Cálculo y métodos numéricos",            room:"Estudio",         color:"c5"},
+    soa: {subject:"Sistemas operativos avanzados",          room:"Estudio",         color:"c2"},
+    cyl: {subject:"Comunicación y liderazgo",               room:"Estudio",         color:"c4"},
     act: {subject:"Actividades y entregas",                 room:"70% continua",    color:"c8"},
     rep: {subject:"Repaso semanal · tipo test",             room:"Dudas y práctica",color:"c7"}
   };
@@ -786,8 +786,8 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
     return {day:day, start:start, end:end, subject:m.subject, teacher:"", room:m.room, color:m.color, modKey:""};
   }
   var BACHELOR = [
-    B(2,"16:00","18:30","alg"),B(3,"16:00","18:30","fis"),
-    B(5,"10:00","12:00","deo"),B(5,"12:15","14:15","act"),
+    B(2,"16:00","18:30","cmn"),B(3,"16:00","18:30","soa"),
+    B(5,"10:00","12:00","cyl"),B(5,"12:15","14:15","act"),
     B(6,"10:00","12:00","act"),B(6,"12:15","13:45","rep")
   ];
 
@@ -796,7 +796,7 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
      title:"Horario Docente · Héctor", sub:"Océano Atlántico · Ciclos Formativos DAM / SMR / ASIR",
      tasksTitle:"Tareas & Evaluaciones", taskHint:"Añadir entrega, examen o tarea...", proposal:false},
     {id:"bachelor", label:"🎓 Bachelor", key:"horario-bachelor-v1", defaults:BACHELOR,
-     title:"Bachelor · UNIPRO", sub:"Estudio y entregas · 1er semestre",
+     title:"Bachelor · UNIPRO", sub:"Estudio y entregas · 2º semestre",
      tasksTitle:"Entregas y tareas", taskHint:"Nueva entrega o tarea...", proposal:true,
      noticeH:"Reparto propuesto.",
      noticeT:"Es un punto de partida (unas 12 h semanales). Pulsa cualquier bloque para moverlo o cambiarlo."},
@@ -1216,7 +1216,17 @@ dialog::backdrop{background:rgba(10,13,18,.5);backdrop-filter:blur(4px)}
     {modKey:"sost", title:"Examen Sostenibilidad",                                  type:"examen",   status:"pending", date:"2026-11-18"},
     {modKey:"psp",  title:"Examen PSP — test + preguntas de resolver",              type:"examen",   status:"pending", date:"2026-11-21"},
     {modKey:"ad",   title:"Examen Acceso a Datos — práctica Power BI, Python y BD", type:"practica", status:"pending", date:"2026-11-23"},
-    {modKey:"dsp",  title:"Examen UD1 — Industria 4.0 (ASIR)",                     type:"examen",   status:"pending", date:"2026-11-25"}
+    {modKey:"dsp",  title:"Examen UD1 — Industria 4.0 (ASIR)",                     type:"examen",   status:"pending", date:"2026-11-25"},
+    // ── Bachelor UNIPRO · 2º semestre ──
+    {modKey:"",  title:"🎓 Act.1 Cálculo — Aplicaciones de la derivada",            type:"entrega",  status:"pending", date:"2026-11-23"},
+    {modKey:"",  title:"🎓 Act.1 Sist. Operativos Avanzados",                       type:"entrega",  status:"pending", date:"2026-11-23"},
+    {modKey:"",  title:"🎓 Act.1 Comunicación y Liderazgo",                         type:"entrega",  status:"pending", date:"2026-11-23"},
+    {modKey:"",  title:"🎓 Act.2 Cálculo — Volúmenes y series",                     type:"entrega",  status:"pending", date:"2026-12-07"},
+    {modKey:"",  title:"🎓 Act.2 Sist. Operativos Avanzados",                       type:"entrega",  status:"pending", date:"2026-12-07"},
+    {modKey:"",  title:"🎓 Act.2 Comunicación y Liderazgo",                         type:"entrega",  status:"pending", date:"2026-12-07"},
+    {modKey:"",  title:"🎓 Foro 1 — Cálculo",                                       type:"tarea",    status:"pending", date:"2026-12-14"},
+    {modKey:"",  title:"🎓 Foro 2 — Cálculo",                                       type:"tarea",    status:"pending", date:"2026-12-14"},
+    {modKey:"",  title:"🎓 Tests Temas 1-10 — Cálculo",                             type:"examen",   status:"pending", date:"2027-01-17"}
   ];
 
   var STORE_VERSIONS = {psp:"v3", sost:"v2", dig:"v2", dsp:"v2", ad:"v2", ofi:"v2", seg:"v2", som:"v3", pim:"v2", sad:"v2", cib:"v2", sri:"v2"};
