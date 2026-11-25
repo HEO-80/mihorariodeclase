@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digitalización — Contenido 2ª y 3ª Evaluación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --bg: #f8f9fb;
+  --card: #fff;
+  --ink: #1a1f2b;
+  --ink2: #4a5568;
+  --ink3: #8896a6;
+  --line: #e2e6ec;
+  --accent: #0d9373;
+  --accent-soft: #e6f5f0;
+  --accent-fg: #065f4a;
+  --blue: #2f6fb5;
+  --blue-soft: #e3edfb;
+  --blue-fg: #1b3b5e;
+  --orange: #e8890c;
+  --orange-soft: #fef3e2;
+  --orange-fg: #7c4a06;
+  --purple: #7e70cc;
+  --purple-soft: #e8e4f8;
+  --purple-fg: #312860;
+  --r: 12px;
+  --shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+[data-theme="dark"] {
+  --bg: #0e1117; --card: #161b26; --ink: #e4e9f0; --ink2: #8c97a5; --ink3: #5a6574;
+  --line: #262e3a;
+  --accent: #2dd4a8; --accent-soft: #0e2e26; --accent-fg: #7eecd0;
+  --blue: #6ca4e0; --blue-soft: #162840; --blue-fg: #aad0f5;
+  --orange: #f5a623; --orange-soft: #2e2210; --orange-fg: #f5c97a;
+  --purple: #8474d0; --purple-soft: #262042; --purple-fg: #c0b6f2;
+  --shadow: 0 2px 8px rgba(0,0,0,.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font: 400 15px/1.7 "DM Sans", system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+.container { max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+.topbar {
+  display: flex; align-items: center; gap: 12px; padding: 14px 24px;
+  background: var(--card); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10;
+}
+.topbar a { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 14px; }
+.topbar a:hover { text-decoration: underline; }
+.topbar h1 { font-size: 17px; font-weight: 700; flex: 1; }
+.topbar .theme-btn {
+  background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+  padding: 6px 12px; cursor: pointer; font-size: 14px;
+}
+h1.title { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+.subtitle { color: var(--ink2); font-size: 15px; margin-bottom: 32px; }
+.eval-label {
+  display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 16px;
+}
+.eval-label.e2 { background: var(--blue-soft); color: var(--blue-fg); }
+.eval-label.e3 { background: var(--purple-soft); color: var(--purple-fg); }
+.unit {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+  padding: 24px 28px; margin-bottom: 20px; box-shadow: var(--shadow);
+}
+.unit h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.unit .meta { font-size: 13px; color: var(--ink3); margin-bottom: 16px; }
+.unit h3 { font-size: 15px; font-weight: 700; margin: 18px 0 8px; color: var(--ink); }
+.unit ul { padding-left: 20px; margin-bottom: 10px; }
+.unit li { margin-bottom: 4px; color: var(--ink2); }
+.unit li strong { color: var(--ink); }
+.asir-note {
+  background: var(--orange-soft); border-left: 3px solid var(--orange);
+  padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0;
+  font-size: 13.5px; color: var(--orange-fg);
+}
+.asir-note strong { font-weight: 700; }
+.task-box {
+  background: var(--accent-soft); border: 1px solid rgba(13,147,115,.2);
+  border-radius: 10px; padding: 16px 20px; margin-top: 16px;
+}
+.task-box h4 { font-size: 14px; font-weight: 700; color: var(--accent-fg); margin-bottom: 6px; }
+.task-box p { font-size: 13.5px; color: var(--accent-fg); margin-bottom: 4px; }
+.task-box .format { font-size: 12px; color: var(--ink3); margin-top: 8px; font-style: italic; }
+.eval-box {
+  background: var(--card); border: 2px solid var(--line); border-radius: var(--r);
+  padding: 20px 24px; margin: 24px 0;
+}
+.eval-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+.eval-box table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.eval-box th, .eval-box td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.eval-box th { font-weight: 600; color: var(--ink3); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+hr { border: none; border-top: 2px solid var(--line); margin: 40px 0; }
+@media (max-width: 600px) {
+  .container { padding: 20px 14px 40px; }
+  .unit { padding: 18px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">← Volver al horario</a>
+  <h1>Digitalización — Planificación</h1>
+  <button class="theme-btn" id="themeBtn">🌙</button>
+</div>
+
+<div class="container">
+
+<h1 class="title">Digitalización</h1>
+<p class="subtitle">1º SMR (Grado Medio) · 1º ASIR (Grado Superior) — 1h/semana · Curso 2026/27</p>
+
+<!-- ============================================ -->
+<!--            2ª EVALUACIÓN                     -->
+<!-- ============================================ -->
+
+<span class="eval-label e2">2ª Evaluación</span>
+
+<div class="unit">
+  <h2>UD2 — Evolución web y negocio digital</h2>
+  <div class="meta">RA asociado: comprender la evolución del entorno digital y los modelos de negocio online</div>
+
+  <h3>1. De la Web 1.0 a la Web 3.0</h3>
+  <ul>
+    <li><strong>Web 1.0</strong> — páginas estáticas, solo lectura, el usuario consume</li>
+    <li><strong>Web 2.0</strong> — interactiva, redes sociales, el usuario crea contenido (YouTube, Wikipedia, blogs)</li>
+    <li><strong>Web 3.0</strong> — semántica y descentralizada, datos conectados, blockchain, identidad digital</li>
+    <li>Línea temporal con ejemplos de cada etapa</li>
+  </ul>
+
+  <h3>2. Modelos de negocio digital</h3>
+  <ul>
+    <li><strong>B2B</strong> (empresa a empresa), <strong>B2C</strong> (empresa a consumidor), <strong>C2C</strong> (consumidor a consumidor)</li>
+    <li>Marketplace (Amazon, Wallapop), suscripción (Netflix, Spotify), freemium (Canva, Dropbox)</li>
+    <li>Economía de plataformas: cómo funcionan Uber, Airbnb, Glovo como intermediarios</li>
+  </ul>
+
+  <h3>3. Marketing digital</h3>
+  <ul>
+    <li>SEO (posicionamiento orgánico) vs SEM (publicidad de pago)</li>
+    <li>Redes sociales como canal de negocio: influencers, publicidad segmentada</li>
+    <li>Email marketing, analítica web básica</li>
+  </ul>
+
+  <h3>4. Pagos electrónicos y seguridad</h3>
+  <ul>
+    <li>Medios de pago: tarjeta, PayPal, Bizum, criptomonedas</li>
+    <li>Seguridad en transacciones: HTTPS, certificados SSL, pasarelas de pago</li>
+    <li>Fraude online: phishing, carding, ingeniería social</li>
+  </ul>
+
+  <div class="asir-note">
+    <strong>ASIR — nivel adicional:</strong> infraestructura detrás del negocio digital (CDN, balanceo de carga, APIs REST, pasarelas de pago a nivel técnico, arquitectura de un e-commerce real).
+  </div>
+
+  <div class="task-box">
+    <h4>📝 Tarea UD2 — Análisis de un negocio digital</h4>
+    <p>Cada alumno elige una empresa online real (Wallapop, Vinted, Glovo, una tienda de Shopify, etc.) y entrega un documento (2-3 páginas) explicando:</p>
+    <ul>
+      <li>Qué modelo de negocio usa (B2B, B2C, C2C, marketplace, suscripción...)</li>
+      <li>Cómo genera ingresos</li>
+      <li>Qué tecnologías hay detrás</li>
+      <li>Valoración personal: puntos fuertes y débiles del modelo</li>
+    </ul>
+    <p class="format">Individual · Entrega por Moodle · PDF con portada</p>
+  </div>
+</div>
+
+<div class="unit">
+  <h2>UD3 — Cloud, Edge, Fog y Mist computing</h2>
+  <div class="meta">RA asociado: conocer los modelos de computación distribuida y sus aplicaciones</div>
+
+  <h3>1. Cloud computing</h3>
+  <ul>
+    <li>Qué es la nube: almacenamiento y procesamiento remoto</li>
+    <li>Modelos de servicio: <strong>IaaS</strong> (AWS EC2, Azure VMs), <strong>PaaS</strong> (Heroku, Google App Engine), <strong>SaaS</strong> (Google Workspace, Office 365)</li>
+    <li>Cloud público vs privado vs híbrido</li>
+    <li>Ventajas (escalabilidad, ahorro, acceso global) e inconvenientes (dependencia, privacidad, latencia)</li>
+  </ul>
+
+  <h3>2. Edge computing</h3>
+  <ul>
+    <li>Por qué no todo puede ir a la nube: latencia, ancho de banda, privacidad</li>
+    <li>Procesamiento en el borde de la red, cerca del origen de los datos</li>
+    <li>Casos: IoT industrial, coches autónomos, cámaras inteligentes, videojuegos en streaming</li>
+  </ul>
+
+  <h3>3. Fog computing y Mist computing</h3>
+  <ul>
+    <li><strong>Fog</strong>: capa intermedia entre el dispositivo y la nube (routers, gateways que procesan datos)</li>
+    <li><strong>Mist</strong>: procesamiento en el propio dispositivo/sensor, el nivel más cercano al dato</li>
+    <li>Comparativa de los 4 modelos: dónde se procesan los datos, latencia, coste, ejemplos</li>
+  </ul>
+
+  <h3>4. Casos de uso por sector</h3>
+  <ul>
+    <li>Sanidad: monitorización de pacientes en tiempo real</li>
+    <li>Industria: mantenimiento predictivo de maquinaria</li>
+    <li>Smart cities: sensores de tráfico, iluminación inteligente</li>
+    <li>Gaming y streaming: servidores edge para reducir lag</li>
+  </ul>
+
+  <div class="asir-note">
+    <strong>ASIR — nivel adicional:</strong> arquitectura cloud real (regiones, zonas de disponibilidad, contenedores Docker, Kubernetes, serverless/funciones). Conexión con lo que ven en ASO y SRI.
+  </div>
+
+  <div class="task-box">
+    <h4>🎤 Trabajo + Presentación oral UD3 — Modelos de computación</h4>
+    <p>En parejas o individual, preparar una presentación (5-8 minutos) donde expliquen:</p>
+    <ul>
+      <li>Los 4 modelos de computación (Cloud, Edge, Fog, Mist)</li>
+      <li>Un ejemplo real de cada modelo, explicando dónde se procesan los datos y por qué</li>
+      <li>Comparativa visual (tabla, infografía o diagrama)</li>
+      <li>Opinión personal: qué modelo creen que tiene más futuro y por qué</li>
+    </ul>
+    <p>Se evalúa tanto el contenido como la exposición oral (claridad, soltura, control del tiempo).</p>
+    <p class="format">Parejas o individual · Presentación en clase · Soporte libre (PowerPoint, Canva, Prezi, póster...)</p>
+  </div>
+</div>
+
+<div class="eval-box">
+  <h3>Evaluación 2º trimestre</h3>
+  <table>
+    <thead><tr><th>Instrumento</th><th>Peso</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td>Tarea UD2</td><td>30%</td><td>Análisis de negocio digital (documento escrito)</td></tr>
+      <tr><td>Trabajo + Presentación UD3</td><td>40%</td><td>Modelos de computación (contenido + exposición oral)</td></tr>
+      <tr><td>Test final trimestre</td><td>30%</td><td>Cuestionario Moodle — preguntas de UD2 y UD3</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr>
+
+<!-- ============================================ -->
+<!--            3ª EVALUACIÓN                     -->
+<!-- ============================================ -->
+
+<span class="eval-label e3">3ª Evaluación</span>
+
+<div class="unit">
+  <h2>UD4 — Inteligencia Artificial aplicada</h2>
+  <div class="meta">RA asociado: comprender los fundamentos y aplicaciones de la IA en el entorno productivo</div>
+
+  <h3>1. Qué es la Inteligencia Artificial</h3>
+  <ul>
+    <li>Definición y breve historia (Turing, inviernos de la IA, auge actual)</li>
+    <li>IA débil (especializada) vs IA fuerte (general)</li>
+    <li>Machine Learning, Deep Learning, redes neuronales: conceptos sin fórmulas</li>
+  </ul>
+
+  <h3>2. Tipos de IA y cómo aprenden</h3>
+  <ul>
+    <li>Aprendizaje supervisado (clasificación, predicción), no supervisado (agrupación) y por refuerzo</li>
+    <li>Datos de entrenamiento: por qué la IA necesita datos masivos y de calidad</li>
+    <li>Sesgos en la IA: ejemplos reales de discriminación algorítmica</li>
+  </ul>
+
+  <h3>3. Aplicaciones actuales</h3>
+  <ul>
+    <li>Asistentes virtuales (Siri, Alexa, ChatGPT)</li>
+    <li>Visión artificial: reconocimiento facial, coches autónomos, control de calidad industrial</li>
+    <li>IA generativa: creación de texto, imagen, código, vídeo</li>
+    <li>IA en sanidad, finanzas, logística, ciberseguridad</li>
+  </ul>
+
+  <h3>4. Ética y regulación</h3>
+  <ul>
+    <li>Reglamento Europeo de IA (AI Act): niveles de riesgo</li>
+    <li>Deepfakes y desinformación</li>
+    <li>Impacto en el empleo: automatización de tareas, nuevos perfiles profesionales</li>
+    <li>Privacidad y protección de datos en sistemas de IA</li>
+  </ul>
+
+  <div class="asir-note">
+    <strong>ASIR — nivel adicional:</strong> infraestructura para IA (GPUs, TPUs, cloud ML como AWS SageMaker / Azure ML), IA aplicada a ciberseguridad (detección de amenazas, análisis de logs con ML), automatización de tareas de sysadmin.
+  </div>
+
+  <div class="task-box">
+    <h4>📝 Tarea UD4 — IA en mi sector</h4>
+    <p>Documento breve (2-3 páginas) donde el alumno investigue una aplicación real de IA en el sector informático/tecnológico:</p>
+    <ul>
+      <li>Qué hace, qué tipo de IA usa, qué datos necesita</li>
+      <li>Ventajas que aporta frente a hacerlo sin IA</li>
+      <li>Riesgos o problemas éticos que plantea</li>
+      <li>Opinión personal: ¿sustituirá empleos o creará otros nuevos?</li>
+    </ul>
+    <p class="format">Individual · Entrega por Moodle · PDF con portada</p>
+  </div>
+</div>
+
+<div class="unit">
+  <h2>UD5 — Otras Tecnologías Habilitadoras Digitales (THD)</h2>
+  <div class="meta">RA asociado: identificar las principales THD y su impacto en la transformación digital</div>
+
+  <h3>1. IoT (Internet de las Cosas)</h3>
+  <ul>
+    <li>Sensores, actuadores y conectividad: cómo los objetos se conectan a internet</li>
+    <li>Ejemplos: domótica, wearables, ciudades inteligentes, agricultura de precisión</li>
+  </ul>
+
+  <h3>2. Big Data y analítica de datos</h3>
+  <ul>
+    <li>Las 5 V: Volumen, Velocidad, Variedad, Veracidad, Valor</li>
+    <li>Cómo las empresas usan los datos para tomar decisiones</li>
+  </ul>
+
+  <h3>3. Conectividad: 5G y más allá</h3>
+  <ul>
+    <li>Evolución de redes móviles (3G → 4G → 5G)</li>
+    <li>Qué permite el 5G que antes no se podía (cirugía remota, vehículos conectados)</li>
+  </ul>
+
+  <h3>4. Robótica y automatización</h3>
+  <ul>
+    <li>Robots industriales, cobots (robots colaborativos), drones</li>
+    <li>RPA (Robotic Process Automation): automatización de tareas administrativas</li>
+  </ul>
+
+  <h3>5. Blockchain</h3>
+  <ul>
+    <li>Qué es una cadena de bloques y para qué sirve más allá de las criptomonedas</li>
+    <li>Smart contracts, trazabilidad, identidad digital</li>
+  </ul>
+
+  <h3>6. Otras THD</h3>
+  <ul>
+    <li><strong>Fabricación aditiva</strong> (impresión 3D): prototipado, medicina, construcción</li>
+    <li><strong>Realidad virtual (VR) y aumentada (AR)</strong>: formación, diseño, turismo</li>
+    <li><strong>Gemelos digitales</strong>: réplica virtual de un sistema físico para simulación</li>
+    <li><strong>Ciberseguridad</strong> como habilitador transversal de todo lo anterior</li>
+  </ul>
+
+  <div class="asir-note">
+    <strong>ASIR — nivel adicional:</strong> ciberseguridad con más profundidad (conectar con su módulo de Seguridad), infraestructura IoT (protocolos MQTT, CoAP), blockchain a nivel técnico (nodos, consenso, Ethereum).
+  </div>
+
+  <div class="task-box">
+    <h4>🎤 Trabajo + Presentación oral UD5 — Mi THD</h4>
+    <p>Cada alumno o pareja elige UNA tecnología habilitadora y prepara una presentación (5-8 min):</p>
+    <ul>
+      <li>Qué es y cómo funciona (explicación clara, con esquema o diagrama)</li>
+      <li>Un caso de uso real en una empresa o sector concreto</li>
+      <li>Ventajas, riesgos y futuro de esa tecnología</li>
+    </ul>
+    <p>No se pueden repetir tecnologías entre compañeros (se sortean o eligen por orden).</p>
+    <p class="format">Parejas o individual · Presentación en clase · Soporte libre</p>
+  </div>
+</div>
+
+<div class="unit">
+  <h2>UD6 — Proyecto final: Plan de transformación digital</h2>
+  <div class="meta">RA asociado: elaborar un proyecto integral de transformación digital de una empresa</div>
+
+  <h3>El proyecto</h3>
+  <p>En grupos de 2-3 alumnos, elegir una empresa ficticia o real (comercio local, taller, clínica, restaurante...) que todavía trabaje de forma tradicional y diseñar su plan de transformación digital:</p>
+
+  <ul>
+    <li><strong>Diagnóstico inicial:</strong> cómo trabaja actualmente la empresa, qué procesos son manuales</li>
+    <li><strong>Propuesta de digitalización:</strong> qué tecnologías aplicar (cloud, IA, IoT, e-commerce, redes sociales...) y por qué</li>
+    <li><strong>Planificación:</strong> fases de implantación, prioridades, coste estimado</li>
+    <li><strong>Impacto esperado:</strong> mejoras en eficiencia, nuevos clientes, ahorro de costes</li>
+    <li><strong>Riesgos y plan B:</strong> qué puede salir mal y cómo mitigarlo</li>
+  </ul>
+
+  <div class="asir-note">
+    <strong>ASIR — nivel adicional:</strong> incluir un esquema de infraestructura técnica (servidores, red, servicios cloud, seguridad, backups) como parte del plan. El proyecto tiene más peso y profundidad que en SMR.
+  </div>
+
+  <div class="task-box">
+    <h4>📋 Proyecto final + Presentación</h4>
+    <p>Entregable: documento completo (8-12 páginas) + presentación oral en clase (10-15 min por grupo).</p>
+    <p>Se evalúa el documento, la presentación y la capacidad de responder a preguntas del profesor y compañeros.</p>
+    <p class="format">Grupos de 2-3 · Documento PDF + exposición oral · Es la tarea principal del trimestre</p>
+  </div>
+</div>
+
+<div class="eval-box">
+  <h3>Evaluación 3er trimestre</h3>
+  <table>
+    <thead><tr><th>Instrumento</th><th>Peso</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td>Tarea UD4</td><td>20%</td><td>IA en mi sector (documento escrito)</td></tr>
+      <tr><td>Presentación UD5</td><td>30%</td><td>Tecnología habilitadora (contenido + exposición oral)</td></tr>
+      <tr><td>Proyecto final UD6</td><td>50%</td><td>Plan de transformación digital (documento + presentación)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+
+<script>
+const btn = document.getElementById('themeBtn');
+const saved = localStorage.getItem('digi-theme');
+if (saved === 'dark') { document.documentElement.dataset.theme = 'dark'; btn.textContent = '☀️'; }
+btn.addEventListener('click', () => {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  document.documentElement.dataset.theme = dark ? '' : 'dark';
+  btn.textContent = dark ? '🌙' : '☀️';
+  localStorage.setItem('digi-theme', dark ? '' : 'dark');
+});
+</script>
+</body>
+</html>
