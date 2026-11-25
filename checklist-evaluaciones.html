@@ -281,19 +281,38 @@
 
 <script>
 const MODULES = [
-  { id: 'ad',   name: 'Acceso a Datos',       cycle: '2º DAM' },
-  { id: 'aso',  name: 'ASO',                   cycle: '2º ASIR' },
-  { id: 'digi', name: 'Digitalización',        cycle: '1º SMR / 1º ASIR' },
-  { id: 'iaw',  name: 'IAW',                   cycle: '2º ASIR' },
-  { id: 'ofi',  name: 'Aplicaciones Ofimáticas', cycle: 'SMR' },
-  { id: 'psp',  name: 'PSP',                   cycle: '2º DAM' },
-  { id: 'sost', name: 'Sostenibilidad',        cycle: '2º ASIR' },
-  { id: 'sri',  name: 'SRI',                   cycle: '2º ASIR' },
-  { id: 'som',  name: 'SOM',                   cycle: '1º SMR' },
-  { id: 'mcs',  name: 'Máster Ciberseguridad', cycle: 'Incidentes' },
+  { id: 'ad',      name: 'Acceso a Datos',       cycle: '2º DAM' },
+  { id: 'aso',     name: 'ASO',                   cycle: '2º ASIR' },
+  { id: 'digi_smr', name: 'Digitalización',       cycle: '1º SMR (Grado Medio)' },
+  { id: 'digi_asir', name: 'Digitalización',      cycle: '1º ASIR (Grado Superior)' },
+  { id: 'iaw',    name: 'IAW',                   cycle: '2º ASIR' },
+  { id: 'ofi',    name: 'Aplicaciones Ofimáticas', cycle: 'SMR' },
+  { id: 'psp',    name: 'PSP',                   cycle: '2º DAM' },
+  { id: 'sost',   name: 'Sostenibilidad',        cycle: '2º ASIR' },
+  { id: 'sri',    name: 'SRI',                   cycle: '2º ASIR' },
+  { id: 'som',    name: 'SOM',                   cycle: '1º SMR' },
+  { id: 'mcs',    name: 'Máster Ciberseguridad', cycle: 'Incidentes' },
 ];
 
-const STORAGE_KEY = 'heo_correcciones_v2';
+// Tareas precargadas como corregidas en 1ª evaluación
+const SEED_TASKS = {
+  1: {
+    'digi_smr':  [
+      { name: 'Examen UD1 — Industria 4.0', done: true },
+      { name: 'Tareas UD1', done: true },
+    ],
+    'digi_asir': [
+      { name: 'Examen UD1 — Industria 4.0', done: true },
+      { name: 'Tareas UD1', done: true },
+    ],
+    'sost': [
+      { name: 'Examen Sostenibilidad', done: true },
+      { name: 'Tareas Sostenibilidad', done: true },
+    ],
+  }
+};
+
+const STORAGE_KEY = 'heo_correcciones_v3';
 
 // --- State ---
 let state = loadState();
@@ -305,7 +324,12 @@ function defaultState() {
   for (const ev of [1, 2]) {
     s[ev] = {};
     for (const m of MODULES) {
-      s[ev][m.id] = { tasks: [] };
+      const seed = SEED_TASKS[ev] && SEED_TASKS[ev][m.id];
+      if (seed) {
+        s[ev][m.id] = { tasks: seed.map(t => ({ name: t.name, done: t.done })) };
+      } else {
+        s[ev][m.id] = { tasks: [] };
+      }
     }
   }
   return s;
