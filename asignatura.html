@@ -748,17 +748,21 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
     aso: {
       ras: [],
       temario: [
-        {num:"UD1", title:"Directorio Activo (Active Directory)", status:"done"},
-        {num:"UD2", title:"Gestión de procesos en Windows y Linux", status:"current", links:[
+        /* ───── 1ª EVALUACIÓN — Windows Server (cerrada) ───── */
+        {num:"UD1", title:"Directorio Activo (Active Directory)", status:"done", links:[
           {name:"Servicios y Procesos en Windows", url:"https://gamma.app/docs/UD2-12-Servicios-Y-Procesos-en-Windows-393efmak1gylkjg?mode=doc"},
           {name:"Gestión de Procesos en Windows y Linux", url:"https://gamma.app/docs/UD2-Gestion-de-Procesos-en-Windows-y-Linux-v41f2fzsmb4lrwi?mode=doc"}
         ]},
-        {num:"UD3", title:"Automatización y Scripting en PowerShell", status:"pending", links:[
+        {num:"UD2", title:"Gestión de procesos en Windows y Linux", status:"done", links:[
+          {name:"Servicios y Procesos en Windows", url:"https://gamma.app/docs/UD2-12-Servicios-Y-Procesos-en-Windows-393efmak1gylkjg?mode=doc"},
+          {name:"Gestión de Procesos en Windows y Linux", url:"https://gamma.app/docs/UD2-Gestion-de-Procesos-en-Windows-y-Linux-v41f2fzsmb4lrwi?mode=doc"}
+        ]},
+        {num:"UD3", title:"Automatización y Scripting en PowerShell", status:"done", links:[
           {name:"Automatización y Scripting en PowerShell", url:"https://gamma.app/docs/UD3-Automatizacion-y-Scripting-en-PowerShell-g8t2dlherqvqcpj?mode=doc"},
           {name:"Tu Primer Script en PowerShell", url:"https://gamma.app/docs/Tu-Primer-Script-en-PowerShell-z0ev4nwm5pc68fq?mode=doc"}
         ]},
-        /* ───── 2ª EVALUACIÓN — Linux Server ───── */
-        {num:"UD4", title:"Administración de usuarios, grupos y permisos en Linux — useradd/usermod/userdel, /etc/passwd, /etc/shadow, chmod, chown, ACLs (getfacl/setfacl), sudo y sudoers", status:"pending"},
+        /* ───── 2ª EVALUACIÓN — Linux Server (contenido en Moodle, tareas pendientes) ───── */
+        {num:"UD4", title:"Administración de usuarios, grupos y permisos en Linux — useradd/usermod/userdel, /etc/passwd, /etc/shadow, chmod, chown, ACLs (getfacl/setfacl), sudo y sudoers", status:"current"},
         {num:"UD5", title:"Servicios, paquetes y automatización con Bash — systemd/systemctl, apt/dnf, scripting Bash (variables, if/for/while, funciones), cron/crontab, journalctl y logs", status:"pending"},
         {num:"UD6", title:"Almacenamiento, copias de seguridad y monitorización — ext4/XFS, fdisk/mkfs/mount/fstab, LVM, quotas, tar/rsync, scripts de backup, top/htop/df/du/free", status:"pending"}
       ],
@@ -767,10 +771,10 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {text:"UD.1 Tarea 2 — Personalización de mi terminal PowerShell de admin", type:"tarea", status:"evaluada", date:"2026-10-22"},
         {text:"RETO EXTRA Dojo", type:"otro", status:"pending", date:"2026-12-01"},
         {text:"A2.1 Licenciamiento de Windows Cliente y Servidor", type:"tarea", status:"evaluada", date:"2026-09-29"},
-        {text:"A3.1 Gestión con PowerShell", type:"tarea", status:"en-curso", date:"2026-11-04"},
-        {text:"Tarea UD2+UD3 — Automatización con PowerShell: alta masiva de usuarios desde Excel + monitorización de procesos", type:"proyecto", status:"en-curso", date:""},
-        {text:"Práctica guiada PowerShell", type:"practica", status:"pending", date:""},
-        {text:"Práctica guiada CMD", type:"practica", status:"pending", date:""},
+        {text:"A3.1 Gestión con PowerShell", type:"tarea", status:"evaluada", date:"2026-11-04"},
+        {text:"Tarea UD2+UD3 — Automatización con PowerShell: alta masiva de usuarios desde Excel + monitorización de procesos", type:"proyecto", status:"evaluada", date:""},
+        {text:"Práctica guiada PowerShell", type:"practica", status:"evaluada", date:""},
+        {text:"Práctica guiada CMD", type:"practica", status:"evaluada", date:""},
         /* ───── 2ª EVALUACIÓN — Linux ───── */
         {text:"UD4 Tarea — Estructura de departamentos en Linux (usuarios, grupos, carpetas, permisos chmod+ACL)", type:"tarea", status:"pending", date:""},
         {text:"UD5 Tarea — Script Bash de automatización (alta masiva desde CSV, grupos, permisos, log)", type:"tarea", status:"pending", date:""},
