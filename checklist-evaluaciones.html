@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de Correcciones</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232735;
+    --border: #2e3345;
+    --text: #e4e6ed;
+    --text2: #9199b0;
+    --accent: #6c8cff;
+    --accent-dim: rgba(108,140,255,0.12);
+    --green: #34d399;
+    --green-dim: rgba(52,211,153,0.12);
+    --orange: #f59e0b;
+    --orange-dim: rgba(245,158,11,0.12);
+    --red: #f87171;
+    --radius: 10px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+  }
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    color: var(--text2);
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  .global-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    flex: 1;
+    min-width: 140px;
+  }
+  .stat-card .label { font-size: 0.75rem; color: var(--text2); text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-card .value { font-size: 1.6rem; font-weight: 700; margin-top: 4px; }
+  .stat-card.total .value { color: var(--accent); }
+  .stat-card.done .value { color: var(--green); }
+  .stat-card.pending .value { color: var(--orange); }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 4px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+  }
+  .tab {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
+    color: var(--text2);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* Module cards */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .module-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .module-card:hover { border-color: var(--accent); }
+  .module-header {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    cursor: pointer;
+    user-select: none;
+  }
+  .module-header h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .module-header .cycle {
+    font-size: 0.72rem;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+  .module-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .module-progress .count { color: var(--text2); }
+  .module-progress .count.all-done { color: var(--green); }
+  .progress-bar {
+    width: 48px;
+    height: 5px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+  .progress-fill.complete { background: var(--green); }
+
+  /* Task list */
+  .task-list {
+    padding: 0 16px 12px;
+    display: none;
+  }
+  .task-list.open { display: block; }
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+  }
+  .task-item:first-child { border-top: none; }
+  .task-check {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .task-check:checked {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .task-check:checked::after {
+    content: '✓';
+    position: absolute;
+    top: -1px;
+    left: 2px;
+    font-size: 13px;
+    color: #fff;
+    font-weight: 700;
+  }
+  .task-name {
+    flex: 1;
+    font-size: 0.85rem;
+    color: var(--text);
+    transition: opacity 0.2s;
+  }
+  .task-item.done .task-name {
+    opacity: 0.4;
+    text-decoration: line-through;
+  }
+  .task-delete {
+    background: none;
+    border: none;
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.15s;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .task-item:hover .task-delete { opacity: 1; }
+  .task-delete:hover { color: var(--red); background: rgba(248,113,113,0.1); }
+
+  /* Add task */
+  .add-task-row {
+    display: flex;
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+  .add-task-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    color: var(--text);
+    font-size: 0.82rem;
+    outline: none;
+  }
+  .add-task-input:focus { border-color: var(--accent); }
+  .add-task-input::placeholder { color: var(--text2); }
+  .add-task-btn {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid rgba(108,140,255,0.25);
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .add-task-btn:hover { background: rgba(108,140,255,0.2); }
+
+  /* Expand arrow */
+  .arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+    color: var(--text2);
+    font-size: 0.7rem;
+    margin-left: 6px;
+  }
+  .module-card.expanded .arrow { transform: rotate(90deg); }
+
+  /* All-done badge */
+  .badge-done {
+    background: var(--green-dim);
+    color: var(--green);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 14px; }
+    .modules-grid { grid-template-columns: 1fr; }
+    .global-stats { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Control de Correcciones</h1>
+<p class="subtitle">Curso 2026 / 2027 — Océano Atlántico</p>
+
+<div class="global-stats" id="globalStats"></div>
+
+<div class="tabs">
+  <button class="tab active" data-eval="1">1ª Evaluación</button>
+  <button class="tab" data-eval="2">2ª Evaluación</button>
+</div>
+
+<div class="modules-grid" id="modulesGrid"></div>
+
+<script>
+const MODULES = [
+  { id: 'ad',   name: 'Acceso a Datos',       cycle: '2º DAM' },
+  { id: 'aso',  name: 'ASO',                   cycle: '2º ASIR' },
+  { id: 'digi', name: 'Digitalización',        cycle: '1º SMR / 1º ASIR' },
+  { id: 'iaw',  name: 'IAW',                   cycle: '2º ASIR' },
+  { id: 'ofi',  name: 'Aplicaciones Ofimáticas', cycle: 'SMR' },
+  { id: 'psp',  name: 'PSP',                   cycle: '2º DAM' },
+  { id: 'sost', name: 'Sostenibilidad',        cycle: '2º ASIR' },
+  { id: 'sri',  name: 'SRI',                   cycle: '2º ASIR' },
+  { id: 'som',  name: 'SOM',                   cycle: '1º SMR' },
+  { id: 'mcs',  name: 'Máster Ciberseguridad', cycle: 'Incidentes' },
+];
+
+const STORAGE_KEY = 'heo_correcciones_v2';
+
+// --- State ---
+let state = loadState();
+let currentEval = 1;
+let expanded = {};
+
+function defaultState() {
+  const s = {};
+  for (const ev of [1, 2]) {
+    s[ev] = {};
+    for (const m of MODULES) {
+      s[ev][m.id] = { tasks: [] };
+    }
+  }
+  return s;
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Ensure all modules exist in both evals
+      const def = defaultState();
+      for (const ev of [1, 2]) {
+        if (!parsed[ev]) parsed[ev] = def[ev];
+        for (const m of MODULES) {
+          if (!parsed[ev][m.id]) parsed[ev][m.id] = { tasks: [] };
+        }
+      }
+      return parsed;
+    }
+  } catch(e) {}
+  return defaultState();
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+// --- Render ---
+function render() {
+  const grid = document.getElementById('modulesGrid');
+  grid.innerHTML = '';
+
+  let totalTasks = 0, totalDone = 0;
+
+  for (const m of MODULES) {
+    const data = state[currentEval][m.id];
+    const tasks = data.tasks;
+    const done = tasks.filter(t => t.done).length;
+    totalTasks += tasks.length;
+    totalDone += done;
+    const pct = tasks.length ? Math.round(done / tasks.length * 100) : 0;
+    const allDone = tasks.length > 0 && done === tasks.length;
+    const isExpanded = expanded[m.id];
+
+    const card = document.createElement('div');
+    card.className = 'module-card' + (isExpanded ? ' expanded' : '');
+    card.innerHTML = `
+      <div class="module-header" data-mid="${m.id}">
+        <div>
+          <h3>${m.name} <span class="arrow">▶</span></h3>
+          <div class="cycle">${m.cycle}</div>
+        </div>
+        <div class="module-progress">
+          ${allDone && tasks.length ? '<span class="badge-done">OK</span>' : ''}
+          <span class="count ${allDone && tasks.length ? 'all-done' : ''}">${done}/${tasks.length}</span>
+          <div class="progress-bar"><div class="progress-fill ${allDone && tasks.length ? 'complete' : ''}" style="width:${pct}%"></div></div>
+        </div>
+      </div>
+      <div class="task-list ${isExpanded ? 'open' : ''}" id="tasks-${m.id}">
+        ${tasks.map((t, i) => `
+          <div class="task-item ${t.done ? 'done' : ''}">
+            <input type="checkbox" class="task-check" data-mid="${m.id}" data-idx="${i}" ${t.done ? 'checked' : ''}>
+            <span class="task-name">${esc(t.name)}</span>
+            <button class="task-delete" data-mid="${m.id}" data-idx="${i}" title="Eliminar">✕</button>
+          </div>
+        `).join('')}
+        <div class="add-task-row">
+          <input class="add-task-input" data-mid="${m.id}" placeholder="Nueva tarea…">
+          <button class="add-task-btn" data-mid="${m.id}">+ Añadir</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  }
+
+  // Global stats
+  const statsEl = document.getElementById('globalStats');
+  statsEl.innerHTML = `
+    <div class="stat-card total"><div class="label">Total tareas</div><div class="value">${totalTasks}</div></div>
+    <div class="stat-card done"><div class="label">Corregidas</div><div class="value">${totalDone}</div></div>
+    <div class="stat-card pending"><div class="label">Pendientes</div><div class="value">${totalTasks - totalDone}</div></div>
+  `;
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// --- Events ---
+document.addEventListener('click', (e) => {
+  // Tab switch
+  if (e.target.classList.contains('tab')) {
+    currentEval = parseInt(e.target.dataset.eval);
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', parseInt(t.dataset.eval) === currentEval));
+    expanded = {};
+    render();
+    return;
+  }
+
+  // Expand/collapse
+  const header = e.target.closest('.module-header');
+  if (header) {
+    const mid = header.dataset.mid;
+    expanded[mid] = !expanded[mid];
+    render();
+    return;
+  }
+
+  // Delete task
+  if (e.target.classList.contains('task-delete')) {
+    const { mid, idx } = e.target.dataset;
+    state[currentEval][mid].tasks.splice(parseInt(idx), 1);
+    saveState();
+    render();
+    return;
+  }
+
+  // Add task button
+  if (e.target.classList.contains('add-task-btn')) {
+    const mid = e.target.dataset.mid;
+    addTask(mid);
+    return;
+  }
+});
+
+document.addEventListener('change', (e) => {
+  if (e.target.classList.contains('task-check')) {
+    const { mid, idx } = e.target.dataset;
+    state[currentEval][mid].tasks[parseInt(idx)].done = e.target.checked;
+    saveState();
+    render();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && e.target.classList.contains('add-task-input')) {
+    addTask(e.target.dataset.mid);
+  }
+});
+
+function addTask(mid) {
+  const input = document.querySelector(`.add-task-input[data-mid="${mid}"]`);
+  const name = input.value.trim();
+  if (!name) return;
+  state[currentEval][mid].tasks.push({ name, done: false });
+  saveState();
+  render();
+  // Re-focus input after render
+  setTimeout(() => {
+    const newInput = document.querySelector(`.add-task-input[data-mid="${mid}"]`);
+    if (newInput) newInput.focus();
+  }, 50);
+}
+
+// Init
+render();
+</script>
+</body>
+</html>
