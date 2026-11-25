@@ -684,11 +684,10 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
         {num:"UD2", title:"Virtualización — Concepto, hypervisors tipo 1 y 2, creación y gestión de VMs en VirtualBox", status:"current"},
         {num:"UD3", title:"Instalación de sistemas operativos — Planificación, particiones, arranque, instalación Windows + Linux, snapshots", status:"pending"},
         {num:"2ª EVAL", title:"─── Segunda Evaluación ───", status:"pending"},
-        {num:"UD4", title:"Configuración y personalización del entorno (Windows) — Arranque, sesiones de usuario, interfaz, directivas de grupo, administración de paquetes", status:"pending"},
-        {num:"UD5", title:"Introducción a Linux — Estructura del sistema de archivos, comandos básicos, usuarios, grupos y permisos en Linux", status:"pending"},
+        {num:"UD4", title:"Administración de Windows en VM — Usuarios y grupos locales (lusrmgr.msc, PowerShell), directivas de grupo (gpedit.msc), servicios y programador de tareas, registro de Windows (regedit), gestión avanzada de discos (diskpart, particiones, cuotas), copias de seguridad y recuperación (puntos de restauración, modo seguro, sfc, chkdsk, DISM), red básica (ipconfig, ping, compartir carpetas, firewall)", status:"pending"},
+        {num:"UD5", title:"Introducción a Linux — Qué es GNU/Linux y distribuciones, instalación de Ubuntu en VM, escritorio y entornos gráficos, terminal y comandos básicos (ls, cd, cp, mv, rm, mkdir, cat, less), estructura del sistema de archivos (/, /home, /etc, /var, /usr), rutas absolutas y relativas", status:"pending"},
         {num:"3ª EVAL", title:"─── Tercera Evaluación ───", status:"pending"},
-        {num:"UD6", title:"Administración y mantenimiento del sistema (Windows) — Perfiles, grupos locales, rendimiento, copias de seguridad, automatización de tareas", status:"pending"},
-        {num:"UD7", title:"Administración avanzada de Linux — Scripts, automatización, despliegue de entorno seguro, proyecto integral de automatización", status:"pending"}
+        {num:"UD6", title:"Administración de Linux — Usuarios, grupos y permisos (chmod, chown, /etc/passwd, /etc/shadow), gestión de paquetes (apt, repositorios, dpkg), almacenamiento (fdisk, mount, /etc/fstab, lsblk, swap), procesos y servicios (ps, top, kill, systemctl, journalctl), red (ip addr, nmcli, ufw, ping, ss, nslookup), scripting Bash (variables, if, for, while, cron), copias de seguridad y seguridad (rsync, tar, SSH, claves públicas)", status:"pending"}
       ],
       activities: [
         {text:"Tarea — Máquinas virtuales (última tarea 1ª evaluación)", type:"tarea", status:"pending", date:"2026-11-27"}
@@ -1150,7 +1149,7 @@ input[type=date]{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant
 
   // ========== STORAGE ==========
   // Bump version per module to force seed refresh (change v1→v2 etc. when seed data is updated)
-  var STORE_VERSIONS = {psp:"v4", sost:"v3", dig:"v3", dsp:"v3", ad:"v2", ofi:"v2", seg:"v2", som:"v4", pim:"v2", sad:"v2", cib:"v2", sri:"v3"};
+  var STORE_VERSIONS = {psp:"v4", sost:"v3", dig:"v3", dsp:"v3", ad:"v2", ofi:"v2", seg:"v2", som:"v5", pim:"v2", sad:"v2", cib:"v2", sri:"v3"};
   var STORE_KEY = "asignatura-" + modKey + "-" + (STORE_VERSIONS[modKey] || "v1");
 
   function loadData(){
